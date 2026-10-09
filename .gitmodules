@@ -1,4 +1,4 @@
 [submodule "frogui"]
 	path = frogui
-	url = git@github.com:tzubertowski/FrogUI.git
-	branch = treefrogui
+	url = https://github.com/Kryptikone316/FrogUI.git
+	branch = sf3500-ports-tab-pinned-base
