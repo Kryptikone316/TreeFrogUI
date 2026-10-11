@@ -8,7 +8,7 @@
 #
 # With no payload, the complete release plus the selected install_first overlay
 # is deployed. Optional development payloads:
-#   release, clean-themes, picoarch, picoarch-hi, frogui, openclaw, frogshell, ebook, pcsx4all, pcsx4all-config,
+#   release, clean-themes, picoarch, picoarch-hi, frogui, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
 #   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test,
 #   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test
 #
@@ -30,7 +30,7 @@ die() {
 usage() {
     cat >&2 <<EOF
 usage: $0 <r36sx|r36hd|sf3000|sf3500> [payload ...]
-    payloads: release clean-themes picoarch picoarch-hi frogui openclaw frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
+    payloads: release clean-themes picoarch picoarch-hi frogui openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
 default:  release
 EOF
     exit 2
@@ -71,7 +71,7 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|clean-themes|picoarch|picoarch-hi|frogui|openclaw|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
+        release|clean-themes|picoarch|picoarch-hi|frogui|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
         *) usage ;;
     esac
 done
@@ -421,6 +421,17 @@ deploy_one() {
     fi
 }
 
+deploy_dsperate() {
+    local src="$WORK/dsperate/build/sf3000-package" dst="$MOUNT/cubegm/dsperate" hash_line
+    [ -f "$src/dsperate" ] || die "DSperate SF3000 package is missing: $src/dsperate"
+    mkdir -p "$dst"
+    rsync -rltc "$src/" "$dst/"
+    sync
+    verify_tree "$src/" "$dst/" "DSperate package"
+    hash_line="$(sha256sum "$dst/dsperate")"
+    echo "dsperate deployed: ${hash_line%% *}"
+}
+
 deploy_mame2000_mslug() {
     local game_src bios_src game_dst bios_dst
     local game_hash bios_hash hash_line
@@ -672,6 +683,7 @@ for payload in "${PAYLOADS[@]}"; do
         amstrad-cap32-test) deploy_amstrad_cap32_test ;;
         o2em-test) deploy_o2em_test ;;
         c64-test) deploy_c64_test ;;
+        dsperate) deploy_dsperate ;;
         *) deploy_one "$payload" ;;
     esac
 done
