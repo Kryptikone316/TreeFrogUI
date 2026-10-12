@@ -8,7 +8,7 @@
 #
 # With no payload, the complete release plus the selected install_first overlay
 # is deployed. Optional development payloads:
-#   release, clean-themes, picoarch, picoarch-hi, frogui, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
+#   release, clean-themes, picoarch, picoarch-hi, frogui, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
 #   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test,
 #   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test
 #
@@ -30,7 +30,7 @@ die() {
 usage() {
     cat >&2 <<EOF
 usage: $0 <r36sx|r36hd|sf3000|sf3500> [payload ...]
-    payloads: release clean-themes picoarch picoarch-hi frogui openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
+    payloads: release clean-themes picoarch picoarch-hi frogui picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
 default:  release
 EOF
     exit 2
@@ -71,7 +71,7 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|clean-themes|picoarch|picoarch-hi|frogui|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
+        release|clean-themes|picoarch|picoarch-hi|frogui|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
         *) usage ;;
     esac
 done
@@ -280,6 +280,7 @@ deploy_release() {
         cubegm/cores/mcpe_libretro.so \
         cubegm/cores/classicube_libretro.so \
         cubegm/cores/j2me_libretro.so \
+        cubegm/cores/picante8_libretro.so \
         cubegm/cores/libemu_md.so \
         cubegm/zhijack.sh; do
         hash_line="$(sha256sum "$MOUNT/$rel")"
@@ -303,6 +304,10 @@ deploy_one() {
         frogui)
             src="$REPO/frogui/out/frogui_libretro.so"
             dst="$MOUNT/cubegm/cores/frogui_libretro.so"
+            ;;
+        picante8)
+            src="$REPO/release/latest/release/cubegm/cores/picante8_libretro.so"
+            dst="$MOUNT/cubegm/cores/picante8_libretro.so"
             ;;
         openclaw)
             src="$WORK/FroggyClaw/openclaw_libretro.so"
