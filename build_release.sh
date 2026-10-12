@@ -59,6 +59,7 @@ CLAW_FONT="$FROGGYCLAW_ROOT/Build_Release/clacon.ttf"
 CLAW_BANNER_NEXTUI="$(pwd)/assets/claw/openclaw-artbook-nextui.png"
 CLAW_BANNER_NEXT="$(pwd)/assets/claw/openclaw-artbook-next.png"
 CLAW_BANNER_NAO="$(pwd)/assets/claw/openclaw-nao-black.png"
+PICANTE8_CORE="${PICANTE8_CORE:-/home/tomaszz/sf3000-work/picante8/picante8_libretro.so}"
 DIABLO_BIN="${DIABLO_BIN:-/home/tomaszz/sf3000-work/FroggyDiablo-sf3000-build/devilutionx}"
 DIABLO_LAUNCHER="$(pwd)/assets/diablo/launch_diablo.sh"
 DIABLO_MARKER="$(pwd)/assets/diablo/Start Diablo 1.diablo"
@@ -177,6 +178,7 @@ cp_if_diff() { [ -f "$1" ] || return 0; cmp -s "$1" "$2" && return 0; cp "$1" "$
 [ -f "$CLAW_BANNER_NEXTUI" ] || { echo "missing Captain Claw NextUI artwork: $CLAW_BANNER_NEXTUI" >&2; exit 1; }
 [ -f "$CLAW_BANNER_NEXT" ] || { echo "missing Captain Claw Next artwork: $CLAW_BANNER_NEXT" >&2; exit 1; }
 [ -f "$CLAW_BANNER_NAO" ] || { echo "missing Captain Claw Nao artwork: $CLAW_BANNER_NAO" >&2; exit 1; }
+[ -f "$PICANTE8_CORE" ] || { echo "missing Picante8 core: $PICANTE8_CORE" >&2; exit 1; }
 [ -x "$DIABLO_BIN" ] || { echo "missing executable Diablo SF3000 build: $DIABLO_BIN" >&2; exit 1; }
 [ -f "$DIABLO_LAUNCHER" ] || { echo "missing Diablo launcher: $DIABLO_LAUNCHER" >&2; exit 1; }
 [ -f "$DIABLO_MARKER" ] || { echo "missing Diablo launcher marker: $DIABLO_MARKER" >&2; exit 1; }
@@ -196,6 +198,7 @@ cp_if_diff "$(pwd)/build/j2me_libretro.so" "$STAGE/cubegm/cores/j2me_libretro.so
 cp_if_diff "$CLASSICUBE_CORE" "$STAGE/cubegm/cores/classicube_libretro.so"
 cp_if_diff "$MCPE_CORE" "$STAGE/cubegm/cores/mcpe_libretro.so"
 cp_if_diff "$CLAW_CORE" "$STAGE/cubegm/cores/openclaw_libretro.so"
+cp_if_diff "$PICANTE8_CORE" "$STAGE/cubegm/cores/picante8_libretro.so"
 cp_if_diff "$DIABLO_BIN" "$STAGE/cubegm/devilutionx"
 cp_if_diff "$DIABLO_LAUNCHER" "$STAGE/cubegm/devilutionx.sh"
 cp_if_diff "$DIABLO_SDL_IMAGE" "$STAGE/cubegm/lib/libSDL_image-1.2.so.0"
@@ -226,6 +229,7 @@ rm -f "$STAGE/frogui/claw.png" \
       "$STAGE/frogui/theme-packs/Nao_Black/claw.png"
 mkdir -p "$STAGE/roms/openclaw"
 mkdir -p "$STAGE/roms/diablo"
+mkdir -p "$STAGE/roms/picante8"
 cp_if_diff "$DIABLO_MARKER" "$STAGE/roms/diablo/Start Diablo 1.diablo"
 cp_if_diff "$DIABLO_ENGINE_ASSET" "$STAGE/roms/diablo/devilutionx.mpq"
 cp_if_diff "$DIABLO_BANNER_NEXTUI" "$STAGE/frogui/diablo.png"
@@ -315,6 +319,7 @@ mkdir -p "$OUT/roms/qpsx"
 mkdir -p "$OUT/roms/j2me"
 mkdir -p "$OUT/roms/mcpe"
 mkdir -p "$OUT/roms/diablo"
+mkdir -p "$OUT/roms/picante8"
 
 # 1b) Our extra assets the old release shipped (these are OURS, not stock OS):
 #     standalone frontends, BIOS, boot logos. NOT shipped: icube/icube_start

@@ -10,6 +10,7 @@ PICOARCH_ROOT=${PICOARCH_ROOT:-$WORK_ROOT/picoarch}
 FROGGYCRAFT_ROOT=${FROGGYCRAFT_ROOT:-$WORK_ROOT/FroggyCraft}
 FROGGYPE_ROOT=${FROGGYPE_ROOT:-$WORK_ROOT/FroggyPE}
 FROGGYCLAW_ROOT=${FROGGYCLAW_ROOT:-$WORK_ROOT/FroggyClaw}
+PICANTE8_ROOT=${PICANTE8_ROOT:-$WORK_ROOT/picante8}
 EBOOK_ROOT=${EBOOK_ROOT:-$WORK_ROOT/ebook}
 MUPDF_ROOT=${MUPDF_ROOT:-$WORK_ROOT/mupdf}
 DSPERATE_ROOT=${DSPERATE_ROOT:-$WORK_ROOT/dsperate/build/sf3000-package}
@@ -28,6 +29,7 @@ for file in \
   "$FROGGYCRAFT_ROOT/source/classicube_sf2000/Makefile" \
   "$FROGGYPE_ROOT/Makefile.sf2000" \
   "$FROGGYCLAW_ROOT/Makefile" \
+  "$PICANTE8_ROOT/Makefile" \
   "$EBOOK_ROOT/build_reader_sf.sh" \
   "$DSPERATE_ROOT/dsperate"; do
   [[ -e "$file" ]] || { echo "Missing local build input: $file" >&2; exit 1; }
@@ -79,6 +81,17 @@ make -C "$FROGGYCLAW_ROOT" SF2000_PLATFORM=sf3000 clean
 make -C "$FROGGYCLAW_ROOT" SF2000_PLATFORM=sf3000 \
   SF3000_MIPS="$PREFIX" SF3000_SYSROOT="$SYSROOT" -j2
 "${PREFIX}strip" "$FROGGYCLAW_ROOT/openclaw_libretro.so"
+
+echo 'Building Picante8...'
+make -C "$PICANTE8_ROOT" clean
+PICANTE8_FLAGS="-O3 -fPIC -fomit-frame-pointer -ffast-math -march=mips32 -mtune=mips32r2 -mhard-float -mfp32 -EL -isystem $TOOLCHAIN/opt/ext-toolchain/sysroot/mipsel-r2-hard/usr/include -Isrc -Isrc/io -Isrc/lua -Isrc/libretro -Isrc/vm -D__LIBRETRO__"
+make -C "$PICANTE8_ROOT" platform=retrofw \
+  CC="${PREFIX}gcc" CXX="${PREFIX}g++" AR="${PREFIX}ar" RANLIB="${PREFIX}ranlib" \
+  CFLAGS="$PICANTE8_FLAGS" CXXFLAGS="$PICANTE8_FLAGS -std=c++14" \
+  LDFLAGS="-EL -L$TOOLCHAIN/opt/ext-toolchain/sysroot/mipsel-r2-hard/usr/lib" -j2
+mkdir -p "$ROOT/build"
+cp "$PICANTE8_ROOT/picante8_libretro.so" "$ROOT/build/picante8_libretro.so"
+"${PREFIX}strip" "$ROOT/build/picante8_libretro.so"
 
 echo 'Building MuPDF and ebook reader...'
 make -C "$MUPDF_ROOT" clean
