@@ -28,9 +28,9 @@ permissions:
 env:
   # This archive is built and tested locally. CI only verifies, packages, and
   # publishes it; changing any of these values is a deliberate release action.
-  LOCAL_BUNDLE_TAG: local-build-v1.6.0-p
-  LOCAL_BUNDLE_ASSET: TreeFrogUI-local-build-v1.6.0-p.tar.gz
-  LOCAL_BUNDLE_SHA256: c8724d936513315384e2f134574b2ac3f87d515ad03352399446a7b29ea7098a
+  LOCAL_BUNDLE_TAG: local-build-v1.6.0-q
+  LOCAL_BUNDLE_ASSET: TreeFrogUI-local-build-v1.6.0-q.tar.gz
+  LOCAL_BUNDLE_SHA256: 2d9da31b8d73435f81c1ffc61f08e8d41e6b882deded815315cbd403b61e03ba
   # update.zip is always cumulative from the last major stable baseline.
   # Change this deliberately when the product moves to a new major baseline;
   # never replace it with the latest prerelease.
@@ -116,19 +116,22 @@ jobs:
           test -s "$current/cubegm/cores/mcpe_libretro.so"
           test -s "$current/cubegm/cores/openclaw_libretro.so"
           test -s "$current/cubegm/bios/Roland_SC-55.sf2"
-          echo 'c08e0e0646d45b5ab17c75c0f9bd6ef43766658061eb34846fe02ddce69190d3  '"$current/cubegm/dsperate/dsperate" | sha256sum -c -
+          echo 'b1b50c73075a9db441fc5e8cac07d86e882fd97fcd0bd4b317f449023bb33ad7  '"$current/cubegm/dsperate/dsperate" | sha256sum -c -
           required=(
             cubegm/picoarch cubegm/picoarch_hi
             cubegm/cores/frogui_libretro.so cubegm/cores/tyrquake_libretro.so
             cubegm/cores/classicube_libretro.so cubegm/cores/mcpe_libretro.so
             cubegm/cores/openclaw_libretro.so
             cubegm/ebook cubegm/dsperate/dsperate
+            cubegm/devilutionx cubegm/devilutionx.sh
+            roms/diablo/devilutionx.mpq roms/diablo/Start Diablo 1.diablo
             cubegm/lib/libSDL-1.2.so.0 cubegm/lib/libpng12.so.0
             cubegm/lib/libpng16.so.16
           )
           for rel in "${required[@]}"; do
             [[ -f "$current/$rel" ]] || { echo "Missing required payload: $rel" >&2; exit 1; }
           done
+          [[ -d "$current/roms/nds" ]] || { echo 'Missing required ROM folder: roms/nds' >&2; exit 1; }
           echo "Release sanity check passed: $(find "$current/cubegm/cores" -name '*.so' | wc -l) cores; resources present."
 
       - name: Package full install and update

@@ -35,6 +35,20 @@ def main() -> None:
     with zipfile.ZipFile(
         output, "w", zipfile.ZIP_DEFLATED, compresslevel=9, strict_timestamps=False
     ) as archive:
+        # ZIP files do not retain directories automatically.  Keep every
+        # directory entry, including empty ROM folders, so a fresh SD install
+        # has the complete system layout before the user copies any games.
+        directories = []
+        for directory, dirnames, _ in os.walk(root):
+            dirnames.sort()
+            if directory == root:
+                continue
+            relative = os.path.relpath(directory, parent).replace(os.sep, "/")
+            directories.append(relative.rstrip("/") + "/")
+        for relative in sorted(directories, key=str.casefold):
+            info = zipfile.ZipInfo(relative)
+            info.external_attr = (0o40755 << 16) | 0x10
+            archive.writestr(info, b"")
         for path in sorted(selected.values(), key=lambda item: os.path.relpath(item, parent).casefold()):
             archive.write(path, os.path.relpath(path, parent).replace(os.sep, "/"))
 
