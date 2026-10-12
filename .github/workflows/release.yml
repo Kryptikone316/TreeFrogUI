@@ -125,7 +125,8 @@ jobs:
             cubegm/cores/openclaw_libretro.so
             cubegm/ebook cubegm/dsperate/dsperate
             cubegm/devilutionx cubegm/devilutionx.sh
-            roms/diablo/devilutionx.mpq roms/diablo/Start Diablo 1.diablo
+            roms/diablo/devilutionx.mpq
+            "roms/diablo/Start Diablo 1.diablo"
             cubegm/lib/libSDL-1.2.so.0 cubegm/lib/libpng12.so.0
             cubegm/lib/libpng16.so.16
           )
