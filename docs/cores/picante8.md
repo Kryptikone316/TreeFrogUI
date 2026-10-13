@@ -17,7 +17,7 @@ Supported formats:
 
 Open **PICO-8 - Picante8** in the system list and select a cart. The core is separate from the existing Fake-08 (`pico8`) and Retro8 (`retro8`) systems.
 
-The release includes these example carts:
+The current hardware test deployment used these carts from the local ROM library:
 
 - `Celeste Classic.p8.png`
 - `Legend of Mario.p8.png`
