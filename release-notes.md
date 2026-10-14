@@ -10,6 +10,7 @@ Changes since v1.6.0_m:
 - Fixed Activity Tracker long ROM titles so they marquee within their available row width without covering the play-time bar.
 - Added Captain Claw through the [FroggyClaw](https://github.com/Synaps33/FroggyClaw) libretro core; place a legally obtained `CLAW.REZ` in `roms/openclaw/`.
 - Added standalone Diablo 1 through [FroggyDiablo](https://github.com/tzubertowski/FroggyDiablo), based on the original [DevilutionX](https://github.com/diasurgical/devilutionX), including its open-source engine asset; place legally obtained `DIABDAT.MPQ` data in `roms/diablo/`.
+- Fixed the Diablo 1 launcher aborting before startup when the bundled `devilutionx.mpq` asset is absent; SF3000 now checks only the required `DIABDAT.MPQ` game data.
 - Fixed OpenClaw SF3000 loading by isolating its SDL compatibility layer from PicoArch's host SDL and removing firmware-only runtime symbol dependencies.
 
 Changes since v1.5.0:
