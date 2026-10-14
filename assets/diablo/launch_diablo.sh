@@ -7,7 +7,7 @@ cd /mnt/sdcard/roms/diablo
 {
     echo "=== Diablo startup $(date 2>/dev/null) ==="
     echo "pid=$$ cwd=$(pwd)"
-    ls -lh DIABDAT.MPQ devilutionx.mpq 2>&1
+    ls -lh DIABDAT.MPQ 2>&1
 } >> /mnt/sdcard/cubegm/logs/diablo_start.log 2>&1
 # The firmware can export an invalid locale and an unwritable desktop HOME;
 # DevilutionX's libc/SDL startup then aborts or appears to hang while creating
