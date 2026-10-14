@@ -202,6 +202,15 @@ make -C "$CORES/FroggyKVM" platform=sf3000 \
     cp "$CORES/FroggyKVM/j2me_libretro.so" "$OUT/j2me_libretro.so" && \
     "$STRIP" "$OUT/j2me_libretro.so" && echo "→ $OUT/j2me_libretro.so"
 
+# FroggyDuke fetches its pinned BUILD engine dependency during this make.
+echo "-- FroggyDuke Duke Nukem 3D make --"
+make -C "$CORES/FroggyDuke" -f Makefile.sf2000 sf3000 \
+    MULTICORE="${MULTICORE_ROOT:-$PWD/../FroggyCraft}/source/sf2000_multicore" \
+    -j$(nproc) 2>&1
+[ -f "$CORES/FroggyDuke/build/sf3000/duke3d_libretro.so" ] && \
+    cp "$CORES/FroggyDuke/build/sf3000/duke3d_libretro.so" "$OUT/duke3d_libretro.so" && \
+    "$STRIP" "$OUT/duke3d_libretro.so" && echo "→ $OUT/duke3d_libretro.so"
+
 # ── standard cores ────────────────────────────────────────────────────────────
 echo "-- picodrive make --"
 _b picodrive         picodrive                 "-f Makefile.libretro"

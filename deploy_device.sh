@@ -8,7 +8,7 @@
 #
 # With no payload, the complete release plus the selected install_first overlay
 # is deployed. Optional development payloads:
-#   release, test-games, clean-themes, picoarch, picoarch-hi, frogui, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
+#   release, test-games, duke3d-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
 #   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test,
 #   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test
 #
@@ -30,7 +30,7 @@ die() {
 usage() {
     cat >&2 <<EOF
 usage: $0 <r36sx|r36hd|sf3000|sf3500> [payload ...]
-    payloads: release test-games clean-themes picoarch picoarch-hi frogui picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
+    payloads: release test-games duke3d-data clean-themes picoarch picoarch-hi frogui duke3d picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
 default:  release
 EOF
     exit 2
@@ -71,7 +71,7 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|test-games|clean-themes|picoarch|picoarch-hi|frogui|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
+        release|test-games|duke3d-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
         *) usage ;;
     esac
 done
@@ -305,6 +305,10 @@ deploy_one() {
             src="$REPO/frogui/out/frogui_libretro.so"
             dst="$MOUNT/cubegm/cores/frogui_libretro.so"
             ;;
+        duke3d)
+            src="$WORK/FroggyDuke/build/sf3000/duke3d_libretro.so"
+            dst="$MOUNT/cubegm/cores/duke3d_libretro.so"
+            ;;
         picante8)
             src="$REPO/release/latest/release/cubegm/cores/picante8_libretro.so"
             dst="$MOUNT/cubegm/cores/picante8_libretro.so"
@@ -399,6 +403,14 @@ deploy_one() {
             rsync -tc "$REPO/assets/minecraft/minecraft-artbook-next.jpg" "$MOUNT/frogui/theme-packs/Art_Book_Next/$system.jpg"
             rsync -tc "$REPO/assets/minecraft/minecraft-nao-black.jpg" "$MOUNT/frogui/theme-packs/Nao_Black/$system.jpg"
         done
+    fi
+    if [ "$name" = duke3d ]; then
+        local marker_src="$REPO/assets/duke3d/Start Duke Nukem 3D.duke3d"
+        local marker_dst="$MOUNT/roms/duke3d/Start Duke Nukem 3D.duke3d"
+        [ -f "$marker_src" ] || die "source missing: $marker_src"
+        mkdir -p "$(dirname "$marker_dst")"
+        rsync -tc "$marker_src" "$marker_dst"
+        echo "duke3d launcher deployed"
     fi
     sync
     hash_line="$(sha256sum "$dst")"
@@ -710,10 +722,32 @@ deploy_test_games() {
     sync
 }
 
+deploy_duke3d_data() {
+    local src_dir=/home/tomaszz/Pobrane/DUKE3D/DUKE3D
+    local file src dst hash_line src_hash dst_hash
+
+    [ -d "$src_dir" ] || die "Duke 3D data directory is missing: $src_dir"
+    mkdir -p "$MOUNT/roms/duke3d"
+    for file in DUKE3D.GRP DUKE.RTS; do
+        src="$src_dir/$file"
+        dst="$MOUNT/roms/duke3d/$file"
+        [ -f "$src" ] || die "Duke 3D data file is missing: $src"
+        rsync -tc "$src" "$dst"
+        hash_line="$(sha256sum "$src")"
+        src_hash="${hash_line%% *}"
+        hash_line="$(sha256sum "$dst")"
+        dst_hash="${hash_line%% *}"
+        [ "$src_hash" = "$dst_hash" ] || die "Duke 3D verification failed: $file"
+        echo "Verified Duke 3D data: roms/duke3d/$file  $dst_hash"
+    done
+    sync
+}
+
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
         release) deploy_release ;;
         test-games) deploy_test_games ;;
+        duke3d-data) deploy_duke3d_data ;;
         mame2000-mslug) deploy_mame2000_mslug ;;
         mame-test) deploy_mame_test ;;
         amstrad-cap32-test) deploy_amstrad_cap32_test ;;

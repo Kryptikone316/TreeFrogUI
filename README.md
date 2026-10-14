@@ -137,6 +137,7 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **mcpe** | Minecraft Pocket Edition 0.6.1, based on [Synaps33 / FroggyPE](https://github.com/Synaps33/FroggyPE) | `mcpe_libretro.so` |
 | **openclaw** | Captain Claw - 📖 [setup guide](docs/cores/openclaw.md), based on [Synaps33 / FroggyClaw](https://github.com/Synaps33/FroggyClaw) | `openclaw_libretro.so` |
 | **diablo** | Diablo 1 / DevilutionX (standalone) - 📖 [setup guide](docs/cores/diablo.md), based on [DevilutionX](https://github.com/diasurgical/DevilutionX) and [FroggyDiablo](https://github.com/tzubertowski/FroggyDiablo) | `devilutionx` |
+| **duke3d** | Duke Nukem 3D - 📖 [setup guide](docs/cores/duke3d.md), based on [Synaps33 / FroggyDuke](https://github.com/Synaps33/FroggyDuke) | `duke3d_libretro.so` |
 | **Quake** | Quake | `tyrquake_libretro.so` |
 | **quake2** | Quake II (heavy) - 📖 [setup guide](docs/cores/quake2.md) | `vitaquake2_libretro.so` |
 | **prboom** | Doom / Doom II / Final Doom / Heretic / Hexen | `prboom_libretro.so` |
@@ -197,6 +198,7 @@ A few systems need more than "drop the ROM in the folder" - either extra compani
 | Quake II (`quake2`) | Game data goes in a required `baseq2/` subfolder | 📖 [docs/cores/quake2.md](docs/cores/quake2.md) |
 | Diablo 1 (`diablo`) | Requires the legally owned `DIABDAT.MPQ` game data file | 📖 [docs/cores/diablo.md](docs/cores/diablo.md) |
 | Captain Claw (`openclaw`) | Requires the legally owned `CLAW.REZ` game data file | 📖 [docs/cores/openclaw.md](docs/cores/openclaw.md) |
+| Duke Nukem 3D (`duke3d`) | Requires the legally owned `DUKE3D.GRP` and `DUKE.RTS` files | 📖 [docs/cores/duke3d.md](docs/cores/duke3d.md) |
 | PlayStation 1 (`PS`/`ps1`/`psx`/`ps1r`) | Two cores, BIOS strongly recommended | 📖 [docs/cores/ps1.md](docs/cores/ps1.md) |
 
 ---
@@ -503,7 +505,7 @@ Donations go straight toward buying the next device to port to.
 - **angree** - Amiga (UAE4ALL) and Atari ST (castaway) ports for SF-series handhelds
 - **goph-R** - [SF3000-RE](https://github.com/goph-R/SF3000-RE) reverse engineering project and boot logo specs
 - **SjslTech** - [YouTube](https://www.youtube.com/@SjslTech) - R36SX testing & contributions
-- **[Synaps33](https://github.com/Synaps33)** - original [FroggyPE](https://github.com/Synaps33/FroggyPE), [FroggyCraft](https://github.com/Synaps33/FroggyCraft), [FroggyKVM](https://github.com/Synaps33/FroggyKVM), and [FroggyClaw](https://github.com/Synaps33/FroggyClaw) cores
+- **[Synaps33](https://github.com/Synaps33)** - original [FroggyPE](https://github.com/Synaps33/FroggyPE), [FroggyCraft](https://github.com/Synaps33/FroggyCraft), [FroggyKVM](https://github.com/Synaps33/FroggyKVM), [FroggyDuke](https://github.com/Synaps33/FroggyDuke), and [FroggyClaw](https://github.com/Synaps33/FroggyClaw) cores
 - **[diasurgical](https://github.com/diasurgical)** and the [DevilutionX contributors](https://github.com/diasurgical/DevilutionX/graphs/contributors) - original Diablo 1 engine and open-source port
 - All libretro core authors
 
