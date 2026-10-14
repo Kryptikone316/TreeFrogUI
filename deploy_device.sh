@@ -8,7 +8,7 @@
 #
 # With no payload, the complete release plus the selected install_first overlay
 # is deployed. Optional development payloads:
-#   release, clean-themes, picoarch, picoarch-hi, frogui, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
+#   release, test-games, clean-themes, picoarch, picoarch-hi, frogui, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
 #   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test,
 #   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test
 #
@@ -30,7 +30,7 @@ die() {
 usage() {
     cat >&2 <<EOF
 usage: $0 <r36sx|r36hd|sf3000|sf3500> [payload ...]
-    payloads: release clean-themes picoarch picoarch-hi frogui picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
+    payloads: release test-games clean-themes picoarch picoarch-hi frogui picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
 default:  release
 EOF
     exit 2
@@ -71,7 +71,7 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|clean-themes|picoarch|picoarch-hi|frogui|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
+        release|test-games|clean-themes|picoarch|picoarch-hi|frogui|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
         *) usage ;;
     esac
 done
@@ -680,9 +680,40 @@ migrate_j2me_saves() {
     [ "$migrated" -eq 0 ] || echo "Migrated and verified $migrated J2ME save directories."
 }
 
+deploy_test_games() {
+    local src dst hash_line src_hash dst_hash
+
+    copy_game() {
+        src="$1"
+        dst="$MOUNT/$2"
+        [ -f "$src" ] || die "test game source is missing: $src"
+        mkdir -p "$(dirname "$dst")"
+        rsync -a --partial --append-verify "$src" "$dst"
+        hash_line="$(sha256sum "$src")"
+        src_hash="${hash_line%% *}"
+        hash_line="$(sha256sum "$dst")"
+        dst_hash="${hash_line%% *}"
+        [ "$src_hash" = "$dst_hash" ] || die "test game verification failed: $dst"
+        echo "Verified test game: $2  $dst_hash"
+    }
+
+    copy_game /home/tomaszz/Pobrane/mattercrash.p8 roms/pico8/mattercrash.p8
+    copy_game /home/tomaszz/Pobrane/carnival_0.2.2.p8 roms/pico8/carnival_0.2.2.p8
+    copy_game '/home/tomaszz/Pobrane/1986 - Pokemon Emerald (U)(TrashMan).gba' 'roms/gba/Pokemon Emerald.gba'
+    copy_game /home/tomaszz/Pobrane/Diamond-Rush_J2ME_EN_v10-DIAMOND-Dopod-S1.jar 'roms/j2me/Diamond Rush.jar'
+    copy_game /home/tomaszz/Pobrane/Asphalt-Nitro_J2ME_EN_v114.jar 'roms/j2me/Asphalt Nitro.jar'
+    copy_game '/home/tomaszz/Pobrane/Doom-RPG_J2ME_EN_v1998/Doom RPG (2009)(JAMDAT Mobile Inc.)(v1.9.98).jar' 'roms/j2me/Doom RPG.jar'
+    copy_game /home/tomaszz/Pobrane/Asphalt_Urban_GT2.jar 'roms/j2me/Asphalt Urban GT 2.jar'
+    copy_game '/home/tomaszz/Pobrane/Tomb Raider (E) [SLES-00024]/Tomb Raider [PAL-E] (E) [SLES-00024].cue' 'roms/ps1/Tomb Raider.cue'
+    copy_game '/home/tomaszz/Pobrane/Tomb Raider (E) [SLES-00024]/Tomb Raider [PAL-E] (E) [SLES-00024].bin' 'roms/ps1/Tomb Raider.bin'
+    copy_game /home/tomaszz/Pobrane/DIABDAT.MPQ roms/diablo/DIABDAT.MPQ
+    sync
+}
+
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
         release) deploy_release ;;
+        test-games) deploy_test_games ;;
         mame2000-mslug) deploy_mame2000_mslug ;;
         mame-test) deploy_mame_test ;;
         amstrad-cap32-test) deploy_amstrad_cap32_test ;;
