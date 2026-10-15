@@ -8,7 +8,7 @@
 #
 # With no payload, the complete release plus the selected install_first overlay
 # is deployed. Optional development payloads:
-#   release, test-games, duke3d-data, undertale-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
+#   release, test-games, duke3d-data, undertale-data, openlara-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
 #   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test,
 #   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test
 #
@@ -30,7 +30,7 @@ die() {
 usage() {
     cat >&2 <<EOF
 usage: $0 <r36sx|r36hd|sf3000|sf3500> [payload ...]
-    payloads: release test-games duke3d-data undertale-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
+    payloads: release test-games duke3d-data undertale-data openlara-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
 default:  release
 EOF
     exit 2
@@ -71,7 +71,7 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|test-games|duke3d-data|undertale-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
+        release|test-games|duke3d-data|undertale-data|openlara-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
         *) usage ;;
     esac
 done
@@ -92,6 +92,7 @@ validate_release() {
         "$RELEASE/MD" \
         "$OVERLAY/cubegm/setting.xml" \
         "$OVERLAY/cubegm/cores/libemu_md.so" \
+        "$RELEASE/cubegm/cores/openlara_libretro.so" \
         "$OVERLAY/cubegm/zhijack.sh"; do
         [ -e "$path" ] ||
             die "release is incomplete; missing $path (run ./build_release.sh)"
@@ -806,12 +807,39 @@ deploy_undertale_data() {
     sync
 }
 
+deploy_openlara_data() {
+    local src_dir="$REPO/build/openlara-game-data" src name dst hash_line src_hash dst_hash count=0 error_slug
+    [ -f "$src_dir/LEVEL1.PHD" ] || die "OpenLara game data is missing: $src_dir/LEVEL1.PHD"
+    mkdir -p "$MOUNT/roms/ports/openlara"
+    for src in "$src_dir"/*.PHD; do
+        [ -f "$src" ] || continue
+        name="${src##*/}"
+        dst="$MOUNT/roms/ports/openlara/$name"
+        rsync -tc "$src" "$dst"
+        hash_line="$(sha256sum "$src")"
+        src_hash="${hash_line%% *}"
+        hash_line="$(sha256sum "$dst")"
+        dst_hash="${hash_line%% *}"
+        [ "$src_hash" = "$dst_hash" ] || die "OpenLara data verification failed: $name"
+        echo "Verified OpenLara data: roms/ports/openlara/$name  $dst_hash"
+        count=$((count + 1))
+    done
+    [ "$count" -gt 0 ] || die "no OpenLara PHD files found in $src_dir"
+    if [ -f "$MOUNT/cubegm/port_error.txt" ] &&
+        IFS= read -r error_slug < "$MOUNT/cubegm/port_error.txt" &&
+        [ "$error_slug" = openlara ]; then
+        rm -f "$MOUNT/cubegm/port_error.txt"
+    fi
+    sync
+}
+
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
         release) deploy_release ;;
         test-games) deploy_test_games ;;
         duke3d-data) deploy_duke3d_data ;;
         undertale-data) deploy_undertale_data ;;
+        openlara-data) deploy_openlara_data ;;
         mame2000-mslug) deploy_mame2000_mslug ;;
         mame-test) deploy_mame_test ;;
         amstrad-cap32-test) deploy_amstrad_cap32_test ;;

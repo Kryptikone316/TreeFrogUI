@@ -1,8 +1,9 @@
 # Ports
 
-Standalone and game-specific ports live under one **Ports** entry in the Games
-view. The Ports root shows only `.sh` launchers (without the extension); port
-data folders stay hidden:
+Standalone and game-specific ports live under `roms/ports/` and appear under one
+**Ports** entry in the Games view. Put each port's game files in its named data
+folder; leave the supplied launcher at the root. The UI shows only the launcher
+name (not `.sh`) and hides data folders:
 
 ```text
 roms/ports/
@@ -12,24 +13,38 @@ roms/ports/
 └── <port>/                # hidden data and saves
 ```
 
-FrogUI renders each launcher's floppy-disk box art in the active theme's
-standard artwork panel. Data files remain in `roms/ports/<port>/`.
+For example, **Captain Claw** is launched by `roms/ports/Captain Claw.sh`, while
+its game data goes in `roms/ports/openclaw/`. Do not move the `.sh` launcher into
+the data folder. FrogUI uses the launcher's matching `.res/<Port name>.png`
+floppy-disk box art in the active theme's standard artwork panel.
+
+## Setup
+
+1. Install the TreeFrogUI release, which supplies the launchers and port
+   binaries. Do not replace these with older launcher files.
+2. Copy any required game data into the exact folder and filenames listed in
+   that port's guide below. These commercial files are not included unless the
+   guide explicitly says otherwise.
+3. Open **Games → Ports** and select the port's friendly name. If required files
+   are missing, the device displays the missing filenames and a QR code to the
+   matching setup guide.
 
 Launchers share one required-file checker. If port data is missing, FrogUI
 shows the missing filenames and a QR code linking to that port's setup guide;
 the game is not started.
 
 On first boot after updating, TreeFrogUI migrates supported old port folders
-from `roms/<port>/` into `roms/ports/<port>/`, preserving user files and keeping
-release-provided files authoritative on name conflicts. The old folder is
-removed only after its contents merge successfully, then stays hidden from the
-Games list.
+from `roms/<port>/` into `roms/ports/<port>/`. It shows per-port progress, moves
+user game data (not old launchers or binaries), and keeps release-provided files
+authoritative on name conflicts. The old folder is removed only after its data
+has merged successfully. If migration is interrupted, reboot to let it resume.
 
 Current guides:
 
 - [Diablo 1](diablo.md)
 - [Duke Nukem 3D](duke3d.md)
 - [Minecraft Pocket Edition](mcpe.md)
+- [OpenLara (Tomb Raider I)](openlara.md)
 - [Captain Claw](openclaw.md)
 - [Undertale](undertale.md)
 - [ClassiCube](classicube.md)

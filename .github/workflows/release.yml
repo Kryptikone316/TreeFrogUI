@@ -28,9 +28,9 @@ permissions:
 env:
   # This archive is built and tested locally. CI only verifies, packages, and
   # publishes it; changing any of these values is a deliberate release action.
-  LOCAL_BUNDLE_TAG: local-build-v1.7.0-a
-  LOCAL_BUNDLE_ASSET: TreeFrogUI-local-build-v1.7.0-a.tar.gz
-  LOCAL_BUNDLE_SHA256: 9e046cf494f76c630670c197e154c8514a7fbe79664dfbf251e8d1f8e63f9f18
+  LOCAL_BUNDLE_TAG: local-build-v1.8.0-a
+  LOCAL_BUNDLE_ASSET: TreeFrogUI-local-build-v1.8.0-a.tar.gz
+  LOCAL_BUNDLE_SHA256: 7e4ee6435af05efa6411fc16cd8a4175d3346d8e9168e80b1908c77b0cc09569
   CORE_BUILD_REPO: tzubertowski/TreeFrogUI-core-builds
   # update.zip is always cumulative from the last major stable baseline.
   # Change this deliberately when the product moves to a new major baseline;
@@ -116,6 +116,7 @@ jobs:
           test -s "$current/cubegm/cores/j2me_libretro.so"
           test -s "$current/cubegm/cores/mcpe_libretro.so"
           test -s "$current/cubegm/cores/openclaw_libretro.so"
+          test -s "$current/cubegm/cores/openlara_libretro.so"
           test -s "$current/cubegm/bios/Roland_SC-55.sf2"
           echo '6bdff3f89916cfd4ec842b889c0d652f4dec12bad0d8470f925e76f5065d2f00  '"$current/cubegm/dsperate/dsperate" | sha256sum -c -
           required=(
@@ -123,6 +124,7 @@ jobs:
             cubegm/cores/frogui_libretro.so cubegm/cores/tyrquake_libretro.so
             cubegm/cores/classicube_libretro.so cubegm/cores/mcpe_libretro.so
             cubegm/cores/openclaw_libretro.so
+            cubegm/cores/openlara_libretro.so
             cubegm/ebook cubegm/dsperate/dsperate
             cubegm/devilutionx cubegm/devilutionx.sh
             roms/ports/diablo/devilutionx.mpq
@@ -130,6 +132,9 @@ jobs:
             "roms/ports/.res/Diablo 1.png"
             "roms/ports/ClassiCube.sh"
             "roms/ports/.res/ClassiCube.png"
+            "roms/ports/OpenLara.sh"
+            "roms/ports/.res/OpenLara.png"
+            "roms/ports/openlara/Start OpenLara.gba"
             "roms/ports/classicube/ClassiCube.classicube"
             "roms/ports/classicube/texpacks/default.zip"
             "roms/ports/classicube/audio/default.zip"

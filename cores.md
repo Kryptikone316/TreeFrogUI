@@ -14,6 +14,7 @@ emulator systems retain their normal `roms/<system>/` folders.
 | `ports/openclaw` | Captain Claw | `openclaw_libretro.so` | [tzubertowski/FroggyClaw](https://github.com/tzubertowski/FroggyClaw) |
 | `ports/duke3d` | Duke Nukem 3D | `duke3d_libretro.so` | [Synaps33/FroggyDuke](https://github.com/Synaps33/FroggyDuke) |
 | `ports/undertale` | Undertale (Butterscotch) | `butterscotch_libretro.so` | [Synaps33/FroggyTale](https://github.com/Synaps33/FroggyTale) |
+| `ports/openlara` | OpenLara (Tomb Raider I) | `openlara_libretro.so` | [tzubertowski/TreeFrogUI_OpenLara](https://github.com/tzubertowski/TreeFrogUI_OpenLara) |
 
 ## Nintendo
 

@@ -135,6 +135,7 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **j2me** | J2ME / MIDP 2.0 games (`.jar` / `.jad`) - 📖 [setup guide](docs/cores/j2me.md) | `j2me_libretro.so` |
 | **ClassiCube** | Minecraft Classic - 📖 [setup guide](docs/cores/classicube.md), based on [Sajnaps / FroggyCraft](https://github.com/Synaps33/FroggyCraft) | **Games → Ports** (`ClassiCube.sh`) |
 | **ports** | Game-specific ports, each in its own folder with a launcher and theme-native boxart - 📖 [Ports guide](docs/cores/ports.md) | Port-specific libretro cores or standalone binaries |
+| **OpenLara** | Tomb Raider I - 📖 [setup guide](docs/cores/openlara.md) | **Games → Ports** (`OpenLara.sh`, `openlara_libretro.so`) |
 | **Quake** | Quake | `tyrquake_libretro.so` |
 | **quake2** | Quake II (heavy) - 📖 [setup guide](docs/cores/quake2.md) | `vitaquake2_libretro.so` |
 | **prboom** | Doom / Doom II / Final Doom / Heretic / Hexen | `prboom_libretro.so` |
