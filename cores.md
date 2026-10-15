@@ -1,6 +1,7 @@
 # SF3000 Core Mappings
 
-ROM folder name → core .so file. Built = present in `build/`. ❌ = not built (see notes).
+ROM folder → core `.so` file. Ports use `roms/ports/<slug>/` and launch scripts;
+emulator systems retain their normal `roms/<system>/` folders.
 
 ---
 
@@ -8,10 +9,11 @@ ROM folder name → core .so file. Built = present in `build/`. ❌ = not built 
 
 | Folder | System | Core .so | Source |
 |--------|--------|----------|--------|
-| `classicube` | ClassiCube / Minecraft Classic | `classicube_libretro.so` | [tzubertowski/FroggyCraft](https://github.com/tzubertowski/FroggyCraft) |
-| `mcpe` | Minecraft Pocket Edition 0.6.1 | `mcpe_libretro.so` | [Synaps33/FroggyPE](https://github.com/Synaps33/FroggyPE) |
-| `openclaw` | Captain Claw | `openclaw_libretro.so` | [tzubertowski/FroggyClaw](https://github.com/tzubertowski/FroggyClaw) |
-| `duke3d` | Duke Nukem 3D | `duke3d_libretro.so` | [Synaps33/FroggyDuke](https://github.com/Synaps33/FroggyDuke) |
+| `ports/classicube` | ClassiCube / Minecraft Classic | `classicube_libretro.so` | [tzubertowski/FroggyCraft](https://github.com/tzubertowski/FroggyCraft) |
+| `ports/mcpe` | Minecraft Pocket Edition 0.6.1 | `mcpe_libretro.so` | [Synaps33/FroggyPE](https://github.com/Synaps33/FroggyPE) |
+| `ports/openclaw` | Captain Claw | `openclaw_libretro.so` | [tzubertowski/FroggyClaw](https://github.com/tzubertowski/FroggyClaw) |
+| `ports/duke3d` | Duke Nukem 3D | `duke3d_libretro.so` | [Synaps33/FroggyDuke](https://github.com/Synaps33/FroggyDuke) |
+| `ports/undertale` | Undertale (Butterscotch) | `butterscotch_libretro.so` | [Synaps33/FroggyTale](https://github.com/Synaps33/FroggyTale) |
 
 ## Nintendo
 

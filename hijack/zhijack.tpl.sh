@@ -153,6 +153,12 @@ PICOARCH_HI=/mnt/sdcard/cubegm/picoarch_hi
 FROGUI_CORE=/mnt/sdcard/cubegm/cores/frogui_libretro.so
 LAUNCH=/mnt/sdcard/cubegm/frogui_launch.txt
 
+process_running() {
+    [ -r "/proc/$1/status" ] || return 1
+    kill -0 "$1" 2>/dev/null || return 1
+    ! grep -q '^State:[[:space:]]*Z' "/proc/$1/status"
+}
+
 ITER=0
 while true; do
     ITER=$((ITER+1))
@@ -167,16 +173,35 @@ while true; do
     # request while the UI is alive so a stuck frontend cannot block every game.
     "$PICOARCH" "$FROGUI_CORE" "$FROGUI_CORE" >> /tmp/treefrog_ui.log 2>&1 &
     UI_PID=$!
-    while kill -0 "$UI_PID" 2>/dev/null; do
+    while process_running "$UI_PID"; do
         if [ -s "$LAUNCH" ]; then
             echo "frogui launch request detected while pid=$UI_PID is alive" >> "$LOG"
-            kill "$UI_PID" 2>/dev/null
-            sleep 0.1
-            kill -9 "$UI_PID" 2>/dev/null
             break
         fi
         sleep 0.05
     done
+    if [ -s "$LAUNCH" ] && process_running "$UI_PID"; then
+        # SHUTDOWN was already requested by FrogUI; give PicoArch time to
+        # unload the frontend/core before escalating on devices that hang.
+        WAIT_TICKS=0
+        while process_running "$UI_PID" && [ "$WAIT_TICKS" -lt 40 ]; do
+            sleep 0.05
+            WAIT_TICKS=$((WAIT_TICKS+1))
+        done
+        if process_running "$UI_PID"; then
+            echo "picoarch shutdown timed out; sending TERM pid=$UI_PID" >> "$LOG"
+            kill -TERM "$UI_PID" 2>/dev/null
+            WAIT_TICKS=0
+            while process_running "$UI_PID" && [ "$WAIT_TICKS" -lt 20 ]; do
+                sleep 0.05
+                WAIT_TICKS=$((WAIT_TICKS+1))
+            done
+        fi
+        if process_running "$UI_PID"; then
+            echo "picoarch TERM timed out; sending KILL pid=$UI_PID" >> "$LOG"
+            kill -KILL "$UI_PID" 2>/dev/null
+        fi
+    fi
     wait "$UI_PID"
     RC=$?
     if [ "$RC" != 0 ]; then
@@ -207,11 +232,34 @@ while true; do
             rm -f "$LAUNCH"
             sleep 0.3
             echo "--- iter $ITER: standalone [$BIN_PATH] ---" >> "$LOG"
+            echo "standalone stat: $(ls -l "$BIN_PATH" 2>/dev/null)" >> "$LOG"
+            : > /mnt/sdcard/cubegm/logs/last_standalone_status.log
             if [ -n "$ARG_PATH" ]; then
-                "$BIN_PATH" "$ARG_PATH" >> /tmp/treefrog_ui.log 2>&1
+                case "$BIN_PATH" in
+                    *.sh) /bin/sh "$BIN_PATH" "$ARG_PATH" >> /tmp/treefrog_ui.log 2>&1 & STANDALONE_PID=$! ;;
+                    *)    "$BIN_PATH" "$ARG_PATH" >> /tmp/treefrog_ui.log 2>&1 & STANDALONE_PID=$! ;;
+                esac
             else
-                "$BIN_PATH" >> /tmp/treefrog_ui.log 2>&1
+                case "$BIN_PATH" in
+                    *.sh) /bin/sh "$BIN_PATH" >> /tmp/treefrog_ui.log 2>&1 & STANDALONE_PID=$! ;;
+                    *)    "$BIN_PATH" >> /tmp/treefrog_ui.log 2>&1 & STANDALONE_PID=$! ;;
+                esac
             fi
+            (
+                while kill -0 "$STANDALONE_PID" 2>/dev/null; do
+                    echo "--- standalone monitor $(date +%s 2>/dev/null) pid=$STANDALONE_PID ---" >> /mnt/sdcard/cubegm/logs/last_standalone_status.log
+                    tr '\n' ' ' < "/proc/$STANDALONE_PID/status" >> /mnt/sdcard/cubegm/logs/last_standalone_status.log 2>/dev/null
+                    echo >> /mnt/sdcard/cubegm/logs/last_standalone_status.log
+                    sleep 2
+                done
+            ) &
+            STANDALONE_MONITOR_PID=$!
+            wait "$STANDALONE_PID"
+            STANDALONE_RC=$?
+            kill "$STANDALONE_MONITOR_PID" 2>/dev/null
+            wait "$STANDALONE_MONITOR_PID" 2>/dev/null
+            echo "standalone exited rc=$STANDALONE_RC" >> "$LOG"
+            cp /tmp/treefrog_ui.log /mnt/sdcard/cubegm/logs/last_standalone.log 2>/dev/null
             sleep 0.2
             continue
         fi

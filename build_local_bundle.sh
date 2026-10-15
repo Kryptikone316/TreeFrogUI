@@ -67,8 +67,13 @@ cp "$ROOT/cores/FroggyKVM/j2me_libretro.so" "$ROOT/build/j2me_libretro.so"
 "${PREFIX}strip" "$ROOT/build/j2me_libretro.so"
 
 echo 'Building ClassiCube...'
-make -C "$FROGGYCRAFT_ROOT/source/classicube_sf2000" SF2000_PLATFORM=sf3000 clean
-make -C "$FROGGYCRAFT_ROOT/source/classicube_sf2000" SF2000_PLATFORM=sf3000 -j2
+(
+  git -C "$FROGGYCRAFT_ROOT" apply --check "$ROOT/patches/froggycraft-classicube-ports.patch"
+  git -C "$FROGGYCRAFT_ROOT" apply "$ROOT/patches/froggycraft-classicube-ports.patch"
+  trap 'git -C "$FROGGYCRAFT_ROOT" apply -R "$ROOT/patches/froggycraft-classicube-ports.patch"' EXIT
+  make -C "$FROGGYCRAFT_ROOT/source/classicube_sf2000" SF2000_PLATFORM=sf3000 clean
+  make -C "$FROGGYCRAFT_ROOT/source/classicube_sf2000" SF2000_PLATFORM=sf3000 -j2
+)
 
 echo 'Building Minecraft PE...'
 make -C "$FROGGYPE_ROOT" -f Makefile.sf2000 platform=sf3000 clean

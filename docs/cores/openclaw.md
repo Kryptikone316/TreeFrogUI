@@ -5,24 +5,22 @@ supported MIPS devices.
 
 ## Installation
 
-Copy the following files into the SD card's `roms/openclaw/` directory:
+Copy `CLAW.REZ` into the SD card's `roms/ports/openclaw/` directory:
 
 ```text
-roms/openclaw/
+roms/ports/openclaw/
 ├── CLAW.REZ
 ├── ASSETS.ZIP
 ├── clacon.ttf
-└── Start Captain Claw.claw
 ```
 
-The release already supplies `ASSETS.ZIP`, `clacon.ttf`, and the small
-`Start Captain Claw.claw` launcher. Obtain `CLAW.REZ` from a legally owned
-Captain Claw installation, or from the matching asset package in the
-[FroggyClaw repository](https://github.com/tzubertowski/FroggyClaw).
+The release already supplies `ASSETS.ZIP` and `clacon.ttf` in that data folder,
+and `roms/ports/Captain Claw.sh` as the visible launcher. Obtain `CLAW.REZ` from
+a legally owned Captain Claw installation, or from the matching asset package in the original
+[FroggyClaw repository](https://github.com/Synaps33/FroggyClaw).
 
 Do not rename `CLAW.REZ`; the core looks for that exact filename. Start the
-game by selecting **OpenClaw / Kapitan Pazur** in FrogUI and choosing **Start
-Captain Claw**.
+game by selecting **Games → Ports → Captain Claw**.
 
 ## Notes
 
@@ -33,7 +31,9 @@ Captain Claw**.
 
 ## Porting notes
 
-OpenClaw is not a drop-in desktop build on these devices. The SF3000 port must
+OpenClaw is not a drop-in desktop build on these devices. This TreeFrogUI
+integration is based on [Synaps33's original FroggyClaw port](https://github.com/Synaps33/FroggyClaw).
+The SF3000 port must
 use the same little-endian MIPS32r2 ABI and PIC/`-G0` settings as the other
 working libretro cores. It also needs to link its SDL compatibility layer with
 `-Wl,-Bsymbolic`; otherwise PicoArch's host SDL symbols can interpose on the

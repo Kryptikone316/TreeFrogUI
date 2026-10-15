@@ -1,18 +1,16 @@
 # Duke Nukem 3D
 
-TreeFrogUI ships the SF3000 libretro port from [Synaps33/FroggyDuke](https://github.com/Synaps33/FroggyDuke).
+TreeFrogUI includes an experimental SF3000-family libretro port from [Synaps33/FroggyDuke](https://github.com/Synaps33/FroggyDuke). Install TreeFrogUI first; the release provides the core and launcher entry, but not the commercial game data.
 
-Copy the legally owned game data into `roms/duke3d/`:
+Copy the legally owned game data into `roms/ports/duke3d/`:
 
 ```text
-roms/duke3d/
-├── DUKE3D.GRP
-├── DUKE.RTS
-└── Start Duke Nukem 3D.duke3d
+roms/ports/duke3d/DUKE3D.GRP
+roms/ports/duke3d/DUKE.RTS
 ```
 
-Select **Start Duke Nukem 3D** in the Duke Nukem 3D system. The marker is only a launcher; the core loads the two data files from the same folder.
+Copy your legally obtained `DUKE3D.GRP` (Atomic Edition v1.5 or Shareware v1.3d) and `DUKE.RTS` into `roms/ports/duke3d/` on the SD card, then select **Duke Nukem 3D** from **Games → Ports**.
 
-The R36HD port is experimental: gameplay works, but audio is currently slow and choppy.
+The R36HD port is experimental. Audio pacing has been optimized in the current local build, but the change has not yet been verified on hardware; sound may still be slow or choppy.
 
 The open-source EDuke32 BUILD dependency is fetched at the pinned revision during the build and is not bundled into TreeFrogUI.

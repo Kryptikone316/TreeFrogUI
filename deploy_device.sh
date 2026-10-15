@@ -8,7 +8,7 @@
 #
 # With no payload, the complete release plus the selected install_first overlay
 # is deployed. Optional development payloads:
-#   release, test-games, duke3d-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
+#   release, test-games, duke3d-data, undertale-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
 #   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test,
 #   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test
 #
@@ -30,7 +30,7 @@ die() {
 usage() {
     cat >&2 <<EOF
 usage: $0 <r36sx|r36hd|sf3000|sf3500> [payload ...]
-    payloads: release test-games duke3d-data clean-themes picoarch picoarch-hi frogui duke3d picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
+    payloads: release test-games duke3d-data undertale-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
 default:  release
 EOF
     exit 2
@@ -71,7 +71,7 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|test-games|duke3d-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
+        release|test-games|duke3d-data|undertale-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
         *) usage ;;
     esac
 done
@@ -243,6 +243,14 @@ deploy_release() {
 
     echo "Deploying the complete $PROFILE TreeFrogUI release to $DEV..."
 
+    # These were the former visible launcher names and adjacent-art locations.
+    for name in \
+        "Start Diablo 1.sh" "Start Duke Nukem 3D.sh" "Start Minecraft PE.sh" \
+        "Start Captain Claw.sh" "Start Undertale.sh"; do
+        rm -f "$MOUNT/roms/ports/$name" "$MOUNT/roms/ports/${name%.sh}.png" \
+            "$MOUNT/roms/ports/.res/${name%.sh}.png"
+    done
+
     # Merge only: preserve ROMs, saves, settings, and stock files not present in
     # the release.
     for dir in cubegm frogui roms MD; do
@@ -308,6 +316,10 @@ deploy_one() {
         duke3d)
             src="$WORK/FroggyDuke/build/sf3000/duke3d_libretro.so"
             dst="$MOUNT/cubegm/cores/duke3d_libretro.so"
+            ;;
+        butterscotch)
+            src="$WORK/FroggyTale/build/sf3000/butterscotch_libretro.so"
+            dst="$MOUNT/cubegm/cores/butterscotch_libretro.so"
             ;;
         picante8)
             src="$REPO/release/latest/release/cubegm/cores/picante8_libretro.so"
@@ -379,25 +391,11 @@ deploy_one() {
               "$MOUNT/frogui/theme-packs/Art_Book_NextUI/claw.png" \
               "$MOUNT/frogui/theme-packs/Art_Book_Next/claw.png" \
               "$MOUNT/frogui/theme-packs/Nao_Black/claw.png"
-        rsync -tc "$REPO/assets/claw/openclaw-artbook-nextui.png" "$MOUNT/frogui/openclaw.png"
-        rsync -tc "$REPO/assets/claw/openclaw-artbook-nextui.png" "$MOUNT/frogui/theme-packs/Art_Book_NextUI/openclaw.png"
-        rsync -tc "$REPO/assets/claw/openclaw-artbook-next.png" "$MOUNT/frogui/theme-packs/Art_Book_Next/openclaw.png"
-        rsync -tc "$REPO/assets/claw/openclaw-nao-black.png" "$MOUNT/frogui/theme-packs/Nao_Black/openclaw.png"
-        # The asset name is stable across devices. R36HD receives its native
-        # 640x480 composition under the normal openclaw.png name.
-        rsync -tc "$REPO/assets/claw/openclaw-artbook-nextui-r36hd.png" "$MOUNT/frogui/openclaw.png"
-        rsync -tc "$REPO/assets/claw/openclaw-artbook-nextui-r36hd.png" "$MOUNT/frogui/theme-packs/Art_Book_NextUI/openclaw.png"
-        rsync -tc "$REPO/assets/claw/openclaw-artbook-next-r36hd.png" "$MOUNT/frogui/theme-packs/Art_Book_Next/openclaw.png"
-        rsync -tc "$REPO/assets/claw/openclaw-nao-black-r36hd.png" "$MOUNT/frogui/theme-packs/Nao_Black/openclaw.png"
-        rm -f "$MOUNT/frogui/openclaw-r36hd.png" \
-              "$MOUNT/frogui/theme-packs/Art_Book_NextUI/openclaw-r36hd.png" \
-              "$MOUNT/frogui/theme-packs/Art_Book_Next/openclaw-r36hd.png" \
-              "$MOUNT/frogui/theme-packs/Nao_Black/openclaw-r36hd.png"
         rsync -tc "$REPO/assets/j2me/java-games-artbook-nextui.png" "$MOUNT/frogui/j2me.png"
         rsync -tc "$REPO/assets/j2me/java-games-artbook-nextui.png" "$MOUNT/frogui/theme-packs/Art_Book_NextUI/j2me.png"
         rsync -tc "$REPO/assets/j2me/java-games-artbook-next.png" "$MOUNT/frogui/theme-packs/Art_Book_Next/j2me.png"
         rsync -tc "$REPO/assets/j2me/java-games-nao-black.png" "$MOUNT/frogui/theme-packs/Nao_Black/j2me.png"
-        for system in classicube mcpe; do
+        for system in classicube; do
             rsync -tc "$REPO/assets/minecraft/minecraft-artbook-nextui.jpg" "$MOUNT/frogui/$system.jpg"
             rsync -tc "$REPO/assets/minecraft/minecraft-artbook-nextui.jpg" "$MOUNT/frogui/theme-packs/Art_Book_NextUI/$system.jpg"
             rsync -tc "$REPO/assets/minecraft/minecraft-artbook-next.jpg" "$MOUNT/frogui/theme-packs/Art_Book_Next/$system.jpg"
@@ -406,11 +404,33 @@ deploy_one() {
     fi
     if [ "$name" = duke3d ]; then
         local marker_src="$REPO/assets/duke3d/Start Duke Nukem 3D.duke3d"
-        local marker_dst="$MOUNT/roms/duke3d/Start Duke Nukem 3D.duke3d"
+        local marker_dst="$MOUNT/roms/ports/duke3d/Start Duke Nukem 3D.duke3d"
+        local launcher_src="$REPO/assets/ports/duke3d/run.sh"
         [ -f "$marker_src" ] || die "source missing: $marker_src"
         mkdir -p "$(dirname "$marker_dst")"
         rsync -tc "$marker_src" "$marker_dst"
+        rsync -tc "$launcher_src" "$MOUNT/roms/ports/Duke Nukem 3D.sh"
+        mkdir -p "$MOUNT/roms/ports/.res"
+        rsync -tc "$REPO/assets/ports/duke3d/boxart.png" "$MOUNT/roms/ports/.res/Duke Nukem 3D.png"
+        rm -f "$MOUNT/roms/ports/Start Duke Nukem 3D.sh" \
+            "$MOUNT/roms/ports/Start Duke Nukem 3D.png" \
+            "$MOUNT/roms/ports/.res/Start Duke Nukem 3D.png"
         echo "duke3d launcher deployed"
+    fi
+    if [ "$name" = butterscotch ]; then
+        local marker_src="$REPO/assets/undertale/Start Undertale.butterscotch"
+        local marker_dst="$MOUNT/roms/ports/undertale/Start Undertale.butterscotch"
+        local launcher_src="$REPO/assets/ports/undertale/run.sh"
+        [ -f "$marker_src" ] || die "source missing: $marker_src"
+        mkdir -p "$(dirname "$marker_dst")"
+        rsync -tc "$marker_src" "$marker_dst"
+        rsync -tc "$launcher_src" "$MOUNT/roms/ports/Undertale.sh"
+        mkdir -p "$MOUNT/roms/ports/.res"
+        rsync -tc "$REPO/assets/ports/undertale/boxart.png" "$MOUNT/roms/ports/.res/Undertale.png"
+        rm -f "$MOUNT/roms/ports/Start Undertale.sh" \
+            "$MOUNT/roms/ports/Start Undertale.png" \
+            "$MOUNT/roms/ports/.res/Start Undertale.png"
+        echo "Undertale launcher marker deployed; game data was not copied"
     fi
     sync
     hash_line="$(sha256sum "$dst")"
@@ -718,7 +738,7 @@ deploy_test_games() {
     copy_game /home/tomaszz/Pobrane/Asphalt_Urban_GT2.jar 'roms/j2me/Asphalt Urban GT 2.jar'
     copy_game '/home/tomaszz/Pobrane/Tomb Raider (E) [SLES-00024]/Tomb Raider [PAL-E] (E) [SLES-00024].cue' 'roms/ps1/Tomb Raider.cue'
     copy_game '/home/tomaszz/Pobrane/Tomb Raider (E) [SLES-00024]/Tomb Raider [PAL-E] (E) [SLES-00024].bin' 'roms/ps1/Tomb Raider.bin'
-    copy_game /home/tomaszz/Pobrane/DIABDAT.MPQ roms/diablo/DIABDAT.MPQ
+    copy_game /home/tomaszz/Pobrane/DIABDAT.MPQ roms/ports/diablo/DIABDAT.MPQ
     sync
 }
 
@@ -727,10 +747,10 @@ deploy_duke3d_data() {
     local file src dst hash_line src_hash dst_hash
 
     [ -d "$src_dir" ] || die "Duke 3D data directory is missing: $src_dir"
-    mkdir -p "$MOUNT/roms/duke3d"
+    mkdir -p "$MOUNT/roms/ports/duke3d"
     for file in DUKE3D.GRP DUKE.RTS; do
         src="$src_dir/$file"
-        dst="$MOUNT/roms/duke3d/$file"
+        dst="$MOUNT/roms/ports/duke3d/$file"
         [ -f "$src" ] || die "Duke 3D data file is missing: $src"
         rsync -tc "$src" "$dst"
         hash_line="$(sha256sum "$src")"
@@ -738,8 +758,51 @@ deploy_duke3d_data() {
         hash_line="$(sha256sum "$dst")"
         dst_hash="${hash_line%% *}"
         [ "$src_hash" = "$dst_hash" ] || die "Duke 3D verification failed: $file"
-        echo "Verified Duke 3D data: roms/duke3d/$file  $dst_hash"
+        echo "Verified Duke 3D data: roms/ports/duke3d/$file  $dst_hash"
     done
+    sync
+}
+
+deploy_undertale_data() {
+    local src_dir="$WORK/FroggyTale/build/undertale-package"
+    local name src dst hash_line src_hash dst_hash
+    [ -d "$src_dir" ] || die "Undertale package is missing: $src_dir"
+    mkdir -p "$MOUNT/roms/ports/undertale/.data"
+    for name in game.unx ATLAS.BIN ATLAS.RGBA4444; do
+        src="$src_dir/$name"
+        dst="$MOUNT/roms/ports/undertale/.data/$name"
+        [ -f "$src" ] || die "Undertale file is missing: $src"
+        rsync -tc "$src" "$dst"
+        hash_line="$(sha256sum "$src")"
+        src_hash="${hash_line%% *}"
+        hash_line="$(sha256sum "$dst")"
+        dst_hash="${hash_line%% *}"
+        [ "$src_hash" = "$dst_hash" ] || die "Undertale verification failed: $name"
+        echo "Verified Undertale data: roms/ports/undertale/.data/$name  $dst_hash"
+        local old_dst="$MOUNT/roms/ports/undertale/$name"
+        if [ -f "$old_dst" ] && [ "$(sha256sum "$old_dst" | cut -d' ' -f1)" = "$src_hash" ]; then
+            rm -- "$old_dst"
+        fi
+    done
+    local audio_count=0
+    for src in "$src_dir"/*.ogg; do
+        [ -f "$src" ] || continue
+        name="${src##*/}"
+        dst="$MOUNT/roms/ports/undertale/.data/$name"
+        rsync -tc "$src" "$dst"
+        hash_line="$(sha256sum "$src")"
+        src_hash="${hash_line%% *}"
+        hash_line="$(sha256sum "$dst")"
+        dst_hash="${hash_line%% *}"
+        [ "$src_hash" = "$dst_hash" ] || die "Undertale audio verification failed: $name"
+        audio_count=$((audio_count + 1))
+        local old_dst="$MOUNT/roms/ports/undertale/$name"
+        if [ -f "$old_dst" ] && [ "$(sha256sum "$old_dst" | cut -d' ' -f1)" = "$src_hash" ]; then
+            rm -- "$old_dst"
+        fi
+    done
+    [ "$audio_count" -gt 0 ] || die "Undertale OGG audio files are missing from $src_dir"
+    echo "Verified Undertale audio: $audio_count OGG tracks"
     sync
 }
 
@@ -748,6 +811,7 @@ for payload in "${PAYLOADS[@]}"; do
         release) deploy_release ;;
         test-games) deploy_test_games ;;
         duke3d-data) deploy_duke3d_data ;;
+        undertale-data) deploy_undertale_data ;;
         mame2000-mslug) deploy_mame2000_mslug ;;
         mame-test) deploy_mame_test ;;
         amstrad-cap32-test) deploy_amstrad_cap32_test ;;

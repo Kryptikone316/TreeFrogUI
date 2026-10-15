@@ -56,19 +56,15 @@ FROGGYCLAW_ROOT="${FROGGYCLAW_ROOT:-/home/tomaszz/sf3000-work/FroggyClaw}"
 CLAW_CORE="$FROGGYCLAW_ROOT/openclaw_libretro.so"
 CLAW_ASSETS="$FROGGYCLAW_ROOT/Build_Release/ASSETS.ZIP"
 CLAW_FONT="$FROGGYCLAW_ROOT/Build_Release/clacon.ttf"
-CLAW_BANNER_NEXTUI="$(pwd)/assets/claw/openclaw-artbook-nextui.png"
-CLAW_BANNER_NEXT="$(pwd)/assets/claw/openclaw-artbook-next.png"
-CLAW_BANNER_NAO="$(pwd)/assets/claw/openclaw-nao-black.png"
 PICANTE8_CORE="${PICANTE8_CORE:-/home/tomaszz/sf3000-work/picante8/picante8_libretro.so}"
 FROGGYDUKE_ROOT="${FROGGYDUKE_ROOT:-/home/tomaszz/sf3000-work/FroggyDuke}"
 DUKE3D_CORE="${DUKE3D_CORE:-$FROGGYDUKE_ROOT/build/sf3000/duke3d_libretro.so}"
+FROGGYTALE_ROOT="${FROGGYTALE_ROOT:-/home/tomaszz/sf3000-work/FroggyTale}"
+BUTTERSCOTCH_CORE="${BUTTERSCOTCH_CORE:-$FROGGYTALE_ROOT/build/sf3000/butterscotch_libretro.so}"
 DIABLO_BIN="${DIABLO_BIN:-/home/tomaszz/sf3000-work/FroggyDiablo-sf3000-build/devilutionx}"
 DIABLO_LAUNCHER="$(pwd)/assets/diablo/launch_diablo.sh"
 DIABLO_MARKER="$(pwd)/assets/diablo/Start Diablo 1.diablo"
 DIABLO_ENGINE_ASSET="$(pwd)/assets/diablo/devilutionx.mpq"
-DIABLO_BANNER_NEXTUI="$(pwd)/assets/diablo/diablo-artbook-nextui.png"
-DIABLO_BANNER_NEXT="$(pwd)/assets/diablo/diablo-artbook-next.png"
-DIABLO_BANNER_NAO="$(pwd)/assets/diablo/diablo-nao-black.png"
 NDS_BANNER_NEXTUI="$(pwd)/assets/nds/nds-artbook-nextui.jpg"
 NDS_BANNER_NEXT="$(pwd)/assets/nds/nds-artbook-next.jpg"
 NDS_BANNER_NAO="$(pwd)/assets/nds/nds-nao-black.jpg"
@@ -177,18 +173,13 @@ cp_if_diff() { [ -f "$1" ] || return 0; cmp -s "$1" "$2" && return 0; cp "$1" "$
 [ -f "$CLAW_CORE" ] || { echo "missing Captain Claw core: $CLAW_CORE" >&2; exit 1; }
 [ -f "$CLAW_ASSETS" ] || { echo "missing Captain Claw assets: $CLAW_ASSETS" >&2; exit 1; }
 [ -f "$CLAW_FONT" ] || { echo "missing Captain Claw font: $CLAW_FONT" >&2; exit 1; }
-[ -f "$CLAW_BANNER_NEXTUI" ] || { echo "missing Captain Claw NextUI artwork: $CLAW_BANNER_NEXTUI" >&2; exit 1; }
-[ -f "$CLAW_BANNER_NEXT" ] || { echo "missing Captain Claw Next artwork: $CLAW_BANNER_NEXT" >&2; exit 1; }
-[ -f "$CLAW_BANNER_NAO" ] || { echo "missing Captain Claw Nao artwork: $CLAW_BANNER_NAO" >&2; exit 1; }
 [ -f "$PICANTE8_CORE" ] || { echo "missing Picante8 core: $PICANTE8_CORE" >&2; exit 1; }
 [ -f "$DUKE3D_CORE" ] || { echo "missing Duke Nukem 3D core: $DUKE3D_CORE" >&2; exit 1; }
+[ -f "$BUTTERSCOTCH_CORE" ] || { echo "missing FroggyTale Undertale core: $BUTTERSCOTCH_CORE" >&2; exit 1; }
 [ -x "$DIABLO_BIN" ] || { echo "missing executable Diablo SF3000 build: $DIABLO_BIN" >&2; exit 1; }
 [ -f "$DIABLO_LAUNCHER" ] || { echo "missing Diablo launcher: $DIABLO_LAUNCHER" >&2; exit 1; }
 [ -f "$DIABLO_MARKER" ] || { echo "missing Diablo launcher marker: $DIABLO_MARKER" >&2; exit 1; }
 [ -f "$DIABLO_ENGINE_ASSET" ] || { echo "missing Diablo engine asset: $DIABLO_ENGINE_ASSET" >&2; exit 1; }
-[ -f "$DIABLO_BANNER_NEXTUI" ] || { echo "missing Diablo NextUI artwork: $DIABLO_BANNER_NEXTUI" >&2; exit 1; }
-[ -f "$DIABLO_BANNER_NEXT" ] || { echo "missing Diablo Next artwork: $DIABLO_BANNER_NEXT" >&2; exit 1; }
-[ -f "$DIABLO_BANNER_NAO" ] || { echo "missing Diablo Nao artwork: $DIABLO_BANNER_NAO" >&2; exit 1; }
 [ -f "$NDS_BANNER_NEXTUI" ] || { echo "missing NDS NextUI artwork: $NDS_BANNER_NEXTUI" >&2; exit 1; }
 [ -f "$NDS_BANNER_NEXT" ] || { echo "missing NDS Next artwork: $NDS_BANNER_NEXT" >&2; exit 1; }
 [ -f "$NDS_BANNER_NAO" ] || { echo "missing NDS Nao artwork: $NDS_BANNER_NAO" >&2; exit 1; }
@@ -203,6 +194,7 @@ cp_if_diff "$MCPE_CORE" "$STAGE/cubegm/cores/mcpe_libretro.so"
 cp_if_diff "$CLAW_CORE" "$STAGE/cubegm/cores/openclaw_libretro.so"
 cp_if_diff "$PICANTE8_CORE" "$STAGE/cubegm/cores/picante8_libretro.so"
 cp_if_diff "$DUKE3D_CORE" "$STAGE/cubegm/cores/duke3d_libretro.so"
+cp_if_diff "$BUTTERSCOTCH_CORE" "$STAGE/cubegm/cores/butterscotch_libretro.so"
 cp_if_diff "$DIABLO_BIN" "$STAGE/cubegm/devilutionx"
 cp_if_diff "$DIABLO_LAUNCHER" "$STAGE/cubegm/devilutionx.sh"
 cp_if_diff "$DIABLO_SDL_IMAGE" "$STAGE/cubegm/lib/libSDL_image-1.2.so.0"
@@ -215,15 +207,10 @@ cp_if_diff "$J2ME_BANNER_NEXTUI" "$STAGE/frogui/j2me.png"
 cp_if_diff "$J2ME_BANNER_NEXTUI" "$STAGE/frogui/theme-packs/Art_Book_NextUI/j2me.png"
 cp_if_diff "$J2ME_BANNER_NEXT" "$STAGE/frogui/theme-packs/Art_Book_Next/j2me.png"
 cp_if_diff "$J2ME_BANNER_NAO" "$STAGE/frogui/theme-packs/Nao_Black/j2me.png"
-for name in classicube mcpe; do
-    cp_if_diff "$MINECRAFT_BANNER_NEXTUI" "$STAGE/frogui/$name.jpg"
-    cp_if_diff "$MINECRAFT_BANNER_NEXTUI" "$STAGE/frogui/theme-packs/Art_Book_NextUI/$name.jpg"
-    cp_if_diff "$MINECRAFT_BANNER_NEXT" "$STAGE/frogui/theme-packs/Art_Book_Next/$name.jpg"
-    cp_if_diff "$MINECRAFT_BANNER_NAO" "$STAGE/frogui/theme-packs/Nao_Black/$name.jpg"
-done
 mkdir -p "$STAGE/roms/j2me"
-mkdir -p "$STAGE/roms/classicube/texpacks"
-mkdir -p "$STAGE/roms/classicube/audio"
+mkdir -p "$STAGE/roms/ports/classicube/texpacks"
+mkdir -p "$STAGE/roms/ports/classicube/audio"
+cp_if_diff "$(pwd)/assets/ports/classicube/ClassiCube.classicube" "$STAGE/roms/ports/classicube/ClassiCube.classicube"
 rm -rf "$STAGE/roms/fheroes2"
 mkdir -p "$STAGE/roms/mcpe/data"
 rm -rf "$STAGE/roms/claw"
@@ -235,28 +222,22 @@ mkdir -p "$STAGE/roms/openclaw"
 mkdir -p "$STAGE/roms/diablo"
 mkdir -p "$STAGE/roms/picante8"
 mkdir -p "$STAGE/roms/duke3d"
+mkdir -p "$STAGE/roms/undertale"
+cp_if_diff "$(pwd)/assets/undertale/Start Undertale.butterscotch" "$STAGE/roms/undertale/Start Undertale.butterscotch"
 cp_if_diff "$(pwd)/assets/duke3d/Start Duke Nukem 3D.duke3d" "$STAGE/roms/duke3d/Start Duke Nukem 3D.duke3d"
 cp_if_diff "$DIABLO_MARKER" "$STAGE/roms/diablo/Start Diablo 1.diablo"
 cp_if_diff "$DIABLO_ENGINE_ASSET" "$STAGE/roms/diablo/devilutionx.mpq"
-cp_if_diff "$DIABLO_BANNER_NEXTUI" "$STAGE/frogui/diablo.png"
-cp_if_diff "$DIABLO_BANNER_NEXTUI" "$STAGE/frogui/theme-packs/Art_Book_NextUI/diablo.png"
-cp_if_diff "$DIABLO_BANNER_NEXT" "$STAGE/frogui/theme-packs/Art_Book_Next/diablo.png"
-cp_if_diff "$DIABLO_BANNER_NAO" "$STAGE/frogui/theme-packs/Nao_Black/diablo.png"
 cp_if_diff "$NDS_BANNER_NEXTUI" "$STAGE/frogui/nds.jpg"
 cp_if_diff "$NDS_BANNER_NEXTUI" "$STAGE/frogui/theme-packs/Art_Book_NextUI/nds.jpg"
 cp_if_diff "$NDS_BANNER_NEXT" "$STAGE/frogui/theme-packs/Art_Book_Next/nds.jpg"
 cp_if_diff "$NDS_BANNER_NAO" "$STAGE/frogui/theme-packs/Nao_Black/nds.jpg"
 cp_if_diff "$CLAW_ASSETS" "$STAGE/roms/openclaw/ASSETS.ZIP"
 cp_if_diff "$CLAW_FONT" "$STAGE/roms/openclaw/clacon.ttf"
-cp_if_diff "$CLAW_BANNER_NEXTUI" "$STAGE/frogui/openclaw.png"
-cp_if_diff "$CLAW_BANNER_NEXTUI" "$STAGE/frogui/theme-packs/Art_Book_NextUI/openclaw.png"
-cp_if_diff "$CLAW_BANNER_NEXT" "$STAGE/frogui/theme-packs/Art_Book_Next/openclaw.png"
-cp_if_diff "$CLAW_BANNER_NAO" "$STAGE/frogui/theme-packs/Nao_Black/openclaw.png"
 cp_if_diff "$(pwd)/assets/claw/Start Captain Claw.claw" "$STAGE/roms/openclaw/Start Captain Claw.claw"
 rsync -rlt --delete "$FROGGYPE_ROOT/data/" "$STAGE/roms/mcpe/data/"
 cp_if_diff "$(pwd)/assets/mcpe/Start Minecraft PE.mcpe" "$STAGE/roms/mcpe/Start Minecraft PE.mcpe"
-cp_if_diff "$CLASSICUBE_TEXPACK" "$STAGE/roms/classicube/texpacks/default.zip"
-cp_if_diff "$CLASSICUBE_AUDIO_ZIP" "$STAGE/roms/classicube/audio/default.zip"
+cp_if_diff "$CLASSICUBE_TEXPACK" "$STAGE/roms/ports/classicube/texpacks/default.zip"
+cp_if_diff "$CLASSICUBE_AUDIO_ZIP" "$STAGE/roms/ports/classicube/audio/default.zip"
 # Runtime language packs are FrogUI data, not compiled-in strings. Keep the
 # staged copy in sync so release archives and local deployments behave alike.
 mkdir -p "$STAGE/frogui/lang"
@@ -292,6 +273,7 @@ cp -a "$STAGE/cubegm/cores/." "$OUT/cubegm/cores/"
 for f in picoarch picoarch_hi nosleep driver_r36sx.so driver_r36sx27.so driver_sf3000.so driver_sf3500.so driver_gb350.so; do
     cp "$STAGE/cubegm/$f" "$OUT/cubegm/$f"
 done
+install -m 0755 assets/ports/port_check.sh "$OUT/cubegm/port_check.sh"
 cp "$HIJACK/tfupdate.sh" "$OUT/cubegm/tfupdate.sh"
 chmod +x "$OUT/cubegm/tfupdate.sh"
 # zhijack.sh is per-device (generated into install_first/<dev>/cubegm/ below) - # the universal payload deliberately ships NO launcher and NO device detection.
@@ -315,18 +297,47 @@ if [ -d "assets/icon-packs" ]; then
     mkdir -p "$OUT/frogui/icon-packs"
     cp -a assets/icon-packs/. "$OUT/frogui/icon-packs/"
 fi
+mkdir -p "$OUT/frogui/port-help"
 # roms/ folder structure (the system subfolders FrogUI expects: gba, nes, snes…).
 # Ships empty folders + their .res/filelist scaffolding; users drop ROMs in.
 [ -d "$STAGE/roms" ] && cp -a "$STAGE/roms" "$OUT/roms"
+mkdir -p "$OUT/roms/ports"
+mkdir -p "$OUT/roms/ports/.res"
+for port in diablo duke3d mcpe openclaw undertale classicube; do
+    port_dir="$OUT/roms/ports/$port"
+    mkdir -p "$port_dir"
+    if [ -d "$OUT/roms/$port" ]; then
+        cp -an "$OUT/roms/$port/." "$port_dir/"
+        rm -rf "$OUT/roms/$port"
+    fi
+    [ "$port" != classicube ] || rm -f "$port_dir/Start_Here.cw"
+    case "$port" in
+        diablo)   launcher="Diablo 1.sh" ;;
+        duke3d)   launcher="Duke Nukem 3D.sh" ;;
+        mcpe)     launcher="Minecraft PE.sh" ;;
+        openclaw) launcher="Captain Claw.sh" ;;
+        undertale) launcher="Undertale.sh" ;;
+        classicube) launcher="ClassiCube.sh" ;;
+    esac
+    install -m 0755 "assets/ports/$port/run.sh" "$OUT/roms/ports/$launcher"
+    [ ! -f "assets/ports/$port/install.png" ] || install -m 0644 "assets/ports/$port/install.png" "$OUT/frogui/port-help/$port.png"
+    if [ -f "assets/ports/$port/boxart.png" ]; then
+        install -m 0644 "assets/ports/$port/boxart.png" "$OUT/roms/ports/.res/${launcher%.sh}.png"
+    fi
+done
+# Ports use launcher boxart rather than system icons or full-screen theme art.
+for art in diablo openclaw mcpe duke3d undertale classicube; do
+    rm -f "$OUT/frogui/$art.png" "$OUT/frogui/$art.jpg" "$OUT/frogui/$art-"*.png "$OUT/frogui/$art-"*.jpg \
+          "$OUT/frogui/system-icons/$art.png"
+    find "$OUT/frogui/theme-packs" -type f \( -name "$art.png" -o -name "$art.jpg" -o -name "$art-*.png" -o -name "$art-*.jpg" \) -delete
+    find "$OUT/frogui/icon-packs" -type f -name "$art.png" -delete
+done
 mkdir -p "$OUT/roms/images"
 mkdir -p "$OUT/roms/music"
 mkdir -p "$OUT/roms/nds"
 mkdir -p "$OUT/roms/qpsx"
 mkdir -p "$OUT/roms/j2me"
-mkdir -p "$OUT/roms/mcpe"
-mkdir -p "$OUT/roms/diablo"
 mkdir -p "$OUT/roms/picante8"
-mkdir -p "$OUT/roms/duke3d"
 
 # 1b) Our extra assets the old release shipped (these are OURS, not stock OS):
 #     standalone frontends, BIOS, boot logos. NOT shipped: icube/icube_start
@@ -358,7 +369,7 @@ install -m 0644 apps/usb_mode/modules/4.4.186-release/usb_f_mtp.ko \
 #     dropped as it documents the retired icube method).
 # User-facing docs come from the REPO ROOT (canonical, maintained) - the sdcard/
 # copies are stale stubs. Assets (picoarch.cfg) come from staging.
-for x in README.md install.md theme.md LICENSE.md; do
+for x in README.md theme.md LICENSE.md; do
     [ -f "$x" ] && cp "$x" "$OUT/$x"
 done
 mkdir -p "$OUT/docs"
@@ -453,12 +464,12 @@ stays happy.
 > # 🔴 **DO NOT USE THE FACTORY/PREINSTALLED STOCK OS** 🔴
 >
 > **Format the SD card and set it up fresh with the exact backup linked in
-> `install.md`. This is not optional. Installing over the stock OS causes missing
+> `INSTALL.md`. This is not optional. Installing over the stock OS causes missing
 > audio, broken controls, display problems, crashes, and boot failures.**
 
 ## Steps
 1. **Format the SD card and perform a clean setup using the exact backup linked
-   in `install.md` for your device.** Do not install over, reuse, or merge with
+   in `INSTALL.md` for your device.** Do not install over, reuse, or merge with
    the factory/preinstalled stock OS. If your card has an older TreeFrogUI that
    replaced `cubegm/icube`, the clean backup setup restores it.
 2. Copy `cubegm/`, `frogui/`, `roms/`, `MD/` onto the SD root (merge/overwrite).

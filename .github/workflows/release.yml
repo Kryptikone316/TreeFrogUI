@@ -125,14 +125,21 @@ jobs:
             cubegm/cores/openclaw_libretro.so
             cubegm/ebook cubegm/dsperate/dsperate
             cubegm/devilutionx cubegm/devilutionx.sh
-            roms/diablo/devilutionx.mpq
-            "roms/diablo/Start Diablo 1.diablo"
+            roms/ports/diablo/devilutionx.mpq
+            "roms/ports/Diablo 1.sh"
+            "roms/ports/.res/Diablo 1.png"
+            "roms/ports/ClassiCube.sh"
+            "roms/ports/.res/ClassiCube.png"
+            "roms/ports/classicube/ClassiCube.classicube"
+            "roms/ports/classicube/texpacks/default.zip"
+            "roms/ports/classicube/audio/default.zip"
             cubegm/lib/libSDL-1.2.so.0 cubegm/lib/libpng12.so.0
             cubegm/lib/libpng16.so.16
           )
           for rel in "${required[@]}"; do
             [[ -f "$current/$rel" ]] || { echo "Missing required payload: $rel" >&2; exit 1; }
           done
+          [[ ! -e "$current/roms/classicube" ]] || { echo 'Legacy ClassiCube folder must be migrated into roms/ports/classicube' >&2; exit 1; }
           [[ -d "$current/roms/nds" ]] || { echo 'Missing required ROM folder: roms/nds' >&2; exit 1; }
           echo "Release sanity check passed: $(find "$current/cubegm/cores" -name '*.so' | wc -l) cores; resources present."
 

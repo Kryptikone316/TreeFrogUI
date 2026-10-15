@@ -133,11 +133,8 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **xmil** | Sharp X68000 | `x68k_libretro.so` |
 | **pico286** | DOS / PC (8086-286, standalone) - 📖 [setup guide](docs/cores/pico286.md) | `pico286` + `x86BOOT.img` |
 | **j2me** | J2ME / MIDP 2.0 games (`.jar` / `.jad`) - 📖 [setup guide](docs/cores/j2me.md) | `j2me_libretro.so` |
-| **classicube** | ClassiCube Minecraft Classic worlds (`.cw`) - 📖 [setup guide](docs/cores/classicube.md), based on [Sajnaps / FroggyCraft](https://github.com/Synaps33/FroggyCraft) | `classicube_libretro.so` |
-| **mcpe** | Minecraft Pocket Edition 0.6.1, based on [Synaps33 / FroggyPE](https://github.com/Synaps33/FroggyPE) | `mcpe_libretro.so` |
-| **openclaw** | Captain Claw - 📖 [setup guide](docs/cores/openclaw.md), based on [Synaps33 / FroggyClaw](https://github.com/Synaps33/FroggyClaw) | `openclaw_libretro.so` |
-| **diablo** | Diablo 1 / DevilutionX (standalone) - 📖 [setup guide](docs/cores/diablo.md), based on [DevilutionX](https://github.com/diasurgical/DevilutionX) and [FroggyDiablo](https://github.com/tzubertowski/FroggyDiablo) | `devilutionx` |
-| **duke3d** | Duke Nukem 3D - 📖 [setup guide](docs/cores/duke3d.md), based on [Synaps33 / FroggyDuke](https://github.com/Synaps33/FroggyDuke) | `duke3d_libretro.so` |
+| **ClassiCube** | Minecraft Classic - 📖 [setup guide](docs/cores/classicube.md), based on [Sajnaps / FroggyCraft](https://github.com/Synaps33/FroggyCraft) | **Games → Ports** (`ClassiCube.sh`) |
+| **ports** | Game-specific ports, each in its own folder with a launcher and theme-native boxart - 📖 [Ports guide](docs/cores/ports.md) | Port-specific libretro cores or standalone binaries |
 | **Quake** | Quake | `tyrquake_libretro.so` |
 | **quake2** | Quake II (heavy) - 📖 [setup guide](docs/cores/quake2.md) | `vitaquake2_libretro.so` |
 | **prboom** | Doom / Doom II / Final Doom / Heretic / Hexen | `prboom_libretro.so` |
@@ -196,9 +193,7 @@ A few systems need more than "drop the ROM in the folder" - either extra compani
 | Wolfenstein 3D (`wolf3d`) | Needs the game data **and** the engine's own resource pack | 📖 [docs/cores/wolf3d.md](docs/cores/wolf3d.md) |
 | Doom / Heretic / Hexen (`prboom`) | Supply a legally obtained IWAD (`doom1.wad`, `heretic1.wad`, `hexen.wad`, etc.) | Put the IWAD in `roms/prboom/` |
 | Quake II (`quake2`) | Game data goes in a required `baseq2/` subfolder | 📖 [docs/cores/quake2.md](docs/cores/quake2.md) |
-| Diablo 1 (`diablo`) | Requires the legally owned `DIABDAT.MPQ` game data file | 📖 [docs/cores/diablo.md](docs/cores/diablo.md) |
-| Captain Claw (`openclaw`) | Requires the legally owned `CLAW.REZ` game data file | 📖 [docs/cores/openclaw.md](docs/cores/openclaw.md) |
-| Duke Nukem 3D (`duke3d`) | Requires the legally owned `DUKE3D.GRP` and `DUKE.RTS` files | 📖 [docs/cores/duke3d.md](docs/cores/duke3d.md) |
+| Ports | Some require user-supplied game files. Port folders and launch instructions | 📖 [Ports guide](docs/cores/ports.md) |
 | PlayStation 1 (`PS`/`ps1`/`psx`/`ps1r`) | Two cores, BIOS strongly recommended | 📖 [docs/cores/ps1.md](docs/cores/ps1.md) |
 
 ---
