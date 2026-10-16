@@ -16,6 +16,12 @@ emulator systems retain their normal `roms/<system>/` folders.
 | `ports/undertale` | Undertale (Butterscotch) | `butterscotch_libretro.so` | [Synaps33/FroggyTale](https://github.com/Synaps33/FroggyTale) |
 | `ports/openlara` | OpenLara (Tomb Raider I) | `openlara_libretro.so` | [tzubertowski/TreeFrogUI_OpenLara](https://github.com/tzubertowski/TreeFrogUI_OpenLara) |
 
+## Games
+
+| Folder | System | Core .so | Source |
+|--------|--------|----------|--------|
+| `ports/vvvvvv` | [VVVVVV](docs/cores/vvvvvv.md) (320×240, 30 FPS; user data required) | `vvvvvv_libretro.so` | [TreeFrogUI_VVVVVV](https://github.com/tzubertowski/TreeFrogUI_VVVVVV), adapted from [jamesofarrell/VVVVVV](https://github.com/jamesofarrell/VVVVVV) and based on [TerryCavanagh/VVVVVV](https://github.com/TerryCavanagh/VVVVVV) |
+
 ## Nintendo
 
 | Folder | System | Core .so | Source |
