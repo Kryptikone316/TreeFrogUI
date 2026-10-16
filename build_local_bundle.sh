@@ -18,7 +18,7 @@ VVVVVV_CORE=${VVVVVV_CORE:-$WORK_ROOT/VVVVVV-OpenDingux/build/sf3000/vvvvvv_libr
 TOOLCHAIN=$WORK_ROOT/sf3000toolchain/mipsel-buildroot-linux-gnu_sdk-buildroot
 PREFIX=$TOOLCHAIN/opt/ext-toolchain/bin/mips-mti-linux-gnu-
 SYSROOT=$TOOLCHAIN/mipsel-buildroot-linux-gnu/sysroot
-DSPERATE_SHA256=${DSPERATE_SHA256:-c08e0e0646d45b5ab17c75c0f9bd6ef43766658061eb34846fe02ddce69190d3}
+DSPERATE_SHA256=${DSPERATE_SHA256:-44634976a75b4734a5545e96c9bc10147181c100ff580946296df8c1b5334e93}
 J2ME_HEAP_BYTES=${J2ME_HEAP_BYTES:-8388608}
 SOURCE_ID=$(git -C "$ROOT" rev-parse --short=7 HEAD)
 OUTPUT=${1:-/tmp/TreeFrogUI-local-build-$SOURCE_ID.tar.gz}
