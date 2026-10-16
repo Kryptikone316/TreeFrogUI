@@ -8,7 +8,7 @@
 #
 # With no payload, the complete release plus the selected install_first overlay
 # is deployed. Optional development payloads:
-#   release, test-games, duke3d-data, undertale-data, openlara-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
+#   release, test-games, duke3d-data, undertale-data, openlara-data, vvvvvv, vvvvvv-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
 #   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test,
 #   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test
 #
@@ -30,7 +30,7 @@ die() {
 usage() {
     cat >&2 <<EOF
 usage: $0 <r36sx|r36hd|sf3000|sf3500> [payload ...]
-    payloads: release test-games duke3d-data undertale-data openlara-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
+    payloads: release test-games duke3d-data undertale-data openlara-data vvvvvv vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
 default:  release
 EOF
     exit 2
@@ -71,7 +71,7 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|test-games|duke3d-data|undertale-data|openlara-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
+        release|test-games|duke3d-data|undertale-data|openlara-data|vvvvvv|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
         *) usage ;;
     esac
 done
@@ -93,6 +93,10 @@ validate_release() {
         "$OVERLAY/cubegm/setting.xml" \
         "$OVERLAY/cubegm/cores/libemu_md.so" \
         "$RELEASE/cubegm/cores/openlara_libretro.so" \
+        "$RELEASE/cubegm/cores/vvvvvv_libretro.so" \
+        "$RELEASE/roms/ports/VVVVVV.sh" \
+        "$RELEASE/roms/ports/vvvvvv" \
+        "$RELEASE/roms/ports/.res/VVVVVV.png" \
         "$OVERLAY/cubegm/zhijack.sh"; do
         [ -e "$path" ] ||
             die "release is incomplete; missing $path (run ./build_release.sh)"
@@ -290,6 +294,7 @@ deploy_release() {
         cubegm/cores/classicube_libretro.so \
         cubegm/cores/j2me_libretro.so \
         cubegm/cores/picante8_libretro.so \
+        cubegm/cores/vvvvvv_libretro.so \
         cubegm/cores/libemu_md.so \
         cubegm/zhijack.sh; do
         hash_line="$(sha256sum "$MOUNT/$rel")"
@@ -325,6 +330,10 @@ deploy_one() {
         picante8)
             src="$REPO/release/latest/release/cubegm/cores/picante8_libretro.so"
             dst="$MOUNT/cubegm/cores/picante8_libretro.so"
+            ;;
+        vvvvvv-data)
+            src="/home/tomaszz/.local/share/Steam/steamapps/common/vvvvvv/data.zip"
+            dst="$MOUNT/roms/ports/vvvvvv/data.zip"
             ;;
         openclaw)
             src="$WORK/FroggyClaw/openclaw_libretro.so"
@@ -457,6 +466,39 @@ deploy_one() {
         [ "$src_hash" = "$dst_hash" ] || die "classes.zip verification failed"
         echo "j2me classes deployed: $dst_hash"
     fi
+}
+
+deploy_vvvvvv() {
+    local src dst source_hash card_hash pair
+    [ -x "$MOUNT/cubegm/port_check.sh" ] && [ -x "$MOUNT/cubegm/picoarch" ] ||
+        die "TreeFrogUI port support is missing; deploy the full release first"
+    local -a files=(
+        "$WORK/VVVVVV-OpenDingux/build/sf3000/vvvvvv_libretro.so:cubegm/cores/vvvvvv_libretro.so"
+        "$REPO/assets/ports/vvvvvv/run.sh:roms/ports/VVVVVV.sh"
+        "$REPO/assets/ports/vvvvvv/boxart.png:roms/ports/.res/VVVVVV.png"
+        "$REPO/assets/ports/vvvvvv/install.png:frogui/port-help/vvvvvv.png"
+        "$REPO/docs/cores/vvvvvv.md:docs/cores/vvvvvv.md"
+        "$WORK/VVVVVV-OpenDingux/LICENSE.md:frogui/licenses/VVVVVV.LICENSE"
+    )
+    mkdir -p "$MOUNT/roms/ports/vvvvvv"
+    for pair in "${files[@]}"; do
+        src="${pair%%:*}"
+        dst="$MOUNT/${pair#*:}"
+        [ -s "$src" ] || die "VVVVVV source missing: $src"
+        mkdir -p "$(dirname "$dst")"
+        rsync -tc "$src" "$dst"
+        [ "$dst" != "$MOUNT/roms/ports/VVVVVV.sh" ] || chmod 755 "$dst"
+    done
+    sync
+    for pair in "${files[@]}"; do
+        src="${pair%%:*}"
+        dst="$MOUNT/${pair#*:}"
+        source_hash="$(sha256sum "$src")"; source_hash="${source_hash%% *}"
+        card_hash="$(sha256sum "$dst")"; card_hash="${card_hash%% *}"
+        [ "$source_hash" = "$card_hash" ] || die "VVVVVV verification failed: ${pair#*:}"
+        echo "Verified VVVVVV: ${pair#*:}  $card_hash"
+    done
+    echo "VVVVVV port deployed; existing data.zip and saves preserved."
 }
 
 deploy_dsperate() {
@@ -836,6 +878,7 @@ deploy_openlara_data() {
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
         release) deploy_release ;;
+        vvvvvv) deploy_vvvvvv ;;
         test-games) deploy_test_games ;;
         duke3d-data) deploy_duke3d_data ;;
         undertale-data) deploy_undertale_data ;;
@@ -850,7 +893,7 @@ for payload in "${PAYLOADS[@]}"; do
     esac
 done
 
-migrate_j2me_saves
+[ "${PAYLOADS[*]}" = vvvvvv ] || migrate_j2me_saves
 
 for rel in "${STOCK_FILES[@]}"; do
     hash_line="$(sha256sum "$MOUNT/$rel")"

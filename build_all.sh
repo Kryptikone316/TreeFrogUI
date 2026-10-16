@@ -234,6 +234,36 @@ else
     echo "WARNING: OpenLara SF3000 build failed"
 fi
 
+# VVVVVV SF3000 libretro target. Its toolchain file supplies the MIPS compiler,
+# sysroot, and device flags; fail the aggregate build if this required core fails.
+echo "-- VVVVVV SF3000 libretro CMake --"
+VVVVVV_ROOT="$PWD/../VVVVVV-OpenDingux"
+VVVVVV_SOURCE="$VVVVVV_ROOT/libretro"
+VVVVVV_BUILD="$VVVVVV_ROOT/build/sf3000"
+VVVVVV_TOOLCHAIN="$VVVVVV_SOURCE/sf3000-toolchain.cmake"
+CMAKE="${CMAKE:-cmake}"
+if [ ! -f "$VVVVVV_SOURCE/CMakeLists.txt" ] || [ ! -f "$VVVVVV_TOOLCHAIN" ]; then
+    echo "ERROR: VVVVVV libretro source/toolchain missing under $VVVVVV_SOURCE" >&2
+    exit 1
+fi
+if ! command -v "$CMAKE" >/dev/null; then
+    echo "ERROR: CMake not found ($CMAKE); cannot build VVVVVV" >&2
+    exit 1
+fi
+if ! "$CMAKE" -S "$VVVVVV_SOURCE" -B "$VVVVVV_BUILD" \
+    -DCMAKE_TOOLCHAIN_FILE="$VVVVVV_TOOLCHAIN" -DCMAKE_BUILD_TYPE=Release; then
+    echo "ERROR: VVVVVV CMake configuration failed" >&2
+    exit 1
+fi
+if ! "$CMAKE" --build "$VVVVVV_BUILD" -j2; then
+    echo "ERROR: VVVVVV SF3000 build failed" >&2
+    exit 1
+fi
+if [ ! -s "$VVVVVV_BUILD/vvvvvv_libretro.so" ]; then
+    echo "ERROR: VVVVVV build produced no vvvvvv_libretro.so" >&2
+    exit 1
+fi
+
 # ── standard cores ────────────────────────────────────────────────────────────
 echo "-- picodrive make --"
 _b picodrive         picodrive                 "-f Makefile.libretro"

@@ -48,3 +48,4 @@ Current guides:
 - [Captain Claw](openclaw.md)
 - [Undertale](undertale.md)
 - [ClassiCube](classicube.md)
+- [VVVVVV](vvvvvv.md)

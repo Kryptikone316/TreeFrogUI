@@ -62,6 +62,8 @@ DUKE3D_CORE="${DUKE3D_CORE:-$FROGGYDUKE_ROOT/build/sf3000/duke3d_libretro.so}"
 FROGGYTALE_ROOT="${FROGGYTALE_ROOT:-/home/tomaszz/sf3000-work/FroggyTale}"
 BUTTERSCOTCH_CORE="${BUTTERSCOTCH_CORE:-$FROGGYTALE_ROOT/build/sf3000/butterscotch_libretro.so}"
 OPENLARA_CORE="${OPENLARA_CORE:-$(pwd)/build/openlara_libretro.so}"
+VVVVVV_ROOT="${VVVVVV_ROOT:-/home/tomaszz/sf3000-work/VVVVVV-OpenDingux}"
+VVVVVV_CORE="${VVVVVV_CORE:-$VVVVVV_ROOT/build/sf3000/vvvvvv_libretro.so}"
 DIABLO_BIN="${DIABLO_BIN:-/home/tomaszz/sf3000-work/FroggyDiablo-sf3000-build/devilutionx}"
 DIABLO_LAUNCHER="$(pwd)/assets/diablo/launch_diablo.sh"
 DIABLO_MARKER="$(pwd)/assets/diablo/Start Diablo 1.diablo"
@@ -178,6 +180,9 @@ cp_if_diff() { [ -f "$1" ] || return 0; cmp -s "$1" "$2" && return 0; cp "$1" "$
 [ -f "$DUKE3D_CORE" ] || { echo "missing Duke Nukem 3D core: $DUKE3D_CORE" >&2; exit 1; }
 [ -f "$BUTTERSCOTCH_CORE" ] || { echo "missing FroggyTale Undertale core: $BUTTERSCOTCH_CORE" >&2; exit 1; }
 [ -s "$OPENLARA_CORE" ] || { echo "missing OpenLara SF3000 libretro core: $OPENLARA_CORE (run ./build_all.sh)" >&2; exit 1; }
+[ -s "$VVVVVV_CORE" ] || { echo "missing VVVVVV libretro core: $VVVVVV_CORE" >&2; exit 1; }
+[ -f "$(pwd)/assets/ports/vvvvvv/boxart.png" ] || { echo "missing VVVVVV box art" >&2; exit 1; }
+[ -f "$(pwd)/assets/ports/vvvvvv/run.sh" ] || { echo "missing VVVVVV launcher" >&2; exit 1; }
 [ -x "$(pwd)/assets/ports/openlara/run.sh" ] || { echo "missing OpenLara launcher" >&2; exit 1; }
 [ -f "$(pwd)/assets/ports/openlara/Start OpenLara.gba" ] || { echo "missing OpenLara launcher marker" >&2; exit 1; }
 [ -f "$(pwd)/assets/ports/openlara/boxart.png" ] || { echo "missing OpenLara box art" >&2; exit 1; }
@@ -201,6 +206,7 @@ cp_if_diff "$PICANTE8_CORE" "$STAGE/cubegm/cores/picante8_libretro.so"
 cp_if_diff "$DUKE3D_CORE" "$STAGE/cubegm/cores/duke3d_libretro.so"
 cp_if_diff "$BUTTERSCOTCH_CORE" "$STAGE/cubegm/cores/butterscotch_libretro.so"
 cp_if_diff "$OPENLARA_CORE" "$STAGE/cubegm/cores/openlara_libretro.so"
+cp_if_diff "$VVVVVV_CORE" "$STAGE/cubegm/cores/vvvvvv_libretro.so"
 cp_if_diff "$DIABLO_BIN" "$STAGE/cubegm/devilutionx"
 cp_if_diff "$DIABLO_LAUNCHER" "$STAGE/cubegm/devilutionx.sh"
 cp_if_diff "$DIABLO_SDL_IMAGE" "$STAGE/cubegm/lib/libSDL_image-1.2.so.0"
@@ -214,6 +220,7 @@ cp_if_diff "$J2ME_BANNER_NEXTUI" "$STAGE/frogui/theme-packs/Art_Book_NextUI/j2me
 cp_if_diff "$J2ME_BANNER_NEXT" "$STAGE/frogui/theme-packs/Art_Book_Next/j2me.png"
 cp_if_diff "$J2ME_BANNER_NAO" "$STAGE/frogui/theme-packs/Nao_Black/j2me.png"
 mkdir -p "$STAGE/roms/j2me"
+mkdir -p "$STAGE/roms/ports/vvvvvv"
 mkdir -p "$STAGE/roms/ports/classicube/texpacks"
 mkdir -p "$STAGE/roms/ports/classicube/audio"
 mkdir -p "$STAGE/roms/ports/openlara"
@@ -309,9 +316,11 @@ mkdir -p "$OUT/frogui/port-help"
 # roms/ folder structure (the system subfolders FrogUI expects: gba, nes, snes…).
 # Ships empty folders + their .res/filelist scaffolding; users drop ROMs in.
 [ -d "$STAGE/roms" ] && cp -a "$STAGE/roms" "$OUT/roms"
+# Staging may contain user game data or the older top-level VVVVVV folder.
+rm -rf "$OUT/roms/vvvvvv" "$OUT/roms/ports/vvvvvv"
 mkdir -p "$OUT/roms/ports"
 mkdir -p "$OUT/roms/ports/.res"
-for port in diablo duke3d mcpe openclaw undertale classicube openlara; do
+for port in diablo duke3d mcpe openclaw undertale classicube openlara vvvvvv; do
     port_dir="$OUT/roms/ports/$port"
     mkdir -p "$port_dir"
     if [ -d "$OUT/roms/$port" ]; then
@@ -327,6 +336,7 @@ for port in diablo duke3d mcpe openclaw undertale classicube openlara; do
         undertale) launcher="Undertale.sh" ;;
         classicube) launcher="ClassiCube.sh" ;;
         openlara) launcher="OpenLara.sh" ;;
+        vvvvvv)  launcher="VVVVVV.sh" ;;
     esac
     install -m 0755 "assets/ports/$port/run.sh" "$OUT/roms/ports/$launcher"
     [ ! -f "assets/ports/$port/install.png" ] || install -m 0644 "assets/ports/$port/install.png" "$OUT/frogui/port-help/$port.png"
@@ -335,7 +345,7 @@ for port in diablo duke3d mcpe openclaw undertale classicube openlara; do
     fi
 done
 # Ports use launcher boxart rather than system icons or full-screen theme art.
-for art in diablo openclaw mcpe duke3d undertale classicube openlara; do
+for art in diablo openclaw mcpe duke3d undertale classicube openlara vvvvvv; do
     rm -f "$OUT/frogui/$art.png" "$OUT/frogui/$art.jpg" "$OUT/frogui/$art-"*.png "$OUT/frogui/$art-"*.jpg \
           "$OUT/frogui/system-icons/$art.png"
     find "$OUT/frogui/theme-packs" -type f \( -name "$art.png" -o -name "$art.jpg" -o -name "$art-*.png" -o -name "$art-*.jpg" \) -delete
@@ -392,6 +402,8 @@ if [ -d "docs/cores" ]; then
     mkdir -p "$OUT/docs/cores"
     cp -a docs/cores/. "$OUT/docs/cores/"
 fi
+mkdir -p "$OUT/frogui/licenses"
+install -m 0644 "$VVVVVV_ROOT/LICENSE.md" "$OUT/frogui/licenses/VVVVVV.LICENSE"
 for x in picoarch.cfg; do
     [ -e "$STAGE/$x" ] && cp -a "$STAGE/$x" "$OUT/$x"
 done
@@ -531,6 +543,13 @@ done
 [ -f "$OUT/$DUMMY_REL" ] || fail "missing autorun dummy rom $DUMMY_REL"
 [ -x "$OUT/cubegm/tfupdate.sh" ] || fail "missing offline updater"
 [ -s "$OUT/cubegm/cores/openlara_libretro.so" ] || fail "missing OpenLara core"
+[ -s "$OUT/cubegm/cores/vvvvvv_libretro.so" ] || fail "missing VVVVVV core"
+[ -f "$OUT/docs/cores/vvvvvv.md" ] || fail "missing VVVVVV setup guide"
+[ -f "$OUT/frogui/licenses/VVVVVV.LICENSE" ] || fail "missing VVVVVV license"
+[ -d "$OUT/roms/ports/vvvvvv" ] || fail "missing VVVVVV port data folder"
+[ -x "$OUT/roms/ports/VVVVVV.sh" ] || fail "missing VVVVVV launcher"
+[ -f "$OUT/roms/ports/.res/VVVVVV.png" ] || fail "missing VVVVVV box art"
+[ ! -e "$OUT/roms/ports/vvvvvv/data.zip" ] || fail "VVVVVV game data must not ship"
 [ -x "$OUT/roms/ports/OpenLara.sh" ] || fail "missing OpenLara launcher"
 [ -f "$OUT/roms/ports/openlara/Start OpenLara.gba" ] || fail "missing OpenLara launcher marker"
 [ -f "$OUT/roms/ports/.res/OpenLara.png" ] || fail "missing OpenLara box art"

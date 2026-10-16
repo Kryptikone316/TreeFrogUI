@@ -5,7 +5,7 @@ set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")" && pwd)
 WORK_ROOT=${WORK_ROOT:-$(dirname "$ROOT")}
-FROGUI_ROOT=${FROGUI_ROOT:-$WORK_ROOT/FrogUI}
+FROGUI_ROOT=${FROGUI_ROOT:-$ROOT/frogui}
 PICOARCH_ROOT=${PICOARCH_ROOT:-$WORK_ROOT/picoarch}
 FROGGYCRAFT_ROOT=${FROGGYCRAFT_ROOT:-$WORK_ROOT/FroggyCraft}
 FROGGYPE_ROOT=${FROGGYPE_ROOT:-$WORK_ROOT/FroggyPE}
@@ -14,6 +14,7 @@ PICANTE8_ROOT=${PICANTE8_ROOT:-$WORK_ROOT/picante8}
 EBOOK_ROOT=${EBOOK_ROOT:-$WORK_ROOT/ebook}
 MUPDF_ROOT=${MUPDF_ROOT:-$WORK_ROOT/mupdf}
 DSPERATE_ROOT=${DSPERATE_ROOT:-$WORK_ROOT/dsperate/build/sf3000-package}
+VVVVVV_CORE=${VVVVVV_CORE:-$WORK_ROOT/VVVVVV-OpenDingux/build/sf3000/vvvvvv_libretro.so}
 TOOLCHAIN=$WORK_ROOT/sf3000toolchain/mipsel-buildroot-linux-gnu_sdk-buildroot
 PREFIX=$TOOLCHAIN/opt/ext-toolchain/bin/mips-mti-linux-gnu-
 SYSROOT=$TOOLCHAIN/mipsel-buildroot-linux-gnu/sysroot
@@ -34,6 +35,7 @@ for file in \
   "$DSPERATE_ROOT/dsperate"; do
   [[ -e "$file" ]] || { echo "Missing local build input: $file" >&2; exit 1; }
 done
+[[ -s "$VVVVVV_CORE" ]] || { echo "Missing VVVVVV core: $VVVVVV_CORE" >&2; exit 1; }
 
 echo "$DSPERATE_SHA256  $DSPERATE_ROOT/dsperate" | sha256sum -c -
 echo 'fca3e514b635a21789d4224e84865d2954a2a914d46b64aa8219ddb565c44869  '"$ROOT/cores/scummvm/dists/soundfonts/Roland_SC-55.sf2" | sha256sum -c -
