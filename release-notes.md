@@ -2,7 +2,7 @@
 
 ## What's new
 
-- Added **VVVVVV** to **Games → Ports**. Bring your own `data.zip`; the [setup guide](docs/cores/vvvvvv.md) lists the required files and install steps.
+- Added **VVVVVV** to **Games → Ports**. Bring your own `data.zip`; the [setup guide](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/blob/main/docs/setup/vvvvvv.md) lists the required files and install steps.
 - Added a screenshot shortcut to the FrogUI menu.
 - Rebuilt the DS emulator from the latest local source.
 

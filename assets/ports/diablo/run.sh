@@ -4,7 +4,7 @@ set -eu
 PORT_DIR=/mnt/sdcard/roms/ports/diablo
 if ! /mnt/sdcard/cubegm/port_check.sh \
     diablo \
-    https://github.com/tzubertowski/TreeFrogUI/blob/main/docs/cores/diablo.md \
+    https://github.com/tzubertowski/TreeFrogUI_PortsCollection/blob/main/docs/setup/diablo.md \
     /mnt/sdcard/frogui/port-help/diablo.png \
     "$PORT_DIR" DIABDAT.MPQ devilutionx.mpq; then exit 0; fi
 cd "$PORT_DIR"

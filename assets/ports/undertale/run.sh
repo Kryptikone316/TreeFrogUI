@@ -6,7 +6,7 @@ DATA_DIR=
 [ -f "$PORT_DIR/.data/game.unx" ] && DATA_DIR=.data/
 if ! /mnt/sdcard/cubegm/port_check.sh \
     undertale \
-    https://github.com/tzubertowski/TreeFrogUI/blob/main/docs/cores/undertale.md \
+    https://github.com/tzubertowski/TreeFrogUI_PortsCollection/blob/main/docs/setup/undertale.md \
     /mnt/sdcard/frogui/port-help/undertale.png \
     "$PORT_DIR" 'Start Undertale.butterscotch' \
     "${DATA_DIR}game.unx" "${DATA_DIR}ATLAS.BIN" "${DATA_DIR}ATLAS.RGBA4444"; then exit 0; fi

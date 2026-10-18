@@ -4,7 +4,7 @@ set -eu
 PORT_DIR=/mnt/sdcard/roms/ports/duke3d
 if ! /mnt/sdcard/cubegm/port_check.sh \
     duke3d \
-    https://github.com/tzubertowski/TreeFrogUI/blob/main/docs/cores/duke3d.md \
+    https://github.com/tzubertowski/TreeFrogUI_PortsCollection/blob/main/docs/setup/duke3d.md \
     /mnt/sdcard/frogui/port-help/duke3d.png \
     "$PORT_DIR" DUKE3D.GRP DUKE.RTS; then exit 0; fi
 cd "$PORT_DIR"

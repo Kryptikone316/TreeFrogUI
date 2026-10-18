@@ -477,7 +477,6 @@ deploy_vvvvvv() {
         "$REPO/assets/ports/vvvvvv/run.sh:roms/ports/VVVVVV.sh"
         "$REPO/assets/ports/vvvvvv/boxart.png:roms/ports/.res/VVVVVV.png"
         "$REPO/assets/ports/vvvvvv/install.png:frogui/port-help/vvvvvv.png"
-        "$REPO/docs/cores/vvvvvv.md:docs/cores/vvvvvv.md"
         "$WORK/VVVVVV-OpenDingux/LICENSE.md:frogui/licenses/VVVVVV.LICENSE"
     )
     mkdir -p "$MOUNT/roms/ports/vvvvvv"
