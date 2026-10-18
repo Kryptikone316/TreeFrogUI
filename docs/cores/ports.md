@@ -1,51 +1,16 @@
-# Ports
+# TreeFrogUI Ports Collection
 
-Standalone and game-specific ports live under `roms/ports/` and appear under one
-**Ports** entry in the Games view. Put each port's game files in its named data
-folder; leave the supplied launcher at the root. The UI shows only the launcher
-name (not `.sh`) and hides data folders:
+Ports are optional and distributed separately from the TreeFrogUI release.
+Install them with the [TreeFrogUI Installer](https://github.com/tzubertowski/TreeFrogUI-installer/releases/latest)
+using its **Install ports** option, or download an archive from the
+[Ports Collection releases](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/releases/latest)
+and extract it to the SD card root.
 
-```text
-roms/ports/
-├── <Port name>.sh
-├── .res/
-│   └── <Port name>.png    # boxart for that launcher
-└── <port>/                # hidden data and saves
-```
+Each port installs its launcher at `roms/ports/<name>.sh` and keeps its
+executable or Libretro core, metadata, and artwork in `roms/ports/<port-id>/`.
+The device shows the launcher's friendly name under **Games → Ports**. Ports
+that need files from an existing game installation use TreeFrogUI's shared
+missing-files screen, which links to the port's setup guide.
 
-For example, **Captain Claw** is launched by `roms/ports/Captain Claw.sh`, while
-its game data goes in `roms/ports/openclaw/`. Do not move the `.sh` launcher into
-the data folder. FrogUI uses the launcher's matching `.res/<Port name>.png`
-floppy-disk box art in the active theme's standard artwork panel.
-
-## Setup
-
-1. Install the TreeFrogUI release, which supplies the launchers and port
-   binaries. Do not replace these with older launcher files.
-2. Copy any required game data into the exact folder and filenames listed in
-   that port's guide below. These commercial files are not included unless the
-   guide explicitly says otherwise.
-3. Open **Games → Ports** and select the port's friendly name. If required files
-   are missing, the device displays the missing filenames and a QR code to the
-   matching setup guide.
-
-Launchers share one required-file checker. If port data is missing, FrogUI
-shows the missing filenames and a QR code linking to that port's setup guide;
-the game is not started.
-
-On first boot after updating, TreeFrogUI migrates supported old port folders
-from `roms/<port>/` into `roms/ports/<port>/`. It shows per-port progress, moves
-user game data (not old launchers or binaries), and keeps release-provided files
-authoritative on name conflicts. The old folder is removed only after its data
-has merged successfully. If migration is interrupted, reboot to let it resume.
-
-Current guides:
-
-- [Diablo 1](diablo.md)
-- [Duke Nukem 3D](duke3d.md)
-- [Minecraft Pocket Edition](mcpe.md)
-- [OpenLara (Tomb Raider I)](openlara.md)
-- [Captain Claw](openclaw.md)
-- [Undertale](undertale.md)
-- [ClassiCube](classicube.md)
-- [VVVVVV](vvvvvv.md)
+See the [Ports Collection README](https://github.com/tzubertowski/TreeFrogUI_PortsCollection#how-to-install)
+for manual installation and instructions for adding ports.

@@ -36,7 +36,6 @@ _apply_patch ardens-sf3000.patch       Ardens
 _apply_patch pico286-sf3000.patch      pico-286
 _apply_patch gw-sf3000-no-zoom.patch   libretro-gw
 _apply_patch froggykvm-sf3000.patch      FroggyKVM
-_apply_patch openlara-level1-uppercase.patch OpenLara
 
 TOOLCHAIN="$HOME/sf3000-work/sf3000toolchain/mipsel-buildroot-linux-gnu_sdk-buildroot"
 MIPS="$TOOLCHAIN/opt/ext-toolchain/bin/mips-mti-linux-gnu-"
@@ -203,66 +202,23 @@ make -C "$CORES/FroggyKVM" platform=sf3000 \
     cp "$CORES/FroggyKVM/j2me_libretro.so" "$OUT/j2me_libretro.so" && \
     "$STRIP" "$OUT/j2me_libretro.so" && echo "→ $OUT/j2me_libretro.so"
 
-# FroggyDuke fetches its pinned BUILD engine dependency during this make.
-echo "-- FroggyDuke Duke Nukem 3D make --"
-make -C "$CORES/FroggyDuke" -f Makefile.sf2000 sf3000 \
-    MULTICORE="${MULTICORE_ROOT:-$PWD/../FroggyCraft}/source/sf2000_multicore" \
-    -j$(nproc) 2>&1
-[ -f "$CORES/FroggyDuke/build/sf3000/duke3d_libretro.so" ] && \
-    cp "$CORES/FroggyDuke/build/sf3000/duke3d_libretro.so" "$OUT/duke3d_libretro.so" && \
-    "$STRIP" "$OUT/duke3d_libretro.so" && echo "→ $OUT/duke3d_libretro.so"
-
-# TreeFrogUI_OpenLara ships an SF2000-family libretro wrapper. Reuse its
-# software renderer/input path, but link a shared SF3000 PicoArch core.
-echo "-- OpenLara SF3000 libretro make --"
-OPENLARA="$CORES/OpenLara"
-OPENLARA_FLAGS="-O3 -fPIC -DSF2000 -DNDEBUG -I$OPENLARA/src -I$OPENLARA -I$PWD/../picoarch/libretro-common/include"
-mkdir -p "$OUT/openlara-build"
-if make -B -C "$OPENLARA" platform=unix STATIC_LINKING=0 \
-    TARGET_NAME="$OUT/openlara-build/openlara" SHARED='-shared -Wl,--no-undefined' \
-    CC="$WRAP/mips-gcc-O3" CXX="$WRAP/mips-g++-O3" \
-    CFLAGS="$OPENLARA_FLAGS" CXXFLAGS="$OPENLARA_FLAGS -std=c++11" \
-    LDFLAGS="$LDFLAGS_S" -j$(nproc) 2>&1; then
-    if [ -s "$OUT/openlara-build/openlara_libretro.so" ]; then
-        cp "$OUT/openlara-build/openlara_libretro.so" "$OUT/openlara_libretro.so"
-        "$STRIP" "$OUT/openlara_libretro.so"
-        echo "→ $OUT/openlara_libretro.so"
-    else
-        echo "WARNING: OpenLara core output missing"
-    fi
-else
-    echo "WARNING: OpenLara SF3000 build failed"
+# OpenBOR legacy SF3000 Libretro core. Source stays in the fork's local checkout.
+echo "-- OpenBOR SF3000 Libretro --"
+OPENBOR_ROOT="${OPENBOR_ROOT:-$PWD/../OpenBOR-TreeFrogUI}"
+if [ ! -f "$OPENBOR_ROOT/build_libretro.sh" ] && [ -f "$CORES/OpenBOR/build_libretro.sh" ]; then
+    OPENBOR_ROOT="$CORES/OpenBOR"
 fi
-
-# VVVVVV SF3000 libretro target. Its toolchain file supplies the MIPS compiler,
-# sysroot, and device flags; fail the aggregate build if this required core fails.
-echo "-- VVVVVV SF3000 libretro CMake --"
-VVVVVV_ROOT="$PWD/../VVVVVV-OpenDingux"
-VVVVVV_SOURCE="$VVVVVV_ROOT/libretro"
-VVVVVV_BUILD="$VVVVVV_ROOT/build/sf3000"
-VVVVVV_TOOLCHAIN="$VVVVVV_SOURCE/sf3000-toolchain.cmake"
-CMAKE="${CMAKE:-cmake}"
-if [ ! -f "$VVVVVV_SOURCE/CMakeLists.txt" ] || [ ! -f "$VVVVVV_TOOLCHAIN" ]; then
-    echo "ERROR: VVVVVV libretro source/toolchain missing under $VVVVVV_SOURCE" >&2
+if [ ! -f "$OPENBOR_ROOT/build_libretro.sh" ]; then
+    echo "ERROR: OpenBOR Libretro source/build script missing under $OPENBOR_ROOT" >&2
     exit 1
 fi
-if ! command -v "$CMAKE" >/dev/null; then
-    echo "ERROR: CMake not found ($CMAKE); cannot build VVVVVV" >&2
+if ! "$OPENBOR_ROOT/build_libretro.sh" sf3000; then
+    echo "ERROR: OpenBOR SF3000 build failed" >&2
     exit 1
 fi
-if ! "$CMAKE" -S "$VVVVVV_SOURCE" -B "$VVVVVV_BUILD" \
-    -DCMAKE_TOOLCHAIN_FILE="$VVVVVV_TOOLCHAIN" -DCMAKE_BUILD_TYPE=Release; then
-    echo "ERROR: VVVVVV CMake configuration failed" >&2
-    exit 1
-fi
-if ! "$CMAKE" --build "$VVVVVV_BUILD" -j2; then
-    echo "ERROR: VVVVVV SF3000 build failed" >&2
-    exit 1
-fi
-if [ ! -s "$VVVVVV_BUILD/vvvvvv_libretro.so" ]; then
-    echo "ERROR: VVVVVV build produced no vvvvvv_libretro.so" >&2
-    exit 1
-fi
+cp "$OPENBOR_ROOT/build/sf3000/openbor_libretro.so" "$OUT/openbor_libretro.so"
+"$STRIP" "$OUT/openbor_libretro.so"
+echo "→ $OUT/openbor_libretro.so"
 
 # ── standard cores ────────────────────────────────────────────────────────────
 echo "-- picodrive make --"

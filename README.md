@@ -33,7 +33,7 @@ A free, custom game-menu (frontend) for a range of MIPS-based Hichip handhelds -
 | Component | What it does |
 |-----------|-------------|
 | **TreeFrogUI** (`frogui_libretro.so`) | ROM browser and launcher, runs inside picoarch |
-| **58 emulator cores** | NES, SNES, GBA, Mega Drive, PC Engine, Amiga, Atari ST, J2ME, and more |
+| **Emulator cores** | NES, SNES, GBA, Mega Drive, PC Engine, Amiga, Atari ST, J2ME, and more |
 | **build system** | Cross-compile everything from source using the SF3000 toolchain |
 
 See [cores.md](cores.md) for the full folder→core mapping table.
@@ -43,7 +43,7 @@ See [cores.md](cores.md) for the full folder→core mapping table.
 ## Why TreeFrogUI?
 
 - **Minimalistic but powerful UI** - Clean, fast game selection screen with quick navigation.
-- **59 emulator cores** - Now supports 59 emulator cores compared to only 14 in the stock OS. This includes **Java Games** (J2ME / MIDP 2.0), **PICO-8** (via Fake08/Retro8/Picante8), **Quake** (via Tyrquake), **Cave Story** (via NXEngine), **Doom** (via PrBoom), **PlayStation 1** (via PCSX ReArmed), plus classic computer systems like Commodore Amiga and Atari ST.
+- **Broad system support** - Includes **Java Games** (J2ME / MIDP 2.0), **PICO-8** (via Fake08/Retro8/Picante8), **Quake** (via Tyrquake), **Cave Story** (via NXEngine), **Doom** (via PrBoom), **PlayStation 1** (via PCSX ReArmed), plus classic computer systems like Commodore Amiga and Atari ST.
 - **Highly configurable cores** - Configurable settings for all cores, allowing for retro features like console palette swaps, LCD ghosting emulation, and more.
 - **In-game saves** - Fully supported across all compatible cores for seamless session saving and loading.
 - **Quick Resume** - Automatically boots back into the last played game upon device boot, skipping the frontend.
@@ -133,10 +133,8 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **xmil** | Sharp X68000 | `x68k_libretro.so` |
 | **pico286** | DOS / PC (8086-286, standalone) - 📖 [setup guide](docs/cores/pico286.md) | `pico286` + `x86BOOT.img` |
 | **j2me** | J2ME / MIDP 2.0 games (`.jar` / `.jad`) - 📖 [setup guide](docs/cores/j2me.md) | `j2me_libretro.so` |
-| **ClassiCube** | Minecraft Classic - 📖 [setup guide](docs/cores/classicube.md), based on [Sajnaps / FroggyCraft](https://github.com/Synaps33/FroggyCraft) | **Games → Ports** (`ClassiCube.sh`) |
-| **ports** | Game-specific ports, each in its own folder with a launcher and theme-native boxart - 📖 [Ports guide](docs/cores/ports.md) | Port-specific libretro cores or standalone binaries |
-| **OpenLara** | Tomb Raider I - 📖 [setup guide](docs/cores/openlara.md) | **Games → Ports** (`OpenLara.sh`, `openlara_libretro.so`) |
-| **VVVVVV** | User-supplied game data required - 📖 [setup guide](docs/cores/vvvvvv.md) | **Games → Ports** (`VVVVVV.sh`, `vvvvvv_libretro.so`) |
+| **Ports Collection** | Optional game ports installed separately - 📖 [installation guide](docs/cores/ports.md) | [Ports Collection release](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/releases/latest) |
+| **openbor** | OpenBOR game/mod PAKs - 📖 [setup guide](docs/cores/openbor.md) | `openbor_libretro.so` |
 | **Quake** | Quake | `tyrquake_libretro.so` |
 | **quake2** | Quake II (heavy) - 📖 [setup guide](docs/cores/quake2.md) | `vitaquake2_libretro.so` |
 | **prboom** | Doom / Doom II / Final Doom / Heretic / Hexen | `prboom_libretro.so` |

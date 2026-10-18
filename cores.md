@@ -1,26 +1,16 @@
 # SF3000 Core Mappings
 
-ROM folder → core `.so` file. Ports use `roms/ports/<slug>/` and launch scripts;
-emulator systems retain their normal `roms/<system>/` folders.
+ROM folder → core `.so` file. Game-specific ports are distributed separately
+by the [TreeFrogUI Ports Collection](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/releases/latest).
+Emulator systems retain their normal `roms/<system>/` folders.
 
 ---
-
-## ClassiCube
-
-| Folder | System | Core .so | Source |
-|--------|--------|----------|--------|
-| `ports/classicube` | ClassiCube / Minecraft Classic | `classicube_libretro.so` | [tzubertowski/FroggyCraft](https://github.com/tzubertowski/FroggyCraft) |
-| `ports/mcpe` | Minecraft Pocket Edition 0.6.1 | `mcpe_libretro.so` | [Synaps33/FroggyPE](https://github.com/Synaps33/FroggyPE) |
-| `ports/openclaw` | Captain Claw | `openclaw_libretro.so` | [tzubertowski/FroggyClaw](https://github.com/tzubertowski/FroggyClaw) |
-| `ports/duke3d` | Duke Nukem 3D | `duke3d_libretro.so` | [Synaps33/FroggyDuke](https://github.com/Synaps33/FroggyDuke) |
-| `ports/undertale` | Undertale (Butterscotch) | `butterscotch_libretro.so` | [Synaps33/FroggyTale](https://github.com/Synaps33/FroggyTale) |
-| `ports/openlara` | OpenLara (Tomb Raider I) | `openlara_libretro.so` | [tzubertowski/TreeFrogUI_OpenLara](https://github.com/tzubertowski/TreeFrogUI_OpenLara) |
 
 ## Games
 
 | Folder | System | Core .so | Source |
 |--------|--------|----------|--------|
-| `ports/vvvvvv` | [VVVVVV](docs/cores/vvvvvv.md) (320×240, 30 FPS; user data required) | `vvvvvv_libretro.so` | [TreeFrogUI_VVVVVV](https://github.com/tzubertowski/TreeFrogUI_VVVVVV), adapted from [jamesofarrell/VVVVVV](https://github.com/jamesofarrell/VVVVVV) and based on [TerryCavanagh/VVVVVV](https://github.com/TerryCavanagh/VVVVVV) |
+| `openbor` | [OpenBOR](docs/cores/openbor.md), multiple user-supplied game/mod PAKs | `openbor_libretro.so` | [TreeFrogUI_openbor](https://github.com/tzubertowski/TreeFrogUI_openbor), legacy engine core |
 
 ## Nintendo
 

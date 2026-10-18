@@ -99,6 +99,31 @@ jobs:
           mkdir -p release/latest
           cp -a "$RUNNER_TEMP/local-bundle/release" release/latest/release
 
+      - name: Remove ports from the TreeFrogUI release payload
+        run: |
+          set -euo pipefail
+          current=release/latest/release
+          # The pinned core bundle predates the separate Ports Collection.
+          rm -f "$current"/cubegm/cores/{classicube,mcpe,openclaw,duke3d,butterscotch,openlara,vvvvvv}_libretro.so
+          rm -f "$current/cubegm/devilutionx" "$current/cubegm/devilutionx.sh" \
+            "$current/cubegm/lib/libSDL_image-1.2.so.0"
+          rm -rf "$current/roms/ports" "$current/roms/diablo" "$current/roms/duke3d" \
+            "$current/roms/mcpe" "$current/roms/openclaw" "$current/roms/openlara" \
+            "$current/roms/undertale" "$current/roms/vvvvvv" "$current/roms/classicube"
+          rm -f "$current"/frogui/port-help/{classicube,diablo,duke3d,mcpe,openclaw,openlara,undertale,vvvvvv}.png \
+            "$current/frogui/licenses/VVVVVV.LICENSE"
+          rm -f "$current"/docs/cores/{classicube,diablo,duke3d,mcpe,openclaw,openlara,undertale,vvvvvv}.md
+          for art in classicube diablo duke3d mcpe openclaw openlara undertale vvvvvv; do
+            rm -f "$current/frogui/$art.png" "$current/frogui/$art.jpg" \
+              "$current/frogui/system-icons/$art.png"
+            if [[ -d "$current/frogui/theme-packs" ]]; then
+              find "$current/frogui/theme-packs" -type f \( -name "$art.png" -o -name "$art.jpg" -o -name "$art-*.png" -o -name "$art-*.jpg" \) -delete
+            fi
+            if [[ -d "$current/frogui/icon-packs" ]]; then
+              find "$current/frogui/icon-packs" -type f -name "$art.png" -delete
+            fi
+          done
+
       - name: Download cumulative update base
         env:
           GH_TOKEN: ${{ github.token }}
@@ -114,48 +139,26 @@ jobs:
           set -euo pipefail
           current=release/latest/release
           test -s "$current/cubegm/cores/j2me_libretro.so"
-          test -s "$current/cubegm/cores/mcpe_libretro.so"
-          test -s "$current/cubegm/cores/openclaw_libretro.so"
-          test -s "$current/cubegm/cores/openlara_libretro.so"
-          test -s "$current/cubegm/cores/vvvvvv_libretro.so"
+          for core in classicube mcpe openclaw duke3d butterscotch openlara vvvvvv; do
+            test ! -e "$current/cubegm/cores/${core}_libretro.so"
+          done
+          test ! -e "$current/roms/ports"
+          test ! -e "$current/cubegm/devilutionx"
           test -s "$current/cubegm/bios/Roland_SC-55.sf2"
           echo '44634976a75b4734a5545e96c9bc10147181c100ff580946296df8c1b5334e93  '"$current/cubegm/dsperate/dsperate" | sha256sum -c -
           required=(
             cubegm/picoarch cubegm/picoarch_hi
+            cubegm/port_check.sh
             cubegm/cores/frogui_libretro.so cubegm/cores/tyrquake_libretro.so
-            cubegm/cores/classicube_libretro.so cubegm/cores/mcpe_libretro.so
-            cubegm/cores/openclaw_libretro.so
-            cubegm/cores/openlara_libretro.so
-            cubegm/cores/vvvvvv_libretro.so
             cubegm/ebook cubegm/dsperate/dsperate
-            cubegm/devilutionx cubegm/devilutionx.sh
-            roms/ports/diablo/devilutionx.mpq
-            "roms/ports/Diablo 1.sh"
-            "roms/ports/.res/Diablo 1.png"
-            "roms/ports/ClassiCube.sh"
-            "roms/ports/.res/ClassiCube.png"
-            "roms/ports/OpenLara.sh"
-            "roms/ports/.res/OpenLara.png"
-            "roms/ports/openlara/Start OpenLara.gba"
-            "roms/ports/VVVVVV.sh"
-            "roms/ports/.res/VVVVVV.png"
-            frogui/port-help/vvvvvv.png
-            frogui/licenses/VVVVVV.LICENSE
-            docs/cores/vvvvvv.md
-            "roms/ports/classicube/ClassiCube.classicube"
-            "roms/ports/classicube/texpacks/default.zip"
-            "roms/ports/classicube/audio/default.zip"
             cubegm/lib/libSDL-1.2.so.0 cubegm/lib/libpng12.so.0
             cubegm/lib/libpng16.so.16
           )
           for rel in "${required[@]}"; do
             [[ -f "$current/$rel" ]] || { echo "Missing required payload: $rel" >&2; exit 1; }
           done
-          [[ ! -e "$current/roms/classicube" ]] || { echo 'Legacy ClassiCube folder must be migrated into roms/ports/classicube' >&2; exit 1; }
-          [[ ! -e "$current/roms/ports/vvvvvv/data.zip" ]] || { echo 'VVVVVV user game data must not ship' >&2; exit 1; }
-          [[ -d "$current/roms/ports/vvvvvv" ]] || { echo 'Missing VVVVVV user-data folder' >&2; exit 1; }
-          [[ ! -e "$current/roms/vvvvvv" ]] || { echo 'Legacy VVVVVV folder must be migrated into roms/ports/vvvvvv' >&2; exit 1; }
           [[ -d "$current/roms/nds" ]] || { echo 'Missing required ROM folder: roms/nds' >&2; exit 1; }
+          [[ -f "$current/docs/cores/ports.md" ]] || { echo 'Missing Ports Collection installation guide' >&2; exit 1; }
           echo "Release sanity check passed: $(find "$current/cubegm/cores" -name '*.so' | wc -l) cores; resources present."
 
       - name: Package full install and update
