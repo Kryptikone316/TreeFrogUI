@@ -8,7 +8,7 @@
 #
 # With no payload, the complete release plus the selected install_first overlay
 # is deployed. Optional development payloads:
-#   release, test-games, duke3d-data, undertale-data, openlara-data, vvvvvv, vvvvvv-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
+#   release, standalone-audio, test-games, duke3d-data, undertale-data, openlara-data, vvvvvv, vvvvvv-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
 #   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test,
 #   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test
 #
@@ -30,7 +30,7 @@ die() {
 usage() {
     cat >&2 <<EOF
 usage: $0 <r36sx|r36hd|sf3000|sf3500> [payload ...]
-    payloads: release test-games duke3d-data undertale-data openlara-data vvvvvv vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
+    payloads: release standalone-audio test-games duke3d-data undertale-data openlara-data vvvvvv vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
 default:  release
 EOF
     exit 2
@@ -71,7 +71,7 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|test-games|duke3d-data|undertale-data|openlara-data|vvvvvv|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
+        release|standalone-audio|test-games|duke3d-data|undertale-data|openlara-data|vvvvvv|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
         *) usage ;;
     esac
 done
@@ -112,6 +112,13 @@ validate_release() {
 
 for payload in "${PAYLOADS[@]}"; do
     [ "$payload" != release ] || validate_release
+    if [ "$payload" = standalone-audio ]; then
+        [ -x "$REPO/hijack/tf_speaker_open" ] ||
+            die "standalone speaker helper is missing; run ./build_release.sh"
+        [ -x "$OVERLAY/cubegm/zhijack.sh" ] &&
+            grep -q tf_speaker_open "$OVERLAY/cubegm/zhijack.sh" ||
+            die "profile launcher lacks standalone speaker guard; run ./build_release.sh"
+    fi
 done
 
 # Resolve only by the selected profile's exact volume label. Both whole-disk
@@ -305,7 +312,7 @@ deploy_release() {
 }
 
 deploy_one() {
-    local name="$1" src dst src_hash dst_hash hash_line
+    local name="$1" src dst src_hash dst_hash hash_line launcher_hash
     case "$name" in
         picoarch)
             src="$WORK/picoarch/picoarch"
@@ -346,6 +353,10 @@ deploy_one() {
         ebook)
             src="$WORK/ebook/ebook"
             dst="$MOUNT/cubegm/ebook"
+            ;;
+        standalone-audio)
+            src="$REPO/hijack/tf_speaker_open"
+            dst="$MOUNT/cubegm/tf_speaker_open"
             ;;
         pcsx4all)
             src="$STAGE/cubegm/pcsx4all"
@@ -448,6 +459,19 @@ deploy_one() {
     [ "$src_hash" = "$dst_hash" ] || die "$name verification failed"
     echo "$name deployed: $dst_hash"
 
+    if [ "$name" = standalone-audio ]; then
+        local launcher_src="$OVERLAY/cubegm/zhijack.sh"
+        [ -f "$launcher_src" ] || die "profile launcher missing: $launcher_src"
+        grep -q tf_speaker_open "$launcher_src" ||
+            die "profile launcher lacks standalone speaker guard: $launcher_src"
+        rsync -tc "$launcher_src" "$MOUNT/cubegm/zhijack.sh"
+        hash_line="$(sha256sum "$launcher_src")"
+        launcher_hash="${hash_line%% *}"
+        hash_line="$(sha256sum "$MOUNT/cubegm/zhijack.sh")"
+        dst_hash="${hash_line%% *}"
+        [ "$launcher_hash" = "$dst_hash" ] || die "standalone launcher verification failed"
+        echo "Standalone launcher verified: $dst_hash"
+    fi
     if [ "$name" = j2me-debug ]; then
         : > "$MOUNT/log.txt"
         echo "J2ME RMS diagnostics enabled."
@@ -877,6 +901,7 @@ deploy_openlara_data() {
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
         release) deploy_release ;;
+        standalone-audio) deploy_one standalone-audio ;;
         vvvvvv) deploy_vvvvvv ;;
         test-games) deploy_test_games ;;
         duke3d-data) deploy_duke3d_data ;;
@@ -892,7 +917,10 @@ for payload in "${PAYLOADS[@]}"; do
     esac
 done
 
-[ "${PAYLOADS[*]}" = vvvvvv ] || migrate_j2me_saves
+case "${PAYLOADS[*]}" in
+    vvvvvv|standalone-audio) ;;
+    *) migrate_j2me_saves ;;
+esac
 
 for rel in "${STOCK_FILES[@]}"; do
     hash_line="$(sha256sum "$MOUNT/$rel")"

@@ -26,6 +26,10 @@ file libemu_tfhijack.so
 $CC -mips32r2 -EL -O2 --sysroot="$SYSROOT" -o nosleep nosleep.c
 "${MIPS}strip" nosleep 2>/dev/null || true
 echo "built nosleep: $(ls -la nosleep | awk '{print $5}') bytes"
+$CC -mips32r2 -EL -Os -Wall -Wextra --sysroot=$SYSROOT \
+    -o tf_speaker_open tf_speaker_open.c
+"${MIPS}strip" tf_speaker_open 2>/dev/null || true
+echo "built tf_speaker_open: $(ls -la tf_speaker_open | awk '{print $5}') bytes"
 echo "=== exported retro_* symbols ==="
 "${MIPS}readelf" --dyn-syms libemu_tfhijack.so 2>/dev/null \
     | awk '$4=="FUNC"{print $8}' | grep '^retro_' | sort | tr '\n' ' '; echo

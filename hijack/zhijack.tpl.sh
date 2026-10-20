@@ -233,6 +233,18 @@ while true; do
                     *)    "$BIN_PATH" >> /tmp/treefrog_ui.log 2>&1 & STANDALONE_PID=$! ;;
                 esac
             fi
+            # SDL and other standalone audio backends can mute the physical
+            # speaker during startup. Reopen it briefly; helper fails closed
+            # unless the validated R36SX GPIO matches.
+            (
+                AMP_TRIES=0
+                while [ "$AMP_TRIES" -lt 12 ] && kill -0 "$STANDALONE_PID" 2>/dev/null; do
+                    sleep 0.25
+                    /mnt/sdcard/cubegm/tf_speaker_open >/dev/null 2>&1
+                    AMP_TRIES=$((AMP_TRIES + 1))
+                done
+            ) &
+            STANDALONE_AMP_PID=$!
             (
                 while kill -0 "$STANDALONE_PID" 2>/dev/null; do
                     echo "--- standalone monitor $(date +%s 2>/dev/null) pid=$STANDALONE_PID ---" >> /mnt/sdcard/cubegm/logs/last_standalone_status.log
@@ -244,6 +256,8 @@ while true; do
             STANDALONE_MONITOR_PID=$!
             wait "$STANDALONE_PID"
             STANDALONE_RC=$?
+            kill "$STANDALONE_AMP_PID" 2>/dev/null
+            wait "$STANDALONE_AMP_PID" 2>/dev/null
             kill "$STANDALONE_MONITOR_PID" 2>/dev/null
             wait "$STANDALONE_MONITOR_PID" 2>/dev/null
             log_event "standalone child exited pid=$STANDALONE_PID rc=$STANDALONE_RC"
