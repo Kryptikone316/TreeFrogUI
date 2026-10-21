@@ -1,13 +1,17 @@
-# TreeFrogUI v1.8.0_c prerelease
+# TreeFrogUI v1.8.0_i prerelease
 
-## What's new
+## Changes since v1.8.0_h
 
-- Added **VVVVVV** to **Games → Ports**. Bring your own `data.zip`; the [setup guide](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/blob/main/docs/setup/vvvvvv.md) lists the required files and install steps.
-- Added a screenshot shortcut to the FrogUI menu.
-- Rebuilt the DS emulator from the latest local source.
-- Improved SF3000 audio buffer status reporting to cores.
-- Made long emulator option names and values scroll faster when selected.
+- **Nintendo DS:** faster MIPS 3D span interpolation, a combined fog/anti-aliasing scan, and aligned cartridge reads. Frame output stayed identical in the QEMU replay checks; hardware speedup still needs testing.
+- **FrogUI:** SELECT + L1 saves the visible menu frame as a BMP under `/mnt/sdcard/screenshots/`; search avoids extra filesystem metadata calls, and Nunito is the default font.
+- **FroggyKVM:** exiting a Java game now returns cleanly to PicoArch, and Java saves use `/mnt/sdcard/saves/j2me/`.
+- Added the **SF3000HD without HDMI** install profile. Its firmware keeps stock sleep behavior.
+- Added a startup guard around the standalone speaker helper.
 
-Thanks to [James O’Farrell](https://github.com/jamesofarrell/VVVVVV) for the original OpenDingux port this Libretro adaptation is based on.
+## Other changes included since the v1.0.15 stable base
+
+- Added Picante8, experimental Duke Nukem 3D, ClassiCube, Minecraft PE, Captain Claw, Diablo 1, Java Games, Nintendo DS, and experimental QPSX support.
+- Added OpenLara and VVVVVV, then moved port setup guides and the Ports collection into their separate release. See the [Ports Collection](https://github.com/tzubertowski/TreeFrogUI_PortsCollection) for downloads and game data instructions.
+- Improved translations, Arabic text rendering, volume and battery indicators, game handoff, audio startup, Java saves, ebook progress, and offline update recovery.
 
 For a fresh installation, use the full archive and matching `install_first/<device>/` files. To update an existing installation, copy `update.zip` to the SD-card root and reboot. Back up your card first.

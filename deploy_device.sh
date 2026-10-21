@@ -4,11 +4,11 @@
 #
 # Usage:
 #   ./build_release.sh
-#   pkexec ./deploy.sh <r36sx|r36hd|sf3000|sf3500> [payload ...]
+#   pkexec ./deploy.sh <r36sx|r36hd|sf3000|sf3000hd_nohdmi|sf3500> [payload ...]
 #
 # With no payload, the complete release plus the selected install_first overlay
 # is deployed. Optional development payloads:
-#   release, standalone-audio, test-games, duke3d-data, undertale-data, openlara-data, vvvvvv, vvvvvv-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-config,
+#   release, test-games, test-media, duke3d-data, undertale-data, openlara-data, vvvvvv, openbor, vvvvvv-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-test-game, ps1-bios, pcsx4all-config,
 #   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test,
 #   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test
 #
@@ -17,6 +17,8 @@ set -euo pipefail
 
 readonly WORK=/home/tomaszz/sf3000-work
 readonly REPO="$WORK/sf3000_treefrogui"
+readonly OPENBOR="$WORK/OpenBOR-TreeFrogUI"
+readonly OPENBOR_GAMES=/home/tomaszz/Roms/openbor
 readonly RELEASE="$REPO/release/latest/release"
 readonly STAGE="$REPO/sdcard"
 readonly OWNER_UID=1000
@@ -29,8 +31,8 @@ die() {
 
 usage() {
     cat >&2 <<EOF
-usage: $0 <r36sx|r36hd|sf3000|sf3500> [payload ...]
-    payloads: release standalone-audio test-games duke3d-data undertale-data openlara-data vvvvvv vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
+usage: $0 <r36sx|r36hd|sf3000|sf3000hd_nohdmi|sf3500> [payload ...]
+    payloads: release standalone-audio test-games test-media duke3d-data undertale-data openlara-data vvvvvv openbor vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-test-game ps1-bios pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
 default:  release
 EOF
     exit 2
@@ -54,6 +56,10 @@ case "$PROFILE" in
         readonly EXPECTED_LABEL=SF3000
         readonly EXPECTED_TF_DEVICE=SF3000
         ;;
+    sf3000hd_nohdmi)
+        readonly EXPECTED_LABEL=SF3000HD
+        readonly EXPECTED_TF_DEVICE=SF3000
+        ;;
     sf3500)
         readonly EXPECTED_LABEL=SF3500
         readonly EXPECTED_TF_DEVICE=SF3500
@@ -71,7 +77,7 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|standalone-audio|test-games|duke3d-data|undertale-data|openlara-data|vvvvvv|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
+        release|standalone-audio|test-games|test-media|duke3d-data|undertale-data|openlara-data|vvvvvv|openbor|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-test-game|ps1-bios|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
         *) usage ;;
     esac
 done
@@ -116,7 +122,7 @@ for payload in "${PAYLOADS[@]}"; do
         [ -x "$REPO/hijack/tf_speaker_open" ] ||
             die "standalone speaker helper is missing; run ./build_release.sh"
         [ -x "$OVERLAY/cubegm/zhijack.sh" ] &&
-            grep -q tf_speaker_open "$OVERLAY/cubegm/zhijack.sh" ||
+            grep -q 'tf_speaker_open' "$OVERLAY/cubegm/zhijack.sh" ||
             die "profile launcher lacks standalone speaker guard; run ./build_release.sh"
     fi
 done
@@ -453,16 +459,10 @@ deploy_one() {
             "$MOUNT/roms/ports/.res/Start Undertale.png"
         echo "Undertale launcher marker deployed; game data was not copied"
     fi
-    sync
-    hash_line="$(sha256sum "$dst")"
-    dst_hash="${hash_line%% *}"
-    [ "$src_hash" = "$dst_hash" ] || die "$name verification failed"
-    echo "$name deployed: $dst_hash"
-
     if [ "$name" = standalone-audio ]; then
         local launcher_src="$OVERLAY/cubegm/zhijack.sh"
         [ -f "$launcher_src" ] || die "profile launcher missing: $launcher_src"
-        grep -q tf_speaker_open "$launcher_src" ||
+        grep -q 'tf_speaker_open' "$launcher_src" ||
             die "profile launcher lacks standalone speaker guard: $launcher_src"
         rsync -tc "$launcher_src" "$MOUNT/cubegm/zhijack.sh"
         hash_line="$(sha256sum "$launcher_src")"
@@ -472,6 +472,12 @@ deploy_one() {
         [ "$launcher_hash" = "$dst_hash" ] || die "standalone launcher verification failed"
         echo "Standalone launcher verified: $dst_hash"
     fi
+    sync
+    hash_line="$(sha256sum "$dst")"
+    dst_hash="${hash_line%% *}"
+    [ "$src_hash" = "$dst_hash" ] || die "$name verification failed"
+    echo "$name deployed: $dst_hash"
+
     if [ "$name" = j2me-debug ]; then
         : > "$MOUNT/log.txt"
         echo "J2ME RMS diagnostics enabled."
@@ -524,6 +530,81 @@ deploy_vvvvvv() {
     echo "VVVVVV port deployed; existing data.zip and saves preserved."
 }
 
+deploy_openbor() {
+    local pair src dst source_hash card_hash old_pak_hash new_pak_hash game_count=0
+    [ -x "$MOUNT/cubegm/port_check.sh" ] && [ -x "$MOUNT/cubegm/picoarch" ] ||
+        die "TreeFrogUI port support is missing; deploy the full release first"
+    local -a files=(
+        "$OPENBOR/build/sf3000/openbor_libretro.so:cubegm/cores/openbor_libretro.so"
+        "$REPO/frogui/out/frogui_libretro.so:cubegm/cores/frogui_libretro.so"
+        "$REPO/docs/cores/openbor.md:docs/cores/openbor.md"
+        "$OPENBOR/LICENSE:frogui/licenses/OpenBOR.LICENSE"
+    )
+    mkdir -p "$MOUNT/roms/openbor"
+    for pair in "${files[@]}"; do
+        src="${pair%%:*}"
+        dst="$MOUNT/${pair#*:}"
+        [ -s "$src" ] || die "OpenBOR source missing: $src"
+        mkdir -p "$(dirname "$dst")"
+        rsync -tc "$src" "$dst"
+    done
+    mkdir -p "$MOUNT/frogui/lang/builtin"
+    rsync -rltc "$REPO/frogui/lang/builtin/" "$MOUNT/frogui/lang/builtin/"
+    # Preserve PAKs already copied to the former port folder while keeping the
+    # originals in place in case the user wants to roll back.
+    if [ -d "$MOUNT/roms/ports/openbor" ]; then
+        while IFS= read -r -d '' src; do
+            dst="$MOUNT/roms/openbor/${src##*/}"
+            if [ -e "$dst" ]; then
+                old_pak_hash="$(sha256sum "$src")"; old_pak_hash="${old_pak_hash%% *}"
+                new_pak_hash="$(sha256sum "$dst")"; new_pak_hash="${new_pak_hash%% *}"
+                [ "$old_pak_hash" = "$new_pak_hash" ] || {
+                    echo "Kept conflicting PAK in roms/ports/openbor: ${src##*/}" >&2
+                    continue
+                }
+            else
+                rsync -tc "$src" "$dst"
+                old_pak_hash="$(sha256sum "$src")"; old_pak_hash="${old_pak_hash%% *}"
+                new_pak_hash="$(sha256sum "$dst")"; new_pak_hash="${new_pak_hash%% *}"
+                [ "$old_pak_hash" = "$new_pak_hash" ] || die "OpenBOR PAK migration failed: ${src##*/}"
+            fi
+            rm -f "$src"
+            echo "Moved OpenBOR PAK to roms/openbor/: ${src##*/}"
+        done < <(find "$MOUNT/roms/ports/openbor" -maxdepth 1 -type f -iname '*.pak' -print0)
+        rmdir "$MOUNT/roms/ports/openbor" 2>/dev/null || true
+    fi
+    [ -d "$OPENBOR_GAMES" ] || die "OpenBOR game folder is missing: $OPENBOR_GAMES"
+    while IFS= read -r -d '' src; do
+        dst="$MOUNT/roms/openbor/${src##*/}"
+        if [ -e "$dst" ]; then
+            old_pak_hash="$(sha256sum "$src")"; old_pak_hash="${old_pak_hash%% *}"
+            new_pak_hash="$(sha256sum "$dst")"; new_pak_hash="${new_pak_hash%% *}"
+            [ "$old_pak_hash" = "$new_pak_hash" ] || die "refusing to overwrite a different PAK: ${src##*/}"
+        else
+            rsync -tc "$src" "$dst"
+            old_pak_hash="$(sha256sum "$src")"; old_pak_hash="${old_pak_hash%% *}"
+            new_pak_hash="$(sha256sum "$dst")"; new_pak_hash="${new_pak_hash%% *}"
+            [ "$old_pak_hash" = "$new_pak_hash" ] || die "OpenBOR game copy failed: ${src##*/}"
+        fi
+        echo "Verified OpenBOR game: roms/openbor/${src##*/}  $new_pak_hash"
+        game_count=$((game_count + 1))
+    done < <(find "$OPENBOR_GAMES" -maxdepth 1 -type f -iname '*.pak' -print0)
+    [ "$game_count" -gt 0 ] || die "no OpenBOR PAK games found in $OPENBOR_GAMES"
+    rm -f "$MOUNT/roms/ports/OpenBOR.sh" "$MOUNT/roms/ports/.res/OpenBOR.png"
+    rm -f "$MOUNT/frogui/port-help/openbor.png"
+    sync
+    for pair in "${files[@]}"; do
+        src="${pair%%:*}"
+        dst="$MOUNT/${pair#*:}"
+        source_hash="$(sha256sum "$src")"; source_hash="${source_hash%% *}"
+        card_hash="$(sha256sum "$dst")"; card_hash="${card_hash%% *}"
+        [ "$source_hash" = "$card_hash" ] || die "OpenBOR verification failed: ${pair#*:}"
+        echo "Verified OpenBOR: ${pair#*:}  $card_hash"
+    done
+    verify_tree "$REPO/frogui/lang/builtin/" "$MOUNT/frogui/lang/builtin/" "OpenBOR translations"
+    echo "OpenBOR core deployed under Games/OpenBOR; existing game PAKs and saves were preserved."
+}
+
 deploy_dsperate() {
     local src="$WORK/dsperate/build/sf3000-package" dst="$MOUNT/cubegm/dsperate" hash_line
     [ -f "$src/dsperate" ] || die "DSperate SF3000 package is missing: $src/dsperate"
@@ -533,6 +614,40 @@ deploy_dsperate() {
     verify_tree "$src/" "$dst/" "DSperate package"
     hash_line="$(sha256sum "$dst/dsperate")"
     echo "dsperate deployed: ${hash_line%% *}"
+}
+
+deploy_pcsx4all_test_game() {
+    local src="/home/tomaszz/Roms/ps1/Harvest Moon - Back to Nature (USA)"
+    local dst="$MOUNT/roms/ps1/Harvest Moon - Back to Nature (USA)"
+    [ -s "$src/Harvest Moon - Back to Nature (USA).cue" ] &&
+        [ -s "$src/Harvest Moon - Back to Nature (USA).bin" ] ||
+        die "Harvest Moon PS1 test game is missing from $src"
+    mkdir -p "$dst"
+    rsync -rltc "$src/" "$dst/"
+    sync
+    verify_tree "$src/" "$dst/" "PCSX4ALL test game"
+    echo "Verified PS1 test game: roms/ps1/Harvest Moon - Back to Nature (USA)"
+}
+
+deploy_ps1_bios() {
+    local src="/home/tomaszz/Roms/BIOS/scph5501.bin"
+    local dst="$MOUNT/cubegm/bios/scph5501.bin" hash_line src_hash dst_hash
+    [ -s "$src" ] && [ "$(wc -c < "$src")" -eq 524288 ] ||
+        die "valid PS1 BIOS is missing from $src"
+    mkdir -p "$(dirname "$dst")"
+    if [ -e "$dst" ]; then
+        hash_line="$(sha256sum "$src")"; src_hash="${hash_line%% *}"
+        hash_line="$(sha256sum "$dst")"; dst_hash="${hash_line%% *}"
+        [ "$src_hash" = "$dst_hash" ] ||
+            die "refusing to replace a different BIOS at $dst"
+    else
+        rsync -tc "$src" "$dst"
+    fi
+    sync
+    hash_line="$(sha256sum "$src")"; src_hash="${hash_line%% *}"
+    hash_line="$(sha256sum "$dst")"; dst_hash="${hash_line%% *}"
+    [ "$src_hash" = "$dst_hash" ] || die "PS1 BIOS verification failed"
+    echo "Verified PS1 BIOS: cubegm/bios/scph5501.bin  $dst_hash"
 }
 
 deploy_mame2000_mslug() {
@@ -808,6 +923,31 @@ deploy_test_games() {
     sync
 }
 
+deploy_test_media() {
+    local src dst hash_line src_hash dst_hash
+
+    copy_file() {
+        src="$1"
+        dst="$MOUNT/$2"
+        [ -f "$src" ] || die "test media source is missing: $src"
+        mkdir -p "$(dirname "$dst")"
+        rsync -tc "$src" "$dst"
+        hash_line="$(sha256sum "$src")"; src_hash="${hash_line%% *}"
+        hash_line="$(sha256sum "$dst")"; dst_hash="${hash_line%% *}"
+        [ "$src_hash" = "$dst_hash" ] || die "test media verification failed: $dst"
+        echo "Verified test media: ${dst#"$MOUNT/"}  $dst_hash"
+    }
+
+    copy_file '/home/tomaszz/Pobrane/Dance with the Dead - Hex [Official Video].mp3' 'roms/mp3/Dance with the Dead - Hex [Official Video].mp3'
+    copy_file '/home/tomaszz/Pobrane/Dance with the Dead - Hex [Official Video].mp3' 'roms/rockbox/Dance with the Dead - Hex [Official Video].mp3'
+    copy_file '/home/tomaszz/Roms/gb/video themes/Wario Land - Super Mario Land 3 (World).mp4' 'roms/videos/Wario Land - Super Mario Land 3 (World).mp4'
+    copy_file '/home/tomaszz/Roms/ps1/Crash Bandicoot (USA)/Crash Bandicoot (USA).cue' 'roms/ps1/Crash Bandicoot (USA)/Crash Bandicoot (USA).cue'
+    copy_file '/home/tomaszz/Roms/ps1/Crash Bandicoot (USA)/Crash Bandicoot (USA).bin' 'roms/ps1/Crash Bandicoot (USA)/Crash Bandicoot (USA).bin'
+    copy_file '/home/tomaszz/Roms/snes/Super Metroid (Japan, USA) (En,Ja).sfc' 'roms/snes/Super Metroid.sfc'
+    copy_file '/home/tomaszz/Roms/gb/roms/Dr. Mario (World) (Rev A).gb' 'roms/gb/Dr. Mario (World) (Rev A).gb'
+    sync
+}
+
 deploy_duke3d_data() {
     local src_dir=/home/tomaszz/Pobrane/DUKE3D/DUKE3D
     local file src dst hash_line src_hash dst_hash
@@ -903,7 +1043,9 @@ for payload in "${PAYLOADS[@]}"; do
         release) deploy_release ;;
         standalone-audio) deploy_one standalone-audio ;;
         vvvvvv) deploy_vvvvvv ;;
+        openbor) deploy_openbor ;;
         test-games) deploy_test_games ;;
+        test-media) deploy_test_media ;;
         duke3d-data) deploy_duke3d_data ;;
         undertale-data) deploy_undertale_data ;;
         openlara-data) deploy_openlara_data ;;
@@ -913,12 +1055,14 @@ for payload in "${PAYLOADS[@]}"; do
         o2em-test) deploy_o2em_test ;;
         c64-test) deploy_c64_test ;;
         dsperate) deploy_dsperate ;;
+        pcsx4all-test-game) deploy_pcsx4all_test_game ;;
+        ps1-bios) deploy_ps1_bios ;;
         *) deploy_one "$payload" ;;
     esac
 done
 
 case "${PAYLOADS[*]}" in
-    vvvvvv|standalone-audio) ;;
+    vvvvvv|openbor|standalone-audio) ;;
     *) migrate_j2me_saves ;;
 esac
 

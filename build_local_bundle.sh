@@ -14,7 +14,7 @@ DSPERATE_ROOT=${DSPERATE_ROOT:-$WORK_ROOT/dsperate/build/sf3000-package}
 TOOLCHAIN=$WORK_ROOT/sf3000toolchain/mipsel-buildroot-linux-gnu_sdk-buildroot
 PREFIX=$TOOLCHAIN/opt/ext-toolchain/bin/mips-mti-linux-gnu-
 SYSROOT=$TOOLCHAIN/mipsel-buildroot-linux-gnu/sysroot
-DSPERATE_SHA256=${DSPERATE_SHA256:-44634976a75b4734a5545e96c9bc10147181c100ff580946296df8c1b5334e93}
+DSPERATE_SHA256=${DSPERATE_SHA256:-0942579a47d78d476f4eced03e11e8f39ee93f98b0147621f8879c41429fbff7}
 J2ME_HEAP_BYTES=${J2ME_HEAP_BYTES:-8388608}
 SOURCE_ID=$(git -C "$ROOT" rev-parse --short=7 HEAD)
 OUTPUT=${1:-/tmp/TreeFrogUI-local-build-$SOURCE_ID.tar.gz}
@@ -22,6 +22,7 @@ OUTPUT=${1:-/tmp/TreeFrogUI-local-build-$SOURCE_ID.tar.gz}
 for file in \
   "$PREFIX"gcc \
   "$FROGUI_ROOT/build_libretro.sh" \
+  "$ROOT/hijack/build_tfhijack.sh" \
   "$PICOARCH_ROOT/build_sf3000.sh" \
   "$PICANTE8_ROOT/Makefile" \
   "$EBOOK_ROOT/build_reader_sf.sh" \
@@ -74,6 +75,9 @@ echo 'Building MuPDF and ebook reader...'
 make -C "$MUPDF_ROOT" clean
 "$EBOOK_ROOT/build_mupdf_sf.sh"
 "$EBOOK_ROOT/build_reader_sf.sh"
+
+echo 'Building TreeFrogUI hijack helpers...'
+"$ROOT/hijack/build_tfhijack.sh"
 
 echo 'Assembling release tree...'
 FROGUI_ROOT="$FROGUI_ROOT" \

@@ -71,6 +71,9 @@ declare -A STOCK=(
   # the proven driver_r36sx.so and never swaps. Reuses the R36SX stock xml/boot.
   [r36hd]=/home/tomaszz/sf3000-work/R36SX_sdcard/cubegm
   [sf3000]=/home/tomaszz/sf3000-work/SF3000_sdcard/SF3000_sdcard/cubegm
+  # SF3000HD without HDMI uses the SF3000 boot/display format; reuse its autorun
+  # XML while keeping this hardware's driver selection in the device profile.
+  [sf3000hd_nohdmi]=/home/tomaszz/sf3000-work/SF3000_sdcard/SF3000_sdcard/cubegm
   [sf3500]=/home/tomaszz/sf3000-work/SF3500_sdcard_v1.1/cubegm
   # SF3000_HD = HDMI-out variant. Same SoC/panel(854x480)/disp_frame as SF3500,
   # byte-identical encrypted driver.so, identical config/filelist. It even detects
@@ -103,6 +106,9 @@ declare -A HJ=(
   # FrogShell is now a libretro core and is rotated by picoarch's SF display
   # path; the old 270-degree standalone-shell value double-rotates media.
   [sf3000]="  SF3000   854 480 16 9   90  dispframe driver_sf3000.so  kill"
+  # Its backed-up cubegm/driver.so is byte-identical to driver_r36sx.so; keep
+  # SF3000 display geometry but select that matching library for audio.
+  [sf3000hd_nohdmi]="SF3000   854 480 16 9   90  dispframe driver_r36sx.so   kill"
   [sf3500]="  SF3500   854 480 16 9   90  dispframe driver_sf3500.so  kill"
   [sf3000hd]="SF3500   854 480 16 9   90  dispframe driver_sf3500.so  kill"
   [sf3100]="  SF3500   854 480 16 9   90  dispframe driver_sf3500.so  kill"
@@ -118,6 +124,7 @@ declare -A HJ=(
 # on that device (sleep lives elsewhere, or cubevol differs). Addresses are the
 # stores that ARM sleep: tap, idle-timeout, set_sleep_mode_state, msg-269 send.
 declare -A NOSLEEP_ADDRS=(
+  # shortcut: sleep-disable offsets stay unavailable until this revision's distinct cubevol is verified.
   # Original R36SX plus the newer R36SX v2.7/R36HD cubevol variant. Only the
   # three instructions matching the running ELF are touched.
   [r36sx]="0x406d24:0xac62bb18 0x40701c:0xae02bb18 0x406b50:0xac44bb18 0x406d84:0xac62bcc8 0x407088:0xae02bcc8 0x406bb0:0xac44bcc8"
@@ -337,9 +344,11 @@ printf 'dummy.md,TreeFrogUI,MD\n' > "$OUT/$(dirname "$DUMMY_REL")/filelist.csv"
 # paths, and a new core name all silently failed on hardware).
 for dev in "${!STOCK[@]}"; do
     src="${STOCK[$dev]}"; dst="$OUT/install_first/$dev"
+    fallback_dev="$dev"
+    [ "$dev" != sf3000hd_nohdmi ] || fallback_dev=sf3000
     if [ ! -f "$src/setting.xml" ] && [ -n "$STOCK_FALLBACK" ] &&
-       [ -f "$STOCK_FALLBACK/$dev/cubegm/setting.xml" ]; then
-        src="$STOCK_FALLBACK/$dev/cubegm"
+       [ -f "$STOCK_FALLBACK/$fallback_dev/cubegm/setting.xml" ]; then
+        src="$STOCK_FALLBACK/$fallback_dev/cubegm"
     fi
     [ -d "$src" ] || { echo "WARN: no stock for $dev ($src) - skipping"; continue; }
     mkdir -p "$dst/cubegm/cores"
@@ -413,10 +422,12 @@ stays happy.
    (REQUIRED: it carries the launcher script and autorun setup for your device):
    - `install_first/r36sx/`    → R36SX (v2.6 and v2.7 - same xml)
    - `install_first/sf3000/`   → SF3000
+   - `install_first/sf3000hd_nohdmi/` → SF3000HD without HDMI (SF3000 boot/display path)
    - `install_first/sf3500/`   → SF3500
    - `install_first/sf3000hd/` → SF3000 HD (HDMI-out variant)
    - `install_first/sf3100/`   → SF3100
    - `install_first/gb350/`    → GB350
+   - SF3000HD without HDMI keeps stock sleep behavior; its `cubevol` offsets are not patched.
    (This sets the rkgame autorun + registers the hijack core for YOUR device.)
 4. Eject, boot. The stock menu loads, then jumps straight into TreeFrogUI.
 
@@ -447,7 +458,7 @@ done
 # r36sx: boot killall only, no loop kills (tested config)
 [ "$(grep -c 'killall rkgame' "$OUT/install_first/r36sx/cubegm/zhijack.sh")" = 1 ] \
     || fail "r36sx zhijack must contain exactly 1 killall rkgame (boot block only)"
-for dev in sf3000 sf3500 sf3000hd sf3100 gb350; do
+for dev in sf3000 sf3000hd_nohdmi sf3500 sf3000hd sf3100 gb350; do
     [ "$(grep -c 'killall rkgame' "$OUT/install_first/$dev/cubegm/zhijack.sh")" = 3 ] \
         || fail "$dev zhijack must contain 3 killall rkgame (boot + 2 loop)"
 done
