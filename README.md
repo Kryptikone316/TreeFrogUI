@@ -2,6 +2,8 @@
 
 # TreeFrogUI - Retro Emulation Frontend
 
+🌐 **[TreeFrogUI website](https://tzubertowski.github.io/TreeFrogUI/)** - releases, news, and notes
+
 A free, custom game-menu (frontend) for a range of MIPS-based Hichip handhelds - R36SX, SF3000, SF3500, GB350 and more (full list below). It replaces the stock menu and runs hundreds of retro systems.
 
 **Supported devices:** R36SX (v2.6 & v2.7), **R36 HD** (and R36SX clones - see [install guide](install.md#r36sx-clones-r36hd-etc)), SF3000, SF3000 HD, SF3100, SF3500, and GB350.
@@ -18,7 +20,7 @@ A free, custom game-menu (frontend) for a range of MIPS-based Hichip handhelds -
 > ### 💬 [**TreeFrogUI community server**](https://discord.gg/JYFsmBYFBd)
 
 ### New here? Start with these
-- 🧰 **How to install it** - use our [TreeFrogUI Installer](https://github.com/tzubertowski/TreeFrogUI-installer/releases/latest), or [follow the manual installation steps](install.md)
+- 🧰 **How to install it** - use our [TreeFrogUI Installer](https://github.com/tzubertowski/TreeFrogUI-installer/releases), or [follow the manual installation steps](install.md)
 - 🕹️ **[How to add games + which folder](#rom-folder-setup)** - where to put your ROMs
 - 🔌 **[Use a USB/OTG drive as a game library](docs/otg-storage.md)** - play ROMs directly from external storage
 - 🎨 **[How to customise it](theme.md)** - themes, fonts, game art / box art / thumbnails, backgrounds

@@ -16,7 +16,7 @@ Use **[Mini Scraper for CFW](https://github.com/tzubertowski/mini-scraper-cfw/re
 2. Choose the SD card or ROM folder, confirm the detected **TreeFrogUI** format, and leave artwork source option 1 selected: **Automatic (Libretro Thumbnails) · no login**.
 3. Press **Add artwork**.
 
-Mini Scraper matches covers to the ROM filenames and writes them directly to TreeFrogUI's required `.res/<ROM name>.png` locations. Existing artwork is preserved unless you explicitly choose to replace it.
+Mini Scraper matches covers to the ROM filenames and writes each image beside its ROM using the filename TreeFrogUI expects. Existing artwork is preserved unless you explicitly choose to replace it.
 
 ### Add box art manually
 
@@ -27,7 +27,7 @@ roms/GBA/Advance Wars.gba
 roms/GBA/.res/Advance Wars.png
 ```
 
-The rule is `<ROM folder>/.res/<ROM name without extension>.<png|jpg|jpeg|bmp>`.
+Name the image after the ROM filename without its extension, then use a supported image extension: `.png`, `.jpg`, `.jpeg` or `.bmp`.
 
 PNG, JPG, JPEG and BMP images can be any resolution. Images larger than the 250×200 preview area are downscaled automatically with their aspect ratio preserved. PNG transparency is supported. Keep files reasonably small because they are decoded while browsing.
 
@@ -62,7 +62,7 @@ Settings are stored in `/mnt/sdcard/frogui/settings.txt`.
 
 ### Background theme packs
 
-Theme packs live in `/mnt/sdcard/frogui/theme-packs/<pack>/`. Select one in
+Theme packs live in a folder under `/mnt/sdcard/frogui/theme-packs/`. Select one in
 Settings → Appearance → **Background Theme Pack**. Packs use the same filenames
 as per-system backgrounds: `main.jpg`, `settings.jpg`, `recents.jpg`,
 `favourites.jpg`, or a ROM folder name such as `gba.jpg`. The shipped
@@ -181,7 +181,7 @@ Place the files directly in `/mnt/sdcard/frogui/`:
 | Recent games | `recents.png` |
 | Favourites | `favourites.png` |
 | Settings | `settings.png` |
-| A ROM folder | `<folder name>.png`, for example `GBA.png` or `FC.png` |
+| A ROM folder | The folder name plus `.png`, for example `GBA.png` or `FC.png` |
 
 The base filename must exactly match the ROM folder name, including case. Use a lower-case `.png`, `.jpg`, `.jpeg`, or `.bmp` extension.
 

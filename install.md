@@ -197,24 +197,9 @@ the R36SX v2.7 backup as the R36HD base.
 
 ---
 
-## In-Game Shortcuts
+For controller shortcuts, see [In-game shortcuts](README.md#shortcuts).
 
-**SELECT** is the function key (OnionOS-style):
-
-- **`SELECT + START`** - in-game menu (PCSX4ALL opens its own menu instead).
-- **`SELECT + R2`** - save state (slot 0).
-- **`SELECT + L2`** - load state (slot 0).
-- **`SELECT + R1`** - fast-forward: off → 2× → 3× → off (audio mutes). Per-core toggle.
-- **`SELECT + B`** - hold to rewind. Per-core toggle.
-- **`SELECT + L1`** - screenshot → `.bmp` in the `screenshots/` folder on your card.
-
----
-
-## PlayStation 1 BIOS (strongly recommended)
-
-PS1 has two cores, each with its own BIOS location - without a real BIOS they
-fall back to HLE, which causes graphical glitches and broken/hanging memory-card
-saves. Full setup, BIOS paths, and speed toggles: 📖 **[docs/cores/ps1.md](docs/cores/ps1.md)**.
+For BIOS requirements, see [BIOS files required](README.md#bios-files-required) and the [PlayStation 1 setup guide](docs/cores/ps1.md).
 
 ---
 

@@ -1,0 +1,15 @@
+title: TreeFrogUI
+description: A retro frontend for handhelds, made for the joy of playing.
+url: https://tzubertowski.github.io
+baseurl: /TreeFrogUI
+markdown: kramdown
+permalink: /news/:year/:month/:day/:title/
+exclude:
+  - README.md
+  - scripts
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: default
