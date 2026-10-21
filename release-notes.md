@@ -5,6 +5,8 @@
 - Added **VVVVVV** to **Games → Ports**. Bring your own `data.zip`; the [setup guide](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/blob/main/docs/setup/vvvvvv.md) lists the required files and install steps.
 - Added a screenshot shortcut to the FrogUI menu.
 - Rebuilt the DS emulator from the latest local source.
+- Improved SF3000 audio buffer status reporting to cores.
+- Made long emulator option names and values scroll faster when selected.
 
 Thanks to [James O’Farrell](https://github.com/jamesofarrell/VVVVVV) for the original OpenDingux port this Libretro adaptation is based on.
 
