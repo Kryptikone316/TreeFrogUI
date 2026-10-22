@@ -1,0 +1,112 @@
+---
+layout: default
+title: FrogScrapper - easy game boxart in 3 steps
+description: Find, resize and package artwork for your handheld ROM library in your browser.
+permalink: /scraper/
+---
+<section class="page-heading">
+  <p class="eyebrow">TreeFrogUI tool</p>
+  <h1>FrogScrapper - easy game boxart in 3 steps</h1>
+  <p>Choose a ROM folder or SD card, find matching artwork, and download a ZIP laid out for your frontend. Your ROM files stay on your device.</p>
+</section>
+
+<section class="installer-callout" aria-labelledby="scraper-output-title">
+  <p class="eyebrow">After the scrape</p>
+  <h2 id="scraper-output-title">Put the artwork on your card</h2>
+  <ol class="installer-steps">
+    <li><strong>Download the ZIP.</strong><span>When the scrape finishes, save the artwork ZIP to your computer.</span></li>
+    <li><strong>Extract it beside your ROM folders.</strong><span>Use the same folder level you selected below: the SD card root, the <code>Roms</code> folder, or the system folder. Keep the folders from the ZIP so each image lands beside the right games.</span></li>
+    <li><strong>Eject the card safely and check your games.</strong><span>Put the card back in your handheld and open the game list. The selected frontend layout determines where the artwork is installed.</span></li>
+  </ol>
+  <p class="quiet">Prefer a desktop app? <a href="https://github.com/tzubertowski/mini-scraper-cfw/releases">Mini Scraper CFW</a> is the standalone alternative.</p>
+</section>
+
+<section class="scraper-panel" aria-labelledby="scraper-source-title">
+  <h2 id="scraper-source-title">1. Choose your artwork source</h2>
+  <label class="scraper-field">Source
+    <select id="source">
+      <option value="automatic">Automatic · Libretro Thumbnails · no account</option>
+      <option value="retroachievements">RetroAchievements · use your API key</option>
+    </select>
+  </label>
+  <div id="ra-fields" class="scraper-options scraper-credentials" hidden>
+    <label class="scraper-field">RetroAchievements username <input id="ra-user" autocomplete="username"></label>
+    <label class="scraper-field">Web API key <input id="ra-key" type="password" autocomplete="off"></label>
+    <p class="scraper-note">The key is used in this browser session to access RetroAchievements. It is not saved by this site.</p>
+  </div>
+</section>
+
+<section class="scraper-panel" aria-labelledby="scraper-library-title">
+  <h2 id="scraper-library-title">2. Choose your ROM library</h2>
+  <p>Choose the SD card root, a <code>Roms</code> folder, or one system folder. The browser scans supported systems and games locally.</p>
+  <div class="scraper-actions">
+    <button class="button" id="choose-folder" type="button">Choose folder</button>
+    <input id="folder-input" type="file" webkitdirectory directory multiple hidden>
+    <span id="library-label" class="quiet">No library selected</span>
+  </div>
+  <div id="library-summary" class="scraper-summary" hidden aria-live="polite">
+    <strong id="library-count"></strong>
+    <ul id="system-list"></ul>
+  </div>
+</section>
+
+<section class="scraper-panel" aria-labelledby="scraper-settings-title">
+  <h2 id="scraper-settings-title">3. Set artwork options</h2>
+  <div class="scraper-options">
+    <label class="scraper-field">Frontend output
+      <select id="format">
+        <option value="treefrogui">TreeFrogUI</option><option value="minui">MinUI</option><option value="nextui">NextUI</option>
+        <option value="muos">muOS</option><option value="knulli">Knulli</option><option value="onionos">OnionOS</option>
+        <option value="garlicos">GarlicOS</option><option value="spruceos">SpruceOS</option><option value="alliumos">AlliumOS</option>
+        <option value="anbernic">Anbernic</option><option value="funkey">FunKey</option><option value="esde">ES-DE</option>
+      </select>
+    </label>
+    <label class="scraper-field">Artwork type
+      <select id="art-type">
+        <option value="boxart">Box art</option>
+        <option value="box+snap">Box art + screenshot</option>
+        <option value="box+title">Box art + title screen</option>
+        <option value="snap">Screenshot</option>
+        <option value="snap+box">Screenshot + box art</option>
+        <option value="snap+title">Screenshot + title screen</option>
+        <option value="title">Title screen</option>
+        <option value="title+box">Title screen + box art</option>
+        <option value="title+snap">Title screen + screenshot</option>
+      </select>
+    </label>
+    <label class="scraper-field">Maximum width <input id="width" type="number" value="300" min="50" max="2000"></label>
+    <label class="scraper-field">Maximum height (optional) <input id="height" type="number" min="50" max="2000" placeholder="Keep aspect ratio"></label>
+    <label class="scraper-field esde-setting" hidden>ES-DE media path <input id="media-path" value="ES-DE/downloaded_media"></label>
+  </div>
+  <details class="scraper-advanced"><summary>Advanced matching and download settings</summary>
+    <div class="scraper-options">
+      <label class="scraper-field scraper-check"><input id="force" type="checkbox"> Replace existing artwork</label>
+      <label class="scraper-field scraper-check"><input id="ai" type="checkbox"> Use AI matching (OpenAI-compatible API)</label>
+      <label class="scraper-field">AI endpoint <input id="ai-url" type="url" value="http://localhost:11434/v1"></label>
+      <label class="scraper-field">AI model <input id="ai-model" value="gemma2:2b"></label>
+      <label class="scraper-field">AI API key <input id="ai-key" type="password" autocomplete="off" placeholder="Local Ollama: leave blank"></label>
+      <label class="scraper-field">Preferred regions <input id="regions" value="World,Europe,USA,Japan"></label>
+      <label class="scraper-field">Requests per batch <input id="batch-size" type="number" value="100" min="1"></label>
+      <label class="scraper-field">Pause between batches (ms) <input id="batch-delay" type="number" value="1000" min="0"></label>
+      <label class="scraper-field">Failed download retries <input id="batch-retries" type="number" value="2" min="0"></label>
+    </div>
+    <p class="scraper-note">AI endpoints must allow browser cross-origin requests. Thumbnails and database downloads are cached in this browser.</p>
+  </details>
+  <div id="preview-section" class="scraper-preview" aria-labelledby="preview-title">
+    <h3 id="preview-title">Live artwork preview</h3>
+    <p id="preview-count" class="scraper-note" aria-live="polite">Loading sample artwork…</p>
+    <div id="art-previews" class="art-previews"></div>
+  </div>
+  <div class="scraper-actions scraper-run">
+    <button class="button" id="start" type="button" disabled>Find artwork and download ZIP</button>
+    <button class="button button-muted" id="write" type="button" hidden>Write to selected card</button>
+    <button class="button button-muted" id="cleanup" type="button" hidden>Remove generated artwork</button>
+    <button class="button button-muted" id="cancel" type="button" hidden>Cancel</button>
+  </div>
+  <div id="progress-wrap" class="scraper-progress" hidden><progress id="progress" max="1" value="0"></progress><span id="progress-text"></span></div>
+  <p id="scraper-message" class="scraper-message" role="status" aria-live="polite"></p>
+  <pre id="scraper-log" class="scraper-log" aria-live="polite" hidden></pre>
+</section>
+
+<p class="scraper-note scraper-legal">Uses Libretro game databases and thumbnails, RetroAchievements when selected, and optional AI services configured by you. ROMs remain in your browser; only metadata, checksums, and artwork requests are sent to the selected services. See the <a href="https://github.com/tzubertowski/mini-scraper-cfw">Mini Scraper source and license</a>.</p>
+<script type="module" src="{{ '/assets/js/scraper-app.js' | relative_url }}"></script>

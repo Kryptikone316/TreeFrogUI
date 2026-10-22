@@ -10,7 +10,7 @@ title: Minimalistic emulation frontend for SF3000-like handhelds
     <p class="lede">For R36SX, SF3500, GB350 and similar handhelds.</p>
     <div class="actions">
       <a class="button" href="{{ '/guides/installation/' | relative_url }}">Installation guide</a>
-      <a class="text-link" href="https://github.com/tzubertowski/mini-scraper-cfw/releases">Easy boxart &amp; artwork →</a>
+      <a class="text-link" href="{{ '/scraper/' | relative_url }}">Easy boxart &amp; artwork →</a>
     </div>
   </div>
   <img class="hero-image" src="{{ '/assets/images/console.jpg' | relative_url }}" alt="TreeFrogUI running on a handheld console">
@@ -18,6 +18,7 @@ title: Minimalistic emulation frontend for SF3000-like handhelds
 
 <section class="tool-shelf" aria-label="TreeFrogUI tools">
   <a class="tool-card" href="https://github.com/tzubertowski/TreeFrogUI-installer/releases"><span class="tool-card-copy"><strong>TreeFrogUI Installer</strong><small>Install TreeFrogUI from Windows, macOS, or Linux.</small></span><span class="tool-card-arrow" aria-hidden="true">↗</span></a>
+  <a class="tool-card" href="{{ '/scraper/' | relative_url }}"><span class="tool-card-copy"><strong>Browser artwork tool</strong><small>Find box art and download a ready-to-use ZIP without installing software.</small></span><span class="tool-card-arrow" aria-hidden="true">↗</span></a>
   <a class="tool-card" href="https://github.com/tzubertowski/mini-scraper-cfw/releases"><span class="tool-card-copy"><strong>Mini Scraper</strong><small>Find and add box art and other game artwork.</small></span><span class="tool-card-arrow" aria-hidden="true">↗</span></a>
   <a class="tool-card" href="https://github.com/tzubertowski/TreeFrogUI_PortsCollection/releases"><span class="tool-card-copy"><strong>Ports Collection</strong><small>Add optional standalone games to your handheld.</small></span><span class="tool-card-arrow" aria-hidden="true">↗</span></a>
 </section>
@@ -27,7 +28,7 @@ title: Minimalistic emulation frontend for SF3000-like handhelds
   <p>Follow a simple guide to set up your device, add games and make the menu yours.</p>
   <div class="guide-grid">
     <a href="{{ '/guides/installation/' | relative_url }}"><strong>Install TreeFrogUI</strong><span>Choose your device and follow the setup steps.</span></a>
-    <a href="{{ '/guides/artwork/' | relative_url }}"><strong>Add box art</strong><span>Get artwork automatically with Mini Scraper.</span></a>
+    <a href="{{ '/guides/artwork/' | relative_url }}"><strong>Add box art</strong><span>Find artwork in your browser or use Mini Scraper.</span></a>
     <a href="{{ '/guides/folders/' | relative_url }}"><strong>Games, folders &amp; systems</strong><span>Find the right folder for each console.</span></a>
     <a href="{{ '/guides/theming/' | relative_url }}"><strong>Change the look</strong><span>Pick colours, backgrounds and fonts.</span></a>
     <a href="{{ '/guides/ports/' | relative_url }}"><strong>Install game ports</strong><span>Add optional ports such as standalone games.</span></a>
