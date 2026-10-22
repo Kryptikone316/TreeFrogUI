@@ -4,10 +4,10 @@ Picante8 is the MustardOS PICO-8 libretro core integrated into TreeFrogUI.
 
 ## Installation
 
-Place PICO-8 carts in:
+Place PICO-8 carts in the default folder:
 
 ```text
-roms/picante8/
+roms/pico8/
 ```
 
 Supported formats:
@@ -15,7 +15,7 @@ Supported formats:
 - `.p8` source carts
 - `.p8.png` cartridge images
 
-Open **PICO-8 - Picante8** in the system list and select a cart. The core is separate from the existing Fake-08 (`pico8`) and Retro8 (`retro8`) systems.
+Open **PICO-8** in the system list and select a cart. The other test folders are `roms/fake08/` for Fake-08 and `roms/retro8/` for Retro8.
 
 The current hardware test deployment used these carts from the local ROM library:
 

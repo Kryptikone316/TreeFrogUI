@@ -8,8 +8,8 @@
 #
 # With no payload, the complete release plus the selected install_first overlay
 # is deployed. Optional development payloads:
-#   release, test-games, test-media, duke3d-data, undertale-data, openlara-data, vvvvvv, openbor, vvvvvv-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-test-game, ps1-bios, pcsx4all-config,
-#   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test,
+#   release, test-games, test-media, perf-test-roms, duke3d-data, undertale-data, openlara-data, vvvvvv, openbor, vvvvvv-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-test-game, ps1-bios, pcsx4all-config,
+#   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test, launcher,
 #   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test
 #
 # This script never formats a card and never uses rsync --delete.
@@ -32,7 +32,7 @@ die() {
 usage() {
     cat >&2 <<EOF
 usage: $0 <r36sx|r36hd|sf3000|sf3000hd_nohdmi|sf3500> [payload ...]
-    payloads: release standalone-audio test-games test-media duke3d-data undertale-data openlara-data vvvvvv openbor vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-test-game ps1-bios pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test mame2000 mame2000-mslug mame-test amstrad-cap32-test
+    payloads: release test-games test-media perf-test-roms duke3d-data undertale-data openlara-data vvvvvv openbor vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-test-game ps1-bios pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test launcher mame2000 mame2000-mslug mame-test amstrad-cap32-test
 default:  release
 EOF
     exit 2
@@ -77,7 +77,7 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|standalone-audio|test-games|test-media|duke3d-data|undertale-data|openlara-data|vvvvvv|openbor|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-test-game|ps1-bios|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
+        release|test-games|test-media|perf-test-roms|duke3d-data|undertale-data|openlara-data|vvvvvv|openbor|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-test-game|ps1-bios|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|launcher|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
         *) usage ;;
     esac
 done
@@ -118,12 +118,13 @@ validate_release() {
 
 for payload in "${PAYLOADS[@]}"; do
     [ "$payload" != release ] || validate_release
-    if [ "$payload" = standalone-audio ]; then
-        [ -x "$REPO/hijack/tf_speaker_open" ] ||
-            die "standalone speaker helper is missing; run ./build_release.sh"
-        [ -x "$OVERLAY/cubegm/zhijack.sh" ] &&
-            grep -q 'tf_speaker_open' "$OVERLAY/cubegm/zhijack.sh" ||
-            die "profile launcher lacks standalone speaker guard; run ./build_release.sh"
+    if [ "$payload" = launcher ]; then
+        launcher_src="$OVERLAY/cubegm/zhijack.sh"
+        [ -f "$launcher_src" ] || die "profile launcher missing: $launcher_src"
+        grep -qx "TF_DEVICE=$EXPECTED_TF_DEVICE" "$launcher_src" ||
+            die "$PROFILE launcher identity is invalid"
+        ! grep -q 'tf_speaker_open' "$launcher_src" ||
+            die "$PROFILE launcher references the standalone speaker helper"
     fi
 done
 
@@ -236,10 +237,19 @@ declare -a STOCK_FILES=(
     cubegm/rkgame
     cubegm/driver.so
 )
-if { [ "$PROFILE" != sf3500 ] && [ "$PROFILE" != r36hd ]; } || [ -f "$MOUNT/cubegm/icube" ]; then
+if [ -f "$MOUNT/cubegm/icube" ]; then
     STOCK_FILES=(cubegm/icube "${STOCK_FILES[@]}")
-else
+elif [ "$PROFILE" = r36sx ] &&
+    [ -f "$MOUNT/cubegm/zhijack.sh" ] &&
+    grep -qx "TF_DEVICE=$EXPECTED_TF_DEVICE" "$MOUNT/cubegm/zhijack.sh" &&
+    [ -f "$MOUNT/cubegm/setting.xml" ] &&
+    grep -q 'file="/mnt/sdcard/MD/dummy.md" driver=""' "$MOUNT/cubegm/setting.xml" &&
+    [ -f "$MOUNT/cubegm/cores/libemu_md.so" ]; then
+    echo "r36sx TreeFrogUI identity verified; absent legacy cubegm/icube is unused by this boot path."
+elif [ "$PROFILE" = sf3500 ] || [ "$PROFILE" = r36hd ]; then
     echo "$PROFILE legacy cubegm/icube is absent (unused by its boot path)."
+else
+    die "stock file is missing: cubegm/icube"
 fi
 readonly -a STOCK_FILES
 declare -A stock_hashes=()
@@ -360,10 +370,6 @@ deploy_one() {
             src="$WORK/ebook/ebook"
             dst="$MOUNT/cubegm/ebook"
             ;;
-        standalone-audio)
-            src="$REPO/hijack/tf_speaker_open"
-            dst="$MOUNT/cubegm/tf_speaker_open"
-            ;;
         pcsx4all)
             src="$STAGE/cubegm/pcsx4all"
             dst="$MOUNT/cubegm/pcsx4all"
@@ -388,6 +394,10 @@ deploy_one() {
             src="$STAGE/cubegm/cores/o2em_libretro.so"
             dst="$MOUNT/cubegm/cores/o2em_libretro.so"
             ;;
+        launcher)
+            src="$OVERLAY/cubegm/zhijack.sh"
+            dst="$MOUNT/cubegm/zhijack.sh"
+            ;;
         mame2000)
             src="$STAGE/cubegm/cores/mame2000_libretro.so"
             dst="$MOUNT/cubegm/cores/mame2000_libretro.so"
@@ -409,6 +419,11 @@ deploy_one() {
     fi
 
     rsync -tc "$src" "$dst"
+    if [ "$name" = launcher ]; then
+        rm -f "$MOUNT/cubegm/tf_speaker_open"
+        [ ! -e "$MOUNT/cubegm/tf_speaker_open" ] ||
+            die "obsolete speaker helper remains on card"
+    fi
     if [ "$name" = frogui ]; then
         mkdir -p "$MOUNT/frogui/lang"
         rsync -rltc "$REPO/frogui/lang/" "$MOUNT/frogui/lang/"
@@ -458,19 +473,6 @@ deploy_one() {
             "$MOUNT/roms/ports/Start Undertale.png" \
             "$MOUNT/roms/ports/.res/Start Undertale.png"
         echo "Undertale launcher marker deployed; game data was not copied"
-    fi
-    if [ "$name" = standalone-audio ]; then
-        local launcher_src="$OVERLAY/cubegm/zhijack.sh"
-        [ -f "$launcher_src" ] || die "profile launcher missing: $launcher_src"
-        grep -q 'tf_speaker_open' "$launcher_src" ||
-            die "profile launcher lacks standalone speaker guard: $launcher_src"
-        rsync -tc "$launcher_src" "$MOUNT/cubegm/zhijack.sh"
-        hash_line="$(sha256sum "$launcher_src")"
-        launcher_hash="${hash_line%% *}"
-        hash_line="$(sha256sum "$MOUNT/cubegm/zhijack.sh")"
-        dst_hash="${hash_line%% *}"
-        [ "$launcher_hash" = "$dst_hash" ] || die "standalone launcher verification failed"
-        echo "Standalone launcher verified: $dst_hash"
     fi
     sync
     hash_line="$(sha256sum "$dst")"
@@ -948,6 +950,35 @@ deploy_test_media() {
     sync
 }
 
+deploy_perf_test_roms() {
+    local src dst hash_line src_hash dst_hash
+
+    copy_rom() {
+        src="$1"
+        dst="$MOUNT/$2"
+        [ -f "$src" ] || die "performance test ROM is missing: $src"
+        mkdir -p "$(dirname "$dst")"
+        rsync -tc "$src" "$dst"
+        hash_line="$(sha256sum "$src")"; src_hash="${hash_line%% *}"
+        hash_line="$(sha256sum "$dst")"; dst_hash="${hash_line%% *}"
+        [ "$src_hash" = "$dst_hash" ] || die "performance test ROM verification failed: $dst"
+        echo "Verified performance test ROM: ${dst#"$MOUNT/"}  $dst_hash"
+    }
+
+    copy_rom '/home/tomaszz/Pobrane/Castlevania - Dawn of Sorrow (USA).nds' 'roms/nds/Castlevania - Dawn of Sorrow.nds'
+    copy_rom '/home/tomaszz/Pobrane/Picross DS (USA) (En,Fr,Es).nds' 'roms/nds/Picross DS.nds'
+    copy_rom '/home/tomaszz/Roms/gb/roms/Super Mario Land 2 - 6 Golden Coins (USA, Europe) (Rev B).gb' 'roms/gb/Super Mario Land 2.gb'
+    copy_rom '/home/tomaszz/Roms/Nintendo Game Boy Color/roms/Pokemon - Crystal Version (USA, Europe) (Rev A).gbc' 'roms/gbc/Pokemon Crystal.gbc'
+    copy_rom '/home/tomaszz/Roms/gba/Metroid Fusion (USA).gba' 'roms/gba/Metroid Fusion.gba'
+    copy_rom '/home/tomaszz/Roms/nes/Metroid (USA).nes' 'roms/nes/Metroid.nes'
+    copy_rom '/home/tomaszz/Roms/snes/Super Metroid (Japan, USA) (En,Ja).sfc' 'roms/snes/Super Metroid.sfc'
+    copy_rom '/home/tomaszz/Roms/sega/Sonic The Hedgehog 2 (World) (Rev B).md' 'roms/sega/Sonic 2.md'
+    copy_rom '/home/tomaszz/Roms/pico8/[Platform]/Celeste (v1.0).p8.png' 'roms/pico8/Celeste (v1.0).p8.png'
+    copy_rom '/home/tomaszz/Roms/pico8/[Platform]/Celeste (v1.0).p8.png' 'roms/fake08/Celeste (v1.0).p8.png'
+    copy_rom '/home/tomaszz/Roms/pico8/[Platform]/Celeste (v1.0).p8.png' 'roms/retro8/Celeste (v1.0).p8.png'
+    sync
+}
+
 deploy_duke3d_data() {
     local src_dir=/home/tomaszz/Pobrane/DUKE3D/DUKE3D
     local file src dst hash_line src_hash dst_hash
@@ -1041,11 +1072,11 @@ deploy_openlara_data() {
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
         release) deploy_release ;;
-        standalone-audio) deploy_one standalone-audio ;;
         vvvvvv) deploy_vvvvvv ;;
         openbor) deploy_openbor ;;
         test-games) deploy_test_games ;;
         test-media) deploy_test_media ;;
+        perf-test-roms) deploy_perf_test_roms ;;
         duke3d-data) deploy_duke3d_data ;;
         undertale-data) deploy_undertale_data ;;
         openlara-data) deploy_openlara_data ;;
@@ -1062,7 +1093,7 @@ for payload in "${PAYLOADS[@]}"; do
 done
 
 case "${PAYLOADS[*]}" in
-    vvvvvv|openbor|standalone-audio) ;;
+    vvvvvv|openbor) ;;
     *) migrate_j2me_saves ;;
 esac
 

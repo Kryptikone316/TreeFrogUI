@@ -2,6 +2,8 @@
 
 # TreeFrogUI - Retro Emulation Frontend
 
+🌐 **[TreeFrogUI website](https://tzubertowski.github.io/TreeFrogUI/)** - releases, news, and notes
+
 A free, custom game-menu (frontend) for a range of MIPS-based Hichip handhelds - R36SX, SF3000, SF3500, GB350 and more (full list below). It replaces the stock menu and runs hundreds of retro systems.
 
 **Supported devices:** R36SX (v2.6 & v2.7), **R36 HD** (and R36SX clones - see [install guide](install.md#r36sx-clones-r36hd-etc)), SF3000, SF3000 HD, SF3000HD without HDMI, SF3100, SF3500, and GB350.
@@ -18,7 +20,7 @@ A free, custom game-menu (frontend) for a range of MIPS-based Hichip handhelds -
 > ### 💬 [**TreeFrogUI community server**](https://discord.gg/JYFsmBYFBd)
 
 ### New here? Start with these
-- 🧰 **How to install it** - use our [TreeFrogUI Installer](https://github.com/tzubertowski/TreeFrogUI-installer/releases/latest), or [follow the manual installation steps](install.md)
+- 🧰 **How to install it** - use our [TreeFrogUI Installer](https://github.com/tzubertowski/TreeFrogUI-installer/releases), or [follow the manual installation steps](install.md)
 - 🕹️ **[How to add games + which folder](#rom-folder-setup)** - where to put your ROMs
 - 🔌 **[Use a USB/OTG drive as a game library](docs/otg-storage.md)** - play ROMs directly from external storage
 - 🎨 **[How to customise it](theme.md)** - themes, fonts, game art / box art / thumbnails, backgrounds
@@ -145,9 +147,9 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **xrick** | Rick Dangerous | `xrick_libretro.so` |
 | **jnb** | Jump 'n Bump | `jumpnbump_libretro.so` |
 | **gw** | Game & Watch | `gw_libretro.so` |
-| **pico8** | PICO-8 (fake08) - also accepts legacy `fake08` folder | `fake08_libretro.so` |
-| **retro8** | PICO-8 (retro8) | `retro8_libretro.so` |
-| **picante8** | PICO-8 (Picante8) - 📖 [setup guide](docs/cores/picante8.md) | `picante8_libretro.so` |
+| **pico8** | PICO-8 (Picante8) - 📖 [setup guide](docs/cores/picante8.md) | `picante8_libretro.so` |
+| **fake08** | PICO-8 (Fake-08) | `fake08_libretro.so` |
+| **retro8** | PICO-8 (Retro8) | `retro8_libretro.so` |
 | **lowres-nx** | LowRes NX | `lowresnx_libretro.so` |
 | **tic80** | TIC-80 fantasy console | `tic80_libretro.so` |
 | **pokem** | Pokémon Mini | `pokemini_libretro.so` |
@@ -174,9 +176,10 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 
 See [cores.md](cores.md) for detailed build status and source repositories of TreeFrogUI external cores.
 
-**PICO-8 (fake08):** place carts in `roms/pico8/` (the legacy `roms/fake08/` folder still works). Both `.p8` (text source) and `.p8.png` (cart image) formats are supported.
+**PICO-8 (Picante8):** place carts in `roms/pico8/`. Both `.p8` (text source) and `.p8.png` (cart image) formats are supported.
 
-**PICO-8 (Picante8):** place `.p8` carts or `.p8.png` cart images in `roms/picante8/`. This is a separate PICO-8 implementation and does not replace the existing Fake-08 or Retro8 entries.
+**PICO-8 alternatives:** place carts in `roms/fake08/` for Fake-08 or `roms/retro8/` for Retro8.
+Existing carts in `roms/picante8/` still use Picante8.
 
 **Arduboy:** the `arduboy` folder uses the **Ardens** core (a fast custom AVR emulator) and accepts both `.hex` and `.arduboy` files. The `arduous` folder runs the older simavr-based **arduous** core (cycle-accurate but much slower; `.hex` only) - use it only if a game misbehaves under Ardens.
 

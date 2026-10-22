@@ -147,11 +147,11 @@ Emulator systems retain their normal `roms/<system>/` folders.
 | `xrick` | Rick Dangerous | `xrick_libretro.so` | [libretro/xrick-libretro](https://github.com/libretro/xrick-libretro) |
 | `jnb` | Jump 'n Bump | `jumpnbump_libretro.so` | [libretro/jumpnbump-libretro](https://github.com/libretro/jumpnbump-libretro) |
 | `gong` | Pong clone | `gong_libretro.so` | [libretro/gong](https://github.com/libretro/gong) |
-| `pico8` (or legacy `fake08`) | PICO-8 | `fake08_libretro.so` | [tzubertowski/fake-08](https://github.com/tzubertowski/fake-08) (branch `sf3000`) |
+| `pico8` | PICO-8 (Picante8) | `picante8_libretro.so` | [MustardOS/picante8](https://github.com/MustardOS/picante8) |
+| `fake08` | PICO-8 (Fake-08) | `fake08_libretro.so` | [tzubertowski/fake-08](https://github.com/tzubertowski/fake-08) (branch `sf3000`) |
 | `ps1r` | PlayStation (lightrec JIT) | `pcsx_rearmed_libretro.so` | [libretro/pcsx_rearmed](https://github.com/libretro/pcsx_rearmed) + `patches/pcsx_rearmed-sf3000-lightrec.patch` |
 | `qpsx` | PlayStation (QPSX MIPS recompiler) | `qpsx_libretro.so` | [angree/sf2000-qpsx-playstation-emulator](https://github.com/angree/sf2000-qpsx-playstation-emulator) + `patches/qpsx-sf3000.patch` |
 | `retro8` | PICO-8 compat | `retro8_libretro.so` | [libretro/retro8](https://github.com/libretro/retro8) |
-| `picante8` | PICO-8 compat (Picante8) | `picante8_libretro.so` | [MustardOS/picante8](https://github.com/MustardOS/picante8) |
 | `lowres-nx` | LowRes NX | `lowresnx_libretro.so` | [timoinutilis/lowres-nx](https://github.com/timoinutilis/lowres-nx) |
 | `tic80` | TIC-80 fantasy console (.tic carts) | `tic80_libretro.so` | [nesbox/TIC-80](https://github.com/nesbox/TIC-80) |
 | `arduboy` | Arduboy (default) | `ardens_libretro.so` | [tiberiusbrown/Ardens](https://github.com/tiberiusbrown/Ardens) + `patches/ardens-sf3000.patch` - fast custom AVR core, C++14 libretro target, built directly (no cmake) |

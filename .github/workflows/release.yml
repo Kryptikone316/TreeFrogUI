@@ -15,6 +15,11 @@ on:
         required: true
         default: true
         type: boolean
+      notify_discord:
+        description: Post the release update to Discord
+        required: true
+        default: false
+        type: boolean
   repository_dispatch:
     types: [release]
 
@@ -28,9 +33,9 @@ permissions:
 env:
   # This archive is built and tested locally. CI only verifies, packages, and
   # publishes it; changing any of these values is a deliberate release action.
-  LOCAL_BUNDLE_TAG: local-build-v1.8.0-i
-  LOCAL_BUNDLE_ASSET: TreeFrogUI-local-build-v1.8.0-i.tar.gz
-  LOCAL_BUNDLE_SHA256: 5e4dae50630cf34e4f9b78ba18afacbcadcba2e7f76292e068243a8e8b1bee60
+  LOCAL_BUNDLE_TAG: local-build-v1.8.0-k
+  LOCAL_BUNDLE_ASSET: TreeFrogUI-local-build-v1.8.0-k.tar.gz
+  LOCAL_BUNDLE_SHA256: 6601deeab218f0ca97f77da1bb7c9904fb1ad1825db8904660f75cc40645a2ad
   CORE_BUILD_REPO: tzubertowski/TreeFrogUI-core-builds
   # update.zip is always cumulative from the last major stable baseline.
   # Change this deliberately when the product moves to a new major baseline;
@@ -145,12 +150,13 @@ jobs:
           test ! -e "$current/roms/ports"
           test ! -e "$current/cubegm/devilutionx"
           test -s "$current/cubegm/bios/Roland_SC-55.sf2"
-          echo '0942579a47d78d476f4eced03e11e8f39ee93f98b0147621f8879c41429fbff7  '"$current/cubegm/dsperate/dsperate" | sha256sum -c -
+          echo '39c080709be1dca0056613b4f548aaffb1f0aaf18c1c988cdad3f37251e206a8  '"$current/cubegm/dsperate/dsperate" | sha256sum -c -
           required=(
             cubegm/picoarch cubegm/picoarch_hi
             cubegm/port_check.sh
             cubegm/cores/frogui_libretro.so cubegm/cores/tyrquake_libretro.so
             cubegm/ebook cubegm/dsperate/dsperate
+            cubegm/cores/openbor_libretro.so
             cubegm/lib/libSDL-1.2.so.0 cubegm/lib/libpng12.so.0
             cubegm/lib/libpng16.so.16
           )
@@ -158,7 +164,15 @@ jobs:
             [[ -f "$current/$rel" ]] || { echo "Missing required payload: $rel" >&2; exit 1; }
           done
           [[ -d "$current/roms/nds" ]] || { echo 'Missing required ROM folder: roms/nds' >&2; exit 1; }
+          for system in pico8 fake08 retro8; do
+            [[ -d "$current/roms/$system" ]] || { echo "Missing required ROM folder: roms/$system" >&2; exit 1; }
+          done
           [[ -f "$current/docs/cores/ports.md" ]] || { echo 'Missing Ports Collection installation guide' >&2; exit 1; }
+          [[ -f "$current/docs/cores/openbor.md" ]] || { echo 'Missing OpenBOR guide' >&2; exit 1; }
+          if [[ -d "$current/roms/openbor" ]] && find "$current/roms/openbor" -type f -iname '*.pak' -print -quit | grep -q .; then
+            echo 'OpenBOR game PAK files must not be included in the release' >&2
+            exit 1
+          fi
           echo "Release sanity check passed: $(find "$current/cubegm/cores" -name '*.so' | wc -l) cores; resources present."
 
       - name: Package full install and update
@@ -201,7 +215,7 @@ jobs:
           PRERELEASE: ${{ inputs.prerelease || 'true' }}
         run: |
           set -euo pipefail
-          args=("$RELEASE_TAG" "release/latest/TreeFrogUI_${VERSION}.zip" "release/latest/update.zip" --repo "$GITHUB_REPOSITORY" --title "TreeFrogUI ${VERSION}" --notes-file release-notes.md)
+          args=("$RELEASE_TAG" "release/latest/TreeFrogUI_${VERSION}.zip" "release/latest/update.zip" --repo "$GITHUB_REPOSITORY" --title "TreeFrogUI ${VERSION}" --notes-file release-notes.md --target "$GITHUB_SHA")
           if [[ "$PRERELEASE" == true || "$RELEASE_TAG" == *-unstable* ]]; then args+=(--prerelease); fi
           if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             gh release upload "$RELEASE_TAG" "release/latest/TreeFrogUI_${VERSION}.zip" release/latest/update.zip --clobber --repo "$GITHUB_REPOSITORY"
@@ -210,7 +224,7 @@ jobs:
           fi
 
       - name: Post concise release update to Discord
-        if: steps.names.outputs.tag != ''
+        if: steps.names.outputs.tag != '' && inputs.notify_discord == true
         env:
           GH_TOKEN: ${{ github.token }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_GITHUB_UPDATES_WEBHOOK }}
