@@ -1,8 +1,8 @@
-# TreeFrogUI v1.8.0_l prerelease
+# TreeFrogUI v1.8.0_m prerelease
 
-## Changes since v1.8.0_k
+## Changes since v1.8.0_l
 
-- **FrogUI:** System background images now warm into the existing render cache in a background worker after launch and when the active background settings change. Later system navigation can use pre-rendered images instead of waiting for image decode and resizing.
+- **PicoArch (R36SX):** Restored the selected aspect scaling mode for games. Earlier builds forced fill for 640×480 output, affecting all PicoArch games.
 
 ## Other changes included since the v1.0.15 stable base
 
