@@ -1,8 +1,8 @@
-# TreeFrogUI v1.8.0_m prerelease
+# TreeFrogUI v1.8.0_n prerelease
 
-## Changes since v1.8.0_l
+## Changes since v1.8.0_m
 
-- **PicoArch (R36SX):** Restored the selected aspect scaling mode for games. Earlier builds forced fill for 640×480 output, affecting all PicoArch games.
+- **SNES:** Added Snes9x-Z in `roms/snesz` as a newer, compatibility-oriented alternative. It runs slower than the default Snes9x 2005 core on R36SX.
 
 ## Other changes included since the v1.0.15 stable base
 
