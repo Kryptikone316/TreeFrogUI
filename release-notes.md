@@ -2,7 +2,7 @@
 
 ## Changes since v1.8.0_n
 
-- **PocketStation:** Added Pokket in `roms/pokket` for `.mcd`, `.gme`, `.mcs`, `.pss`, and `.bin` content. It requires a user-supplied `cubegm/bios/pocketstation.bin`; see the setup guide.
+- **PocketStation:** Added Pokket in `roms/pokket` for `.mcd`, `.gme`, `.mcs`, `.pss`, and `.bin` content. It requires a user-supplied `cubegm/bios/pocketstation.bin`; see the setup guide. Added matching backgrounds for the default, Art Book NextUI, Art Book Next, and Nao Black themes.
 
 ## Other changes included since the v1.0.15 stable base
 
