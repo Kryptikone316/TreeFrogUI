@@ -9,7 +9,7 @@
 # With no payload, the complete release plus the selected install_first overlay
 # is deployed. Optional development payloads:
 #   release, test-games, test-media, perf-test-roms, duke3d-data, undertale-data, openlara-data, vvvvvv, openbor, vvvvvv-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-test-game, ps1-bios, pcsx4all-config,
-#   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test, launcher, snesz-comparison,
+#   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test, launcher, snesz-comparison, pokket,
 #   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test
 #
 # This script never formats a card and never uses rsync --delete.
@@ -32,7 +32,7 @@ die() {
 usage() {
     cat >&2 <<EOF
 usage: $0 <r36sx|r36hd|sf3000|sf3000hd_nohdmi|sf3500> [payload ...]
-    payloads: release test-games test-media perf-test-roms duke3d-data undertale-data openlara-data vvvvvv openbor vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-test-game ps1-bios pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test launcher snesz-comparison mame2000 mame2000-mslug mame-test amstrad-cap32-test
+    payloads: release test-games test-media perf-test-roms duke3d-data undertale-data openlara-data vvvvvv openbor vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-test-game ps1-bios pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test launcher snesz-comparison pokket mame2000 mame2000-mslug mame-test amstrad-cap32-test
 default:  release
 EOF
     exit 2
@@ -77,7 +77,7 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|test-games|test-media|perf-test-roms|snesz-comparison|duke3d-data|undertale-data|openlara-data|vvvvvv|openbor|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-test-game|ps1-bios|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|launcher|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
+        release|test-games|test-media|perf-test-roms|snesz-comparison|pokket|duke3d-data|undertale-data|openlara-data|vvvvvv|openbor|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-test-game|ps1-bios|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|launcher|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
         *) usage ;;
     esac
 done
@@ -512,6 +512,26 @@ deploy_one() {
         [ "$src_hash" = "$dst_hash" ] || die "classes.zip verification failed"
         echo "j2me classes deployed: $dst_hash"
     fi
+}
+
+deploy_pokket() {
+    local pair src dst source_hash card_hash
+    local -a files=(
+        "$REPO/frogui/out/frogui_libretro.so:cubegm/cores/frogui_libretro.so"
+        "$REPO/build/pokket_libretro.so:cubegm/cores/pokket_libretro.so"
+    )
+    for pair in "${files[@]}"; do
+        src="${pair%%:*}"
+        dst="$MOUNT/${pair#*:}"
+        [ -s "$src" ] || die "Pokket deployment input missing: $src"
+        mkdir -p "$(dirname "$dst")"
+        rsync -tc "$src" "$dst"
+        source_hash="$(sha256sum "$src")"; source_hash="${source_hash%% *}"
+        card_hash="$(sha256sum "$dst")"; card_hash="${card_hash%% *}"
+        [ "$source_hash" = "$card_hash" ] || die "Pokket deployment verification failed: ${pair#*:}"
+        echo "Verified: ${pair#*:}  $card_hash"
+    done
+    sync
 }
 
 deploy_vvvvvv() {
@@ -1128,6 +1148,7 @@ deploy_openlara_data() {
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
         release) deploy_release ;;
+        pokket) deploy_pokket ;;
         vvvvvv) deploy_vvvvvv ;;
         openbor) deploy_openbor ;;
         test-games) deploy_test_games ;;
