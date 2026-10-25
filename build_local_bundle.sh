@@ -26,6 +26,7 @@ for file in \
   "$PICOARCH_ROOT/build_sf3000.sh" \
   "$ROOT/patches/snes9x-z-mips.patch" \
   "$ROOT/scripts/build_snes9x_z.sh" \
+  "$ROOT/scripts/build_pokket.sh" \
   "$PICANTE8_ROOT/Makefile" \
   "$EBOOK_ROOT/build_reader_sf.sh" \
   "$DSPERATE_ROOT/dsperate"; do
@@ -44,6 +45,9 @@ echo 'Building picoarch frontends...'
 
 echo 'Building Snes9x-Z...'
 WORK_ROOT="$WORK_ROOT" "$ROOT/scripts/build_snes9x_z.sh"
+
+echo 'Building Pokket...'
+WORK_ROOT="$WORK_ROOT" "$ROOT/scripts/build_pokket.sh"
 
 echo 'Building QPSX...'
 mkdir -p "$ROOT/build"

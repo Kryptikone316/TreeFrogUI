@@ -156,6 +156,8 @@ jobs:
             cubegm/port_check.sh
             cubegm/cores/frogui_libretro.so cubegm/cores/tyrquake_libretro.so
             cubegm/cores/snes9x-Z_libretro.so frogui/licenses/Snes9x-Z.LICENSE
+            cubegm/cores/pokket_libretro.so frogui/licenses/Pokket.LICENSE
+            frogui/licenses/Pokket-core.MIT
             cubegm/ebook cubegm/dsperate/dsperate
             cubegm/cores/openbor_libretro.so
             cubegm/lib/libSDL-1.2.so.0 cubegm/lib/libpng12.so.0
@@ -166,6 +168,8 @@ jobs:
           done
           [[ -d "$current/roms/nds" ]] || { echo 'Missing required ROM folder: roms/nds' >&2; exit 1; }
           [[ -d "$current/roms/snesz" ]] || { echo 'Missing required ROM folder: roms/snesz' >&2; exit 1; }
+          [[ -d "$current/roms/pokket" ]] || { echo 'Missing required ROM folder: roms/pokket' >&2; exit 1; }
+          [[ -f "$current/docs/cores/pokket.md" ]] || { echo 'Missing Pokket setup guide' >&2; exit 1; }
           for system in pico8 fake08 retro8; do
             [[ -d "$current/roms/$system" ]] || { echo "Missing required ROM folder: roms/$system" >&2; exit 1; }
           done

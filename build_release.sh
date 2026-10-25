@@ -49,6 +49,9 @@ MINECRAFT_BANNER_NAO="$(pwd)/assets/minecraft/minecraft-nao-black.jpg"
 PICANTE8_CORE="${PICANTE8_CORE:-/home/tomaszz/sf3000-work/picante8/picante8_libretro.so}"
 SNES9X_Z_CORE="$(pwd)/build/snes9x-Z_libretro.so"
 SNES9X_Z_LICENSE="$(pwd)/build/Snes9x-Z.LICENSE"
+POKKET_CORE="$(pwd)/build/pokket_libretro.so"
+POKKET_LICENSE="$(pwd)/build/Pokket.LICENSE"
+POKKET_CORE_LICENSE="$(pwd)/build/Pokket-core.MIT"
 OPENBOR_ROOT="${OPENBOR_ROOT:-$(pwd)/../OpenBOR-TreeFrogUI}"
 [ -f "$OPENBOR_ROOT/build_libretro.sh" ] || OPENBOR_ROOT="$(pwd)/cores/OpenBOR"
 OPENBOR_CORE="${OPENBOR_CORE:-$OPENBOR_ROOT/build/sf3000/openbor_libretro.so}"
@@ -162,6 +165,9 @@ cp_if_diff() { [ -f "$1" ] || return 0; cmp -s "$1" "$2" && return 0; cp "$1" "$
 [ -f "$PICANTE8_CORE" ] || { echo "missing Picante8 core: $PICANTE8_CORE" >&2; exit 1; }
 [ -s "$SNES9X_Z_CORE" ] || { echo "missing Snes9x-Z core: $SNES9X_Z_CORE (run ./scripts/build_snes9x_z.sh)" >&2; exit 1; }
 [ -s "$SNES9X_Z_LICENSE" ] || { echo "missing Snes9x-Z license: $SNES9X_Z_LICENSE" >&2; exit 1; }
+[ -s "$POKKET_CORE" ] || { echo "missing Pokket core: $POKKET_CORE (run ./scripts/build_pokket.sh)" >&2; exit 1; }
+[ -s "$POKKET_LICENSE" ] || { echo "missing Pokket license: $POKKET_LICENSE" >&2; exit 1; }
+[ -s "$POKKET_CORE_LICENSE" ] || { echo "missing Pokket core license: $POKKET_CORE_LICENSE" >&2; exit 1; }
 [ -s "$OPENBOR_CORE" ] || { echo "missing OpenBOR libretro core: $OPENBOR_CORE (run ./build_all.sh)" >&2; exit 1; }
 [ -f "$NDS_BANNER_NEXTUI" ] || { echo "missing NDS NextUI artwork: $NDS_BANNER_NEXTUI" >&2; exit 1; }
 [ -f "$NDS_BANNER_NEXT" ] || { echo "missing NDS Next artwork: $NDS_BANNER_NEXT" >&2; exit 1; }
@@ -172,9 +178,12 @@ cp_if_diff "$FROGUI"      "$STAGE/cubegm/cores/frogui_libretro.so"
 cp_if_diff "$(pwd)/build/qpsx_libretro.so" "$STAGE/cubegm/cores/qpsx_libretro.so"
 cp_if_diff "$(pwd)/build/j2me_libretro.so" "$STAGE/cubegm/cores/j2me_libretro.so"
 cp_if_diff "$PICANTE8_CORE" "$STAGE/cubegm/cores/picante8_libretro.so"
-mkdir -p "$STAGE/cubegm/cores" "$STAGE/frogui/licenses" "$STAGE/roms/snesz"
+mkdir -p "$STAGE/cubegm/cores" "$STAGE/frogui/licenses" "$STAGE/roms/snesz" "$STAGE/roms/pokket"
 cp_if_diff "$SNES9X_Z_CORE" "$STAGE/cubegm/cores/snes9x-Z_libretro.so"
 cp_if_diff "$SNES9X_Z_LICENSE" "$STAGE/frogui/licenses/Snes9x-Z.LICENSE"
+cp_if_diff "$POKKET_CORE" "$STAGE/cubegm/cores/pokket_libretro.so"
+cp_if_diff "$POKKET_LICENSE" "$STAGE/frogui/licenses/Pokket.LICENSE"
+cp_if_diff "$POKKET_CORE_LICENSE" "$STAGE/frogui/licenses/Pokket-core.MIT"
 cp_if_diff "$OPENBOR_CORE" "$STAGE/cubegm/cores/openbor_libretro.so"
 rm -f "$STAGE/cubegm/cores/fheroes2_libretro.so"
 mkdir -p "$STAGE/cubegm/bios"

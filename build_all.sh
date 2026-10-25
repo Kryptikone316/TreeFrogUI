@@ -159,6 +159,9 @@ _b snes9x2010        snes9x2010                "-f Makefile.libretro" "LTO="
 echo "-- Snes9x-Z make (MIPS, threaded renderer disabled by default) --"
 ./scripts/build_snes9x_z.sh || exit $?
 
+echo "-- Pokket PocketStation core (MIPS) --"
+./scripts/build_pokket.sh || exit $?
+
 echo "-- gambatte make --"
 _b gambatte          libretro-gambatte         "-f Makefile.libretro"
 

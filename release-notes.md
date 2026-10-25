@@ -1,12 +1,12 @@
-# TreeFrogUI v1.8.0_n prerelease
+# TreeFrogUI v1.8.0_o prerelease
 
-## Changes since v1.8.0_m
+## Changes since v1.8.0_n
 
-- **SNES:** Added Snes9x-Z in `roms/snesz` as a newer, compatibility-oriented alternative. It runs slower than the default Snes9x 2005 core on R36SX.
+- **PocketStation:** Added Pokket in `roms/pokket` for `.mcd`, `.gme`, `.mcs`, `.pss`, and `.bin` content. It requires a user-supplied `cubegm/bios/pocketstation.bin`; see the setup guide.
 
 ## Other changes included since the v1.0.15 stable base
 
-- Added Picante8, experimental Duke Nukem 3D, ClassiCube, Minecraft PE, Captain Claw, Diablo 1, Java Games, Nintendo DS and experimental QPSX support. Added OpenLara and VVVVVV under **Games → Ports**, with setup guides for user-supplied game data; ports have a separate release collection.
+- Added Snes9x-Z as a slower, compatibility-oriented alternative SNES core, plus Picante8, experimental Duke Nukem 3D, ClassiCube, Minecraft PE, Captain Claw, Diablo 1, Java Games, Nintendo DS and experimental QPSX support. Added OpenLara and VVVVVV under **Games → Ports**, with setup guides for user-supplied game data; ports have a separate release collection.
 - Added support profiles and install guidance for R36SX/R36 HD variants, SF3000, SF3000 HD, SF3000HD without HDMI, SF3100, SF3500 and GB350.
 - Added FrogUI menu-frame screenshots, Nunito, improved translations and Arabic text rendering, shared volume and battery indicators, and PICO-8 system alternatives.
 - Improved game handoff, PicoArch audio startup and underrun handling, Java saves and game exit, ebook progress and page turning, and offline update recovery.

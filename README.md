@@ -103,6 +103,7 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **gpgx** | Mega Drive (accurate) | `genesis_plus_gx_libretro.so` |
 | **segacd** | Sega CD / Mega CD | `genesis_plus_gx_libretro.so` |
 | **PS**, **ps1**, **psx** | PlayStation - 📖 [setup guide](docs/cores/ps1.md) | `pcsx_rearmed_libretro.so` |
+| **pokket** | PocketStation - 📖 [setup guide](docs/cores/pokket.md) | `pokket_libretro.so` |
 | **qpsx** | PlayStation (experimental QPSX MIPS recompiler; not fully integrated) | `qpsx_libretro.so` |
 | **psp** | PSP - optional standalone SF3000 PPSSPP port, falls back to `ppsspp_libretro.so` | `ppsspp` / `ppsspp_libretro.so` |
 | **nds** | Nintendo DS - experimental standalone DSperate port with HCGE scaling | `dsperate/run_sf3000.sh` |
@@ -294,6 +295,7 @@ Some cores need BIOS/firmware files. Place them in the system folder the core ex
 | System | File needed |
 |--------|-------------|
 | PlayStation 1 | any 512 KiB PS1 BIOS in **`cubegm/bios/`** - PCSX4ALL matching is case-insensitive and prefers `scph*`. 📖 [full guide](docs/cores/ps1.md), **strongly recommended** |
+| PocketStation (`pokket`) | User-supplied `pocketstation.bin` in **`cubegm/bios/`** - 📖 [setup and supported formats](docs/cores/pokket.md) |
 | GBA (gpsp) | `gba_bios.bin` (official Nintendo GBA BIOS) |
 | Odyssey² / Videopac (o2em) | `o2rom.bin` in **`cubegm/bios/`** (exact filename; MD5 `562d5ebf9e030a40d6fabfc2f33139fd`) |
 | Amiga (UAE) | Kickstart ROM - 📖 [full guide](docs/cores/amiga.md) |
