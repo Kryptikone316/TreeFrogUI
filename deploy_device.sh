@@ -520,6 +520,7 @@ deploy_pokket() {
         "$REPO/frogui/out/frogui_libretro.so:cubegm/cores/frogui_libretro.so"
         "$REPO/build/pokket_libretro.so:cubegm/cores/pokket_libretro.so"
     )
+    mkdir -p "$MOUNT/roms/pokket"
     for pair in "${files[@]}"; do
         src="${pair%%:*}"
         dst="$MOUNT/${pair#*:}"
