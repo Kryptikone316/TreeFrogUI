@@ -555,7 +555,9 @@ _b quasi88           libretro-quasi88          ""
 
 echo "-- geolith make --"
 # LTO disabled in libretro-geolith/libretro/Makefile (R_MIPS_HI16 PIC issue with GCC 6.3 LTO)
-_b geolith           libretro-geolith/libretro "" "LDFLAGS=$LDFLAGS_S"
+# This Makefile appends -O2 after wrapper flags. Use the trailing -O3 wrappers
+# so the 74Kc build is not left at -O2; keep all SF3000 target flags intact.
+_b geolith           libretro-geolith/libretro "" "CC=$WRAP/mips-gcc-O3 CXX=$WRAP/mips-g++-O3 LDFLAGS=$LDFLAGS_S"
 
 echo "-- xmil make --"
 _b x68k              libretro-xmil/libretro    ""
