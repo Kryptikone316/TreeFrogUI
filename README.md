@@ -6,7 +6,7 @@
 
 A free, custom game-menu (frontend) for a range of MIPS-based Hichip handhelds - R36SX, SF3000, SF3500, GB350 and more (full list below). It replaces the stock menu and runs hundreds of retro systems.
 
-**Supported devices:** R36SX (v2.6 & v2.7), **R36 HD** (and R36SX clones - see [install guide](install.md#r36sx-clones-r36hd-etc)), SF3000, SF3000 HD, SF3100, SF3500, and GB350.
+**Supported devices:** R36SX (v2.6 & v2.7), **R36 HD** (and R36SX clones - see [install guide](install.md#r36sx-clones-r36hd-etc)), SF3000, SF3000 HD, SF3000HD without HDMI, SF3100, SF3500, and GB350.
 
 ![UI Preview on SF3000 Console](console.jpg)
 
@@ -35,7 +35,7 @@ A free, custom game-menu (frontend) for a range of MIPS-based Hichip handhelds -
 | Component | What it does |
 |-----------|-------------|
 | **TreeFrogUI** (`frogui_libretro.so`) | ROM browser and launcher, runs inside picoarch |
-| **58 emulator cores** | NES, SNES, GBA, Mega Drive, PC Engine, Amiga, Atari ST, J2ME, and more |
+| **Emulator cores** | NES, SNES, GBA, Mega Drive, PC Engine, Amiga, Atari ST, J2ME, and more |
 | **build system** | Cross-compile everything from source using the SF3000 toolchain |
 
 See [cores.md](cores.md) for the full folder→core mapping table.
@@ -45,7 +45,7 @@ See [cores.md](cores.md) for the full folder→core mapping table.
 ## Why TreeFrogUI?
 
 - **Minimalistic but powerful UI** - Clean, fast game selection screen with quick navigation.
-- **58 emulator cores** - Now supports 58 emulator cores compared to only 14 in the stock OS. This includes **Java Games** (J2ME / MIDP 2.0), **PICO-8** (via Fake08/Retro8), **Quake** (via Tyrquake), **Cave Story** (via NXEngine), **Doom** (via PrBoom), **PlayStation 1** (via PCSX ReArmed), plus classic computer systems like Commodore Amiga and Atari ST.
+- **Broad system support** - Includes **Java Games** (J2ME / MIDP 2.0), **PICO-8** (via Fake08/Retro8/Picante8), **Quake** (via Tyrquake), **Cave Story** (via NXEngine), **Doom** (via PrBoom), **PlayStation 1** (via PCSX ReArmed), plus classic computer systems like Commodore Amiga and Atari ST.
 - **Highly configurable cores** - Configurable settings for all cores, allowing for retro features like console palette swaps, LCD ghosting emulation, and more.
 - **In-game saves** - Fully supported across all compatible cores for seamless session saving and loading.
 - **Quick Resume** - Automatically boots back into the last played game upon device boot, skipping the frontend.
@@ -90,6 +90,7 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **fds** | Famicom Disk System | `fceumm_libretro.so` |
 | **SFC**, **snes** | Super Famicom / SNES | `snes9x2005_plus_libretro.so` |
 | **snes02** | SNES (accurate / alt) | `snes9x2002_libretro.so` |
+| **snesz** | SNES (newer, compatibility-oriented alternative; slower than default on R36SX) | `snes9x-Z_libretro.so` |
 | **GBA**, **gba** | Game Boy Advance | `gpsp_libretro.so` |
 | **mgba**, **gbaf** | Game Boy Advance (accurate) | `mgba_libretro.so` |
 | **gbav** | Game Boy Advance (alt) | `vba_next_libretro.so` |
@@ -102,6 +103,7 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **gpgx** | Mega Drive (accurate) | `genesis_plus_gx_libretro.so` |
 | **segacd** | Sega CD / Mega CD | `genesis_plus_gx_libretro.so` |
 | **PS**, **ps1**, **psx** | PlayStation - 📖 [setup guide](docs/cores/ps1.md) | `pcsx_rearmed_libretro.so` |
+| **pokket** | PocketStation - 📖 [setup guide](docs/cores/pokket.md) | `pokket_libretro.so` |
 | **qpsx** | PlayStation (experimental QPSX MIPS recompiler; not fully integrated) | `qpsx_libretro.so` |
 | **psp** | PSP - optional standalone SF3000 PPSSPP port, falls back to `ppsspp_libretro.so` | `ppsspp` / `ppsspp_libretro.so` |
 | **nds** | Nintendo DS - experimental standalone DSperate port with HCGE scaling | `dsperate/run_sf3000.sh` |
@@ -135,10 +137,8 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **xmil** | Sharp X68000 | `x68k_libretro.so` |
 | **pico286** | DOS / PC (8086-286, standalone) - 📖 [setup guide](docs/cores/pico286.md) | `pico286` + `x86BOOT.img` |
 | **j2me** | J2ME / MIDP 2.0 games (`.jar` / `.jad`) - 📖 [setup guide](docs/cores/j2me.md) | `j2me_libretro.so` |
-| **classicube** | ClassiCube Minecraft Classic worlds (`.cw`) - 📖 [setup guide](docs/cores/classicube.md), based on [Sajnaps / FroggyCraft](https://github.com/Synaps33/FroggyCraft) | `classicube_libretro.so` |
-| **mcpe** | Minecraft Pocket Edition 0.6.1, based on [Synaps33 / FroggyPE](https://github.com/Synaps33/FroggyPE) | `mcpe_libretro.so` |
-| **openclaw** | Captain Claw - 📖 [setup guide](docs/cores/openclaw.md), based on [Synaps33 / FroggyClaw](https://github.com/Synaps33/FroggyClaw) | `openclaw_libretro.so` |
-| **diablo** | Diablo 1 / DevilutionX (standalone) - 📖 [setup guide](docs/cores/diablo.md), based on [DevilutionX](https://github.com/diasurgical/DevilutionX) and [FroggyDiablo](https://github.com/tzubertowski/FroggyDiablo) | `devilutionx` |
+| **Ports Collection** | Optional game ports installed separately - 📖 [installation guide](docs/cores/ports.md) | [Ports Collection release](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/releases/latest) |
+| **openbor** | OpenBOR game/mod PAKs - 📖 [setup guide](docs/cores/openbor.md) | `openbor_libretro.so` |
 | **Quake** | Quake | `tyrquake_libretro.so` |
 | **quake2** | Quake II (heavy) - 📖 [setup guide](docs/cores/quake2.md) | `vitaquake2_libretro.so` |
 | **prboom** | Doom / Doom II / Final Doom / Heretic / Hexen | `prboom_libretro.so` |
@@ -149,8 +149,9 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **xrick** | Rick Dangerous | `xrick_libretro.so` |
 | **jnb** | Jump 'n Bump | `jumpnbump_libretro.so` |
 | **gw** | Game & Watch | `gw_libretro.so` |
-| **pico8** | PICO-8 (fake08) - also accepts legacy `fake08` folder | `fake08_libretro.so` |
-| **retro8** | PICO-8 (retro8) | `retro8_libretro.so` |
+| **pico8** | PICO-8 (Picante8) - 📖 [setup guide](docs/cores/picante8.md) | `picante8_libretro.so` |
+| **fake08** | PICO-8 (Fake-08) | `fake08_libretro.so` |
+| **retro8** | PICO-8 (Retro8) | `retro8_libretro.so` |
 | **lowres-nx** | LowRes NX | `lowresnx_libretro.so` |
 | **tic80** | TIC-80 fantasy console | `tic80_libretro.so` |
 | **pokem** | Pokémon Mini | `pokemini_libretro.so` |
@@ -177,7 +178,10 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 
 See [cores.md](cores.md) for detailed build status and source repositories of TreeFrogUI external cores.
 
-**PICO-8 (fake08):** place carts in `roms/pico8/` (the legacy `roms/fake08/` folder still works). Both `.p8` (text source) and `.p8.png` (cart image) formats are supported.
+**PICO-8 (Picante8):** place carts in `roms/pico8/`. Both `.p8` (text source) and `.p8.png` (cart image) formats are supported.
+
+**PICO-8 alternatives:** place carts in `roms/fake08/` for Fake-08 or `roms/retro8/` for Retro8.
+Existing carts in `roms/picante8/` still use Picante8.
 
 **Arduboy:** the `arduboy` folder uses the **Ardens** core (a fast custom AVR emulator) and accepts both `.hex` and `.arduboy` files. The `arduous` folder runs the older simavr-based **arduous** core (cycle-accurate but much slower; `.hex` only) - use it only if a game misbehaves under Ardens.
 
@@ -194,8 +198,7 @@ A few systems need more than "drop the ROM in the folder" - either extra compani
 | Wolfenstein 3D (`wolf3d`) | Needs the game data **and** the engine's own resource pack | 📖 [docs/cores/wolf3d.md](docs/cores/wolf3d.md) |
 | Doom / Heretic / Hexen (`prboom`) | Supply a legally obtained IWAD (`doom1.wad`, `heretic1.wad`, `hexen.wad`, etc.) | Put the IWAD in `roms/prboom/` |
 | Quake II (`quake2`) | Game data goes in a required `baseq2/` subfolder | 📖 [docs/cores/quake2.md](docs/cores/quake2.md) |
-| Diablo 1 (`diablo`) | Requires the legally owned `DIABDAT.MPQ` game data file | 📖 [docs/cores/diablo.md](docs/cores/diablo.md) |
-| Captain Claw (`openclaw`) | Requires the legally owned `CLAW.REZ` game data file | 📖 [docs/cores/openclaw.md](docs/cores/openclaw.md) |
+| Ports | Some require user-supplied game files. Port folders and launch instructions | 📖 [Ports guide](docs/cores/ports.md) |
 | PlayStation 1 (`PS`/`ps1`/`psx`/`ps1r`) | Two cores, BIOS strongly recommended | 📖 [docs/cores/ps1.md](docs/cores/ps1.md) |
 
 ---
@@ -292,6 +295,7 @@ Some cores need BIOS/firmware files. Place them in the system folder the core ex
 | System | File needed |
 |--------|-------------|
 | PlayStation 1 | any 512 KiB PS1 BIOS in **`cubegm/bios/`** - PCSX4ALL matching is case-insensitive and prefers `scph*`. 📖 [full guide](docs/cores/ps1.md), **strongly recommended** |
+| PocketStation (`pokket`) | User-supplied `pocketstation.bin` in **`cubegm/bios/`** - 📖 [setup and supported formats](docs/cores/pokket.md) |
 | GBA (gpsp) | `gba_bios.bin` (official Nintendo GBA BIOS) |
 | Odyssey² / Videopac (o2em) | `o2rom.bin` in **`cubegm/bios/`** (exact filename; MD5 `562d5ebf9e030a40d6fabfc2f33139fd`) |
 | Amiga (UAE) | Kickstart ROM - 📖 [full guide](docs/cores/amiga.md) |
@@ -459,8 +463,8 @@ treefrog-ui/
 ### SF3000 family
 
 > [!NOTE]
-> One package now supports **six devices**, auto-detected at boot from the device
-> tree: **R36SX** (v2.6 / v2.7), **SF3000**, **SF3000 HD**, **SF3100**, **SF3500**,
+> One package now supports **seven device variants**, auto-detected at boot from the device
+> tree: **R36SX** (v2.6 / v2.7), **SF3000**, **SF3000 HD**, **SF3000HD without HDMI**, **SF3100**, **SF3500**,
 > and **GB350**. SF3000 HD, SF3100 and SF3500 share the same 854×480 panel + driver
 > (HD/SF3100 report as "SF3500" in the log, expected). GB350 is a 640×480 4:3
 > device. See the [install guide](install.md) for the per-device stock backup and
@@ -502,7 +506,7 @@ Donations go straight toward buying the next device to port to.
 - **angree** - Amiga (UAE4ALL) and Atari ST (castaway) ports for SF-series handhelds
 - **goph-R** - [SF3000-RE](https://github.com/goph-R/SF3000-RE) reverse engineering project and boot logo specs
 - **SjslTech** - [YouTube](https://www.youtube.com/@SjslTech) - R36SX testing & contributions
-- **[Synaps33](https://github.com/Synaps33)** - original [FroggyPE](https://github.com/Synaps33/FroggyPE), [FroggyCraft](https://github.com/Synaps33/FroggyCraft), [FroggyKVM](https://github.com/Synaps33/FroggyKVM), and [FroggyClaw](https://github.com/Synaps33/FroggyClaw) cores
+- **[Synaps33](https://github.com/Synaps33)** - original [FroggyPE](https://github.com/Synaps33/FroggyPE), [FroggyCraft](https://github.com/Synaps33/FroggyCraft), [FroggyKVM](https://github.com/Synaps33/FroggyKVM), [FroggyDuke](https://github.com/Synaps33/FroggyDuke), and [FroggyClaw](https://github.com/Synaps33/FroggyClaw) cores
 - **[diasurgical](https://github.com/diasurgical)** and the [DevilutionX contributors](https://github.com/diasurgical/DevilutionX/graphs/contributors) - original Diablo 1 engine and open-source port
 - All libretro core authors
 

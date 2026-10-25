@@ -1,5 +1,7 @@
 # TreeFrogUI agent instructions
 
+- Luna handles implementation; the main agent handles analysis/review when available.
+
 ## Releases
 
 - Start a fresh `release-notes.md` for every minor or major release; do not inherit or carry forward the previous release's changelog.
