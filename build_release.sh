@@ -58,6 +58,9 @@ OPENBOR_CORE="${OPENBOR_CORE:-$OPENBOR_ROOT/build/sf3000/openbor_libretro.so}"
 NDS_BANNER_NEXTUI="$(pwd)/assets/nds/nds-artbook-nextui.jpg"
 NDS_BANNER_NEXT="$(pwd)/assets/nds/nds-artbook-next.jpg"
 NDS_BANNER_NAO="$(pwd)/assets/nds/nds-nao-black.jpg"
+POKKET_BANNER_NEXTUI="$(pwd)/assets/pokket/pokket-artbook-nextui.jpg"
+POKKET_BANNER_NEXT="$(pwd)/assets/pokket/pokket-artbook-next.jpg"
+POKKET_BANNER_NAO="$(pwd)/assets/pokket/pokket-nao-black.jpg"
 EBOOK=/home/tomaszz/sf3000-work/ebook/ebook
 DSPERATE=${DSPERATE:-/home/tomaszz/sf3000-work/dsperate/build/sf3000-package}
 TYRQUAKE=/home/tomaszz/sf3000-work/tyrquake-og/tyrquake_libretro.so
@@ -172,6 +175,9 @@ cp_if_diff() { [ -f "$1" ] || return 0; cmp -s "$1" "$2" && return 0; cp "$1" "$
 [ -f "$NDS_BANNER_NEXTUI" ] || { echo "missing NDS NextUI artwork: $NDS_BANNER_NEXTUI" >&2; exit 1; }
 [ -f "$NDS_BANNER_NEXT" ] || { echo "missing NDS Next artwork: $NDS_BANNER_NEXT" >&2; exit 1; }
 [ -f "$NDS_BANNER_NAO" ] || { echo "missing NDS Nao artwork: $NDS_BANNER_NAO" >&2; exit 1; }
+[ -f "$POKKET_BANNER_NEXTUI" ] || { echo "missing Pokket Art Book NextUI artwork: $POKKET_BANNER_NEXTUI" >&2; exit 1; }
+[ -f "$POKKET_BANNER_NEXT" ] || { echo "missing Pokket Art Book Next artwork: $POKKET_BANNER_NEXT" >&2; exit 1; }
+[ -f "$POKKET_BANNER_NAO" ] || { echo "missing Pokket Nao Black artwork: $POKKET_BANNER_NAO" >&2; exit 1; }
 cp_if_diff "$PICOARCH"    "$STAGE/cubegm/picoarch"
 cp_if_diff "$PICOARCH_HI" "$STAGE/cubegm/picoarch_hi"
 cp_if_diff "$FROGUI"      "$STAGE/cubegm/cores/frogui_libretro.so"
@@ -197,10 +203,17 @@ mkdir -p "$STAGE/roms/j2me"
 mkdir -p "$STAGE/roms/openbor"
 rm -rf "$STAGE/roms/fheroes2"
 mkdir -p "$STAGE/roms/pico8" "$STAGE/roms/fake08" "$STAGE/roms/retro8"
+mkdir -p "$STAGE/frogui/theme-packs/Art_Book_NextUI" \
+    "$STAGE/frogui/theme-packs/Art_Book_Next" \
+    "$STAGE/frogui/theme-packs/Nao_Black"
 cp_if_diff "$NDS_BANNER_NEXTUI" "$STAGE/frogui/nds.jpg"
 cp_if_diff "$NDS_BANNER_NEXTUI" "$STAGE/frogui/theme-packs/Art_Book_NextUI/nds.jpg"
 cp_if_diff "$NDS_BANNER_NEXT" "$STAGE/frogui/theme-packs/Art_Book_Next/nds.jpg"
 cp_if_diff "$NDS_BANNER_NAO" "$STAGE/frogui/theme-packs/Nao_Black/nds.jpg"
+cp_if_diff "$POKKET_BANNER_NEXTUI" "$STAGE/frogui/pokket.jpg"
+cp_if_diff "$POKKET_BANNER_NEXTUI" "$STAGE/frogui/theme-packs/Art_Book_NextUI/pokket.jpg"
+cp_if_diff "$POKKET_BANNER_NEXT" "$STAGE/frogui/theme-packs/Art_Book_Next/pokket.jpg"
+cp_if_diff "$POKKET_BANNER_NAO" "$STAGE/frogui/theme-packs/Nao_Black/pokket.jpg"
 # Runtime language packs are FrogUI data, not compiled-in strings. Keep the
 # staged copy in sync so release archives and local deployments behave alike.
 mkdir -p "$STAGE/frogui/lang"

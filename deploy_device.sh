@@ -519,6 +519,10 @@ deploy_pokket() {
     local -a files=(
         "$REPO/frogui/out/frogui_libretro.so:cubegm/cores/frogui_libretro.so"
         "$REPO/build/pokket_libretro.so:cubegm/cores/pokket_libretro.so"
+        "$REPO/assets/pokket/pokket-artbook-nextui.jpg:frogui/pokket.jpg"
+        "$REPO/assets/pokket/pokket-artbook-nextui.jpg:frogui/theme-packs/Art_Book_NextUI/pokket.jpg"
+        "$REPO/assets/pokket/pokket-artbook-next.jpg:frogui/theme-packs/Art_Book_Next/pokket.jpg"
+        "$REPO/assets/pokket/pokket-nao-black.jpg:frogui/theme-packs/Nao_Black/pokket.jpg"
     )
     mkdir -p "$MOUNT/roms/pokket"
     for pair in "${files[@]}"; do

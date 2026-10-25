@@ -158,6 +158,10 @@ jobs:
             cubegm/cores/snes9x-Z_libretro.so frogui/licenses/Snes9x-Z.LICENSE
             cubegm/cores/pokket_libretro.so frogui/licenses/Pokket.LICENSE
             frogui/licenses/Pokket-core.MIT
+            frogui/pokket.jpg
+            frogui/theme-packs/Art_Book_NextUI/pokket.jpg
+            frogui/theme-packs/Art_Book_Next/pokket.jpg
+            frogui/theme-packs/Nao_Black/pokket.jpg
             cubegm/ebook cubegm/dsperate/dsperate
             cubegm/cores/openbor_libretro.so
             cubegm/lib/libSDL-1.2.so.0 cubegm/lib/libpng12.so.0
