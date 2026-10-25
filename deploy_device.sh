@@ -525,6 +525,7 @@ deploy_pokket() {
         "$REPO/assets/pokket/pokket-nao-black.jpg:frogui/theme-packs/Nao_Black/pokket.jpg"
     )
     mkdir -p "$MOUNT/roms/pokket"
+    [ -d "$MOUNT/roms/pokket" ] || die "could not create roms/pokket"
     for pair in "${files[@]}"; do
         src="${pair%%:*}"
         dst="$MOUNT/${pair#*:}"
