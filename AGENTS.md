@@ -22,6 +22,11 @@
   reject any archive whose `base_version` is `unknown`; old v1.0 archives may
   predate the cumulative updater. Use the newest valid v1.0.x archive for both
   `base_tag` and `update_base_tag` when no older update-capable archive exists.
+- Reuse the current local core bundle for releases that do not change compiled
+  components. If a release changes a core or FrogUI system mapping, rebuild only
+  that binary, update the affected payload files and bundle checksums, and keep
+  every other binary from the previous bundle. Run `build_local_bundle.sh` only
+  when the full set of compiled components must change or no valid bundle exists.
 - Keep retained comparison ZIPs in `release/artifact/`. Keep current staging,
   the full ZIP, and `update.zip` in `release/latest/`.
 - Do not hand-edit generated content under `release/` and do not commit it.
