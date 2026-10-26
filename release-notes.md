@@ -3,6 +3,7 @@
 ## Changes since v1.8.0_p
 
 - **FrogUI:** Restored the mainline core, including working **Games → Ports** browsing and launchers, friendly names for Java Games (`j2me`), Picante8 (`picante8`), and Ports (`ports`), and the animated selected-item pill. The `zsnes` folder selects Snes9x-Z and reuses SNES artwork and background. Startup stays black while enabled background art loads; disabling backgrounds shows the theme color immediately.
+- **FrogUI performance and memory:** Restored the fast three-frame background and carousel transitions, Recents startup default, and idle-deferred banner loading. Font files are memory-mapped instead of reserving three 24 MiB buffers, reducing the built core's static memory by about 75 MiB. All twelve built-in locale files now contain the same translation keys.
 - **PicoArch:** Retains the corrected submenu pill alignment and smoother, slower option-label scrolling from v1.8.0_p.
 
 ## Other changes included since the v1.0.15 stable base
