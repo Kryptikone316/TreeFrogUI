@@ -1,8 +1,9 @@
-# TreeFrogUI v1.8.0_o prerelease
+# TreeFrogUI v1.8.0_q prerelease
 
-## Changes since v1.8.0_n
+## Changes since v1.8.0_p
 
-- **PocketStation:** Added Pokket in `roms/pokket` for `.mcd`, `.gme`, `.mcs`, `.pss`, and `.bin` content. It requires a user-supplied `cubegm/bios/pocketstation.bin`; see the setup guide. Added matching backgrounds for the default, Art Book NextUI, Art Book Next, and Nao Black themes.
+- **FrogUI:** Restored the mainline core, including working **Games → Ports** browsing and launchers, plus friendly names for Java Games (`j2me`), Picante8 (`picante8`), and Ports (`ports`). The `zsnes` folder now selects Snes9x-Z and reuses the SNES label, artwork, and background.
+- **PicoArch:** Retains the corrected submenu pill alignment and smoother, slower option-label scrolling from v1.8.0_p.
 
 ## Other changes included since the v1.0.15 stable base
 
