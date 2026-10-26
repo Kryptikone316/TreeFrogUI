@@ -2,6 +2,22 @@
 
 - Luna handles implementation; the main agent handles analysis/review when available.
 
+## Repository and branch workflow
+
+- The canonical checkout is `/home/tomaszz/sf3000-work/sf3000_treefrogui`. Keep
+  active TreeFrogUI work in this folder on `main`.
+- Do not create source clones, worktrees, or per-release repository copies under
+  `/tmp` or elsewhere. Do not create per-release branches.
+- If a task needs isolation, use at most one feature branch at a time. Keep
+  `main` as the integration branch and ask the user for explicit confirmation
+  before merging a feature branch into `main`.
+- Before branch changes, inspect and preserve all modified, untracked, and
+  submodule work. Never reset or overwrite existing work to make a checkout
+  clean; record where any temporarily stashed changes were saved.
+- Keep companion repositories such as FrogUI on their existing canonical
+  checkout and branch. Update their pinned commit from the canonical TreeFrogUI
+  checkout; do not make parallel copies of the same source.
+
 ## Releases
 
 - Start a fresh `release-notes.md` for every minor or major release; do not inherit or carry forward the previous release's changelog.
