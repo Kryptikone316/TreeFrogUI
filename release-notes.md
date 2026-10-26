@@ -2,7 +2,7 @@
 
 ## Changes since v1.8.0_p
 
-- **FrogUI:** Restored the mainline core, including working **Games → Ports** browsing and launchers, plus friendly names for Java Games (`j2me`), Picante8 (`picante8`), and Ports (`ports`). The `zsnes` folder now selects Snes9x-Z and reuses the SNES label, artwork, and background.
+- **FrogUI:** Restored the mainline core, including working **Games → Ports** browsing and launchers, friendly names for Java Games (`j2me`), Picante8 (`picante8`), and Ports (`ports`), and the animated selected-item pill. The `zsnes` folder selects Snes9x-Z and reuses SNES artwork and background. Startup stays black while enabled background art loads; disabling backgrounds shows the theme color immediately.
 - **PicoArch:** Retains the corrected submenu pill alignment and smoother, slower option-label scrolling from v1.8.0_p.
 
 ## Other changes included since the v1.0.15 stable base
