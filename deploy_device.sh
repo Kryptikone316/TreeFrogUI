@@ -98,11 +98,6 @@ validate_release() {
         "$RELEASE/MD" \
         "$OVERLAY/cubegm/setting.xml" \
         "$OVERLAY/cubegm/cores/libemu_md.so" \
-        "$RELEASE/cubegm/cores/openlara_libretro.so" \
-        "$RELEASE/cubegm/cores/vvvvvv_libretro.so" \
-        "$RELEASE/roms/ports/VVVVVV.sh" \
-        "$RELEASE/roms/ports/vvvvvv" \
-        "$RELEASE/roms/ports/.res/VVVVVV.png" \
         "$OVERLAY/cubegm/zhijack.sh"; do
         [ -e "$path" ] ||
             die "release is incomplete; missing $path (run ./build_release.sh)"
@@ -293,6 +288,11 @@ deploy_release() {
             "$MOUNT/roms/ports/.res/${name%.sh}.png"
     done
 
+    # Port cores now ship only in the separate Ports Collection.
+    for name in classicube mcpe openclaw duke3d butterscotch openlara vvvvvv; do
+        rm -f "$MOUNT/cubegm/cores/${name}_libretro.so"
+    done
+
     # Merge only: preserve ROMs, saves, settings, and stock files not present in
     # the release.
     for dir in cubegm frogui roms MD; do
@@ -327,15 +327,16 @@ deploy_release() {
         cubegm/picoarch \
         cubegm/picoarch_hi \
         cubegm/cores/frogui_libretro.so \
-        cubegm/cores/mcpe_libretro.so \
-        cubegm/cores/classicube_libretro.so \
         cubegm/cores/j2me_libretro.so \
         cubegm/cores/picante8_libretro.so \
-        cubegm/cores/vvvvvv_libretro.so \
         cubegm/cores/libemu_md.so \
         cubegm/zhijack.sh; do
         hash_line="$(sha256sum "$MOUNT/$rel")"
         echo "Verified: $rel  ${hash_line%% *}"
+    done
+    for name in classicube mcpe openclaw duke3d butterscotch openlara vvvvvv; do
+        [ ! -e "$MOUNT/cubegm/cores/${name}_libretro.so" ] ||
+            die "legacy port core remains in base core directory: $name"
     done
 
     echo "Complete $PROFILE TreeFrogUI release deployed and verified."
