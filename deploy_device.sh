@@ -343,7 +343,7 @@ deploy_release() {
 }
 
 deploy_one() {
-    local name="$1" src dst src_hash dst_hash hash_line launcher_hash bg_src bg_dst
+    local name="$1" src dst src_hash dst_hash hash_line launcher_hash bg_src bg_dst bg_root bg_dest system icon_src icon_dst
     case "$name" in
         picoarch)
             src="$WORK/picoarch/picoarch"
@@ -462,6 +462,14 @@ deploy_one() {
         [ "$(sha256sum "$REPO/assets/system-icons/scummvm.png" | cut -d' ' -f1)" = \
           "$(sha256sum "$MOUNT/frogui/system-icons/scummvm.png" | cut -d' ' -f1)" ] ||
             die "ScummVM icon verification failed"
+        for system in gbc md gbaf ps psx qpsx psp arcade atari-st msx2 zx; do
+            icon_src="$REPO/assets/system-icons/$system.png"
+            icon_dst="$MOUNT/frogui/system-icons/$system.png"
+            rsync -tc "$icon_src" "$icon_dst"
+            [ "$(sha256sum "$icon_src" | cut -d' ' -f1)" = \
+              "$(sha256sum "$icon_dst" | cut -d' ' -f1)" ] ||
+                die "$system system icon verification failed"
+        done
         for pack in default Art_Book_NextUI Art_Book_Next Nao_Black; do
             if [ "$pack" = default ]; then
                 bg_src="$REPO/sdcard/frogui/scummvm.jpg"
@@ -475,6 +483,24 @@ deploy_one() {
             [ "$(sha256sum "$bg_src" | cut -d' ' -f1)" = \
               "$(sha256sum "$bg_dst" | cut -d' ' -f1)" ] ||
                 die "ScummVM $pack background verification failed"
+        done
+        for bg_root in "$REPO/sdcard/frogui" "$REPO/sdcard/frogui/theme-packs/"*; do
+            [ -d "$bg_root" ] || continue
+            if [ "$bg_root" = "$REPO/sdcard/frogui" ]; then
+                bg_dest="$MOUNT/frogui"
+            else
+                bg_dest="$MOUNT/frogui/theme-packs/${bg_root##*/}"
+            fi
+            for system in sega md gpgx neogeo geolith dos pico286; do
+                bg_src="$bg_root/$system.jpg"
+                [ -s "$bg_src" ] || continue
+                bg_dst="$bg_dest/$system.jpg"
+                mkdir -p "$bg_dest"
+                rsync -tc "$bg_src" "$bg_dst"
+                [ "$(sha256sum "$bg_src" | cut -d' ' -f1)" = \
+                  "$(sha256sum "$bg_dst" | cut -d' ' -f1)" ] ||
+                    die "$system background verification failed in ${bg_root##*/}"
+            done
         done
         for system in classicube; do
             rsync -tc "$REPO/assets/minecraft/minecraft-artbook-nextui.jpg" "$MOUNT/frogui/$system.jpg"

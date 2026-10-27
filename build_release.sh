@@ -523,6 +523,13 @@ for art in frogui/scummvm.jpg \
     frogui/theme-packs/Nao_Black/scummvm.jpg; do
     [ -s "$OUT/$art" ] || fail "missing ScummVM background: $art"
 done
+for art_dir in frogui frogui/theme-packs/Art_Book_Next \
+    frogui/theme-packs/Art_Book_NextUI frogui/theme-packs/Nao_Black; do
+    for system in neogeo geolith sega md gpgx dos pico286; do
+        [ -s "$OUT/$art_dir/$system.jpg" ] ||
+            fail "missing $system background: $OUT/$art_dir/$system.jpg"
+    done
+done
 ! find "$OUT/roms/openbor" -type f -iname '*.pak' -print -quit | grep -q . \
     || fail "OpenBOR game data must not ship"
 grep -q 'sh /tmp/tfupdate.sh' "$OUT/install_first/sf3000/cubegm/zhijack.sh" \

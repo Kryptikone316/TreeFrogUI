@@ -26,6 +26,7 @@ A free, custom game-menu (frontend) for a range of MIPS-based Hichip handhelds -
 - 🎨 **[How to customise it](theme.md)** - themes, fonts, game art / box art / thumbnails, backgrounds
 - 🖼️ **[Get box art in three clicks](https://github.com/tzubertowski/mini-scraper-cfw/releases)** - download Mini Scraper, choose your SD card, then press **Add artwork**
 - ⬇️ **[Download the latest version](https://github.com/tzubertowski/treefrog-ui/releases)**
+- 🗂️ **[Changelog](CHANGELOG.md)** - permanent project history
 - 💬 **[Report a bug / give feedback](https://docs.google.com/forms/d/e/1FAIpQLSfM-y2_UnERrjScqkSfkRSEfBPJ79rDwDo3GwuYWXxpkFTp4Q/viewform?usp=header)**
 
 ---
@@ -139,7 +140,7 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **j2me** | J2ME / MIDP 2.0 games (`.jar` / `.jad`) - 📖 [setup guide](docs/cores/j2me.md) | `j2me_libretro.so` |
 | **Ports Collection** | Optional game ports installed separately - 📖 [installation guide](docs/cores/ports.md) | [Ports Collection release](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/releases/latest) |
 | **openbor** | OpenBOR game/mod PAKs - 📖 [setup guide](docs/cores/openbor.md) | `openbor_libretro.so` |
-| **scummvm** | Point-and-click adventures - 📖 [setup guide](docs/cores/scummvm.md) | `scummvm_libretro.so` |
+| **scummvm** | Point-and-click adventures via [Synaps33's FroggyScummvm](https://github.com/Synaps33/FroggyScummvm) - 📖 [setup guide](docs/cores/scummvm.md) | `scummvm_libretro.so` |
 | **Quake** | Quake | `tyrquake_libretro.so` |
 | **quake2** | Quake II (heavy) - 📖 [setup guide](docs/cores/quake2.md) | `vitaquake2_libretro.so` |
 | **prboom** | Doom / Doom II / Final Doom / Heretic / Hexen | `prboom_libretro.so` |

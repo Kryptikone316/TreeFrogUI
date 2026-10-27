@@ -33,9 +33,9 @@ permissions:
 env:
   # This archive is built and tested locally. CI only verifies, packages, and
   # publishes it; changing any of these values is a deliberate release action.
-  LOCAL_BUNDLE_TAG: local-build-v1.8.0-s
-  LOCAL_BUNDLE_ASSET: TreeFrogUI-local-build-v1.8.0-s.tar.gz
-  LOCAL_BUNDLE_SHA256: f1a393ab6fcf8d9c203ea4426d1a71f77a9c405c21a76d078ea546fa70830eeb
+  LOCAL_BUNDLE_TAG: local-build-v1.8.0-t
+  LOCAL_BUNDLE_ASSET: TreeFrogUI-local-build-v1.8.0-t.tar.gz
+  LOCAL_BUNDLE_SHA256: ac2647cdf78eb0faae7129bc8b6005c0018aff3de1f6f3e2a1c1bf4f6eb9893e
   CORE_BUILD_REPO: tzubertowski/TreeFrogUI-core-builds
   # update.zip is always cumulative from the last major stable baseline.
   # Change this deliberately when the product moves to a new major baseline;
@@ -180,6 +180,11 @@ jobs:
           [[ -d "$current/roms/snesz" ]] || { echo 'Missing required ROM folder: roms/snesz' >&2; exit 1; }
           [[ -d "$current/roms/pokket" ]] || { echo 'Missing required ROM folder: roms/pokket' >&2; exit 1; }
           [[ -d "$current/roms/scummvm" ]] || { echo 'Missing required ROM folder: roms/scummvm' >&2; exit 1; }
+          for art_dir in frogui frogui/theme-packs/Art_Book_Next frogui/theme-packs/Art_Book_NextUI frogui/theme-packs/Nao_Black; do
+            for system in neogeo geolith sega md gpgx dos pico286; do
+              [[ -s "$current/$art_dir/$system.jpg" ]] || { echo "Missing $system art: $art_dir/$system.jpg" >&2; exit 1; }
+            done
+          done
           [[ -f "$current/docs/cores/pokket.md" ]] || { echo 'Missing Pokket setup guide' >&2; exit 1; }
           [[ -f "$current/docs/cores/scummvm.md" ]] || { echo 'Missing ScummVM setup guide' >&2; exit 1; }
           for system in pico8 fake08 retro8; do

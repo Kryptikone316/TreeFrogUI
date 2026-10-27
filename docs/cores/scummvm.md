@@ -16,5 +16,5 @@
 ScummVM needs the original game data files. The core does not include games.
 Use IDs recognized by this port's supported engines; see
 [TreeFrogUI FroggyScummVM](https://github.com/tzubertowski/TreeFrogUI_FroggyScummvm)
-for its supported engine list and builds. Based on
-[Synaps33/FroggyScummvm](https://github.com/Synaps33/FroggyScummvm).
+for its supported engine list and builds. The core is based on
+[Synaps33's FroggyScummvm fork](https://github.com/Synaps33/FroggyScummvm).
