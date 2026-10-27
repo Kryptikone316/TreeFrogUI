@@ -55,6 +55,8 @@ POKKET_CORE_LICENSE="$(pwd)/build/Pokket-core.MIT"
 OPENBOR_ROOT="${OPENBOR_ROOT:-$(pwd)/../OpenBOR-TreeFrogUI}"
 [ -f "$OPENBOR_ROOT/build_libretro.sh" ] || OPENBOR_ROOT="$(pwd)/cores/OpenBOR"
 OPENBOR_CORE="${OPENBOR_CORE:-$OPENBOR_ROOT/build/sf3000/openbor_libretro.so}"
+SCUMMVM_CORE="${SCUMMVM_CORE:-$(pwd)/build/scummvm_libretro.so}"
+SCUMMVM_LICENSE="${SCUMMVM_LICENSE:-$(pwd)/cores/FroggyScummvm/COPYING}"
 NDS_BANNER_NEXTUI="$(pwd)/assets/nds/nds-artbook-nextui.jpg"
 NDS_BANNER_NEXT="$(pwd)/assets/nds/nds-artbook-next.jpg"
 NDS_BANNER_NAO="$(pwd)/assets/nds/nds-nao-black.jpg"
@@ -172,6 +174,8 @@ cp_if_diff() { [ -f "$1" ] || return 0; cmp -s "$1" "$2" && return 0; cp "$1" "$
 [ -s "$POKKET_LICENSE" ] || { echo "missing Pokket license: $POKKET_LICENSE" >&2; exit 1; }
 [ -s "$POKKET_CORE_LICENSE" ] || { echo "missing Pokket core license: $POKKET_CORE_LICENSE" >&2; exit 1; }
 [ -s "$OPENBOR_CORE" ] || { echo "missing OpenBOR libretro core: $OPENBOR_CORE (run ./build_all.sh)" >&2; exit 1; }
+[ -s "$SCUMMVM_CORE" ] || { echo "missing ScummVM libretro core: $SCUMMVM_CORE (run ./build_all.sh)" >&2; exit 1; }
+[ -s "$SCUMMVM_LICENSE" ] || { echo "missing ScummVM license: $SCUMMVM_LICENSE" >&2; exit 1; }
 [ -f "$NDS_BANNER_NEXTUI" ] || { echo "missing NDS NextUI artwork: $NDS_BANNER_NEXTUI" >&2; exit 1; }
 [ -f "$NDS_BANNER_NEXT" ] || { echo "missing NDS Next artwork: $NDS_BANNER_NEXT" >&2; exit 1; }
 [ -f "$NDS_BANNER_NAO" ] || { echo "missing NDS Nao artwork: $NDS_BANNER_NAO" >&2; exit 1; }
@@ -191,6 +195,8 @@ cp_if_diff "$POKKET_CORE" "$STAGE/cubegm/cores/pokket_libretro.so"
 cp_if_diff "$POKKET_LICENSE" "$STAGE/frogui/licenses/Pokket.LICENSE"
 cp_if_diff "$POKKET_CORE_LICENSE" "$STAGE/frogui/licenses/Pokket-core.MIT"
 cp_if_diff "$OPENBOR_CORE" "$STAGE/cubegm/cores/openbor_libretro.so"
+cp_if_diff "$SCUMMVM_CORE" "$STAGE/cubegm/cores/scummvm_libretro.so"
+cp_if_diff "$SCUMMVM_LICENSE" "$STAGE/frogui/licenses/ScummVM.GPL-3.0"
 rm -f "$STAGE/cubegm/cores/fheroes2_libretro.so"
 mkdir -p "$STAGE/cubegm/bios"
 cp_if_diff "$J2ME_CLASSES" "$STAGE/cubegm/bios/classes.zip"
@@ -302,6 +308,7 @@ mkdir -p "$OUT/roms/nds"
 mkdir -p "$OUT/roms/qpsx"
 mkdir -p "$OUT/roms/j2me"
 mkdir -p "$OUT/roms/pico8" "$OUT/roms/fake08" "$OUT/roms/retro8"
+mkdir -p "$OUT/roms/scummvm"
 
 # 1b) Our extra assets the old release shipped (these are OURS, not stock OS):
 #     standalone frontends, BIOS, boot logos. NOT shipped: icube/icube_start
@@ -506,6 +513,16 @@ done
 [ -f "$OUT/docs/cores/openbor.md" ] || fail "missing OpenBOR setup guide"
 [ -f "$OUT/frogui/licenses/OpenBOR.LICENSE" ] || fail "missing OpenBOR license"
 [ -d "$OUT/roms/openbor" ] || fail "missing OpenBOR ROM folder"
+[ -s "$OUT/cubegm/cores/scummvm_libretro.so" ] || fail "missing ScummVM core"
+[ -s "$OUT/frogui/system-icons/scummvm.png" ] || fail "missing ScummVM system icon"
+[ -f "$OUT/docs/cores/scummvm.md" ] || fail "missing ScummVM setup guide"
+[ -d "$OUT/roms/scummvm" ] || fail "missing ScummVM ROM folder"
+for art in frogui/scummvm.jpg \
+    frogui/theme-packs/Art_Book_NextUI/scummvm.jpg \
+    frogui/theme-packs/Art_Book_Next/scummvm.jpg \
+    frogui/theme-packs/Nao_Black/scummvm.jpg; do
+    [ -s "$OUT/$art" ] || fail "missing ScummVM background: $art"
+done
 ! find "$OUT/roms/openbor" -type f -iname '*.pak' -print -quit | grep -q . \
     || fail "OpenBOR game data must not ship"
 grep -q 'sh /tmp/tfupdate.sh' "$OUT/install_first/sf3000/cubegm/zhijack.sh" \

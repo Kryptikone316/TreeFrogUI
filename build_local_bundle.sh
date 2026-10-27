@@ -49,6 +49,9 @@ WORK_ROOT="$WORK_ROOT" "$ROOT/scripts/build_snes9x_z.sh"
 echo 'Building Pokket...'
 WORK_ROOT="$WORK_ROOT" "$ROOT/scripts/build_pokket.sh"
 
+echo 'Building ScummVM...'
+WORK_ROOT="$WORK_ROOT" bash "$ROOT/scripts/build_scummvm.sh"
+
 echo 'Building QPSX...'
 mkdir -p "$ROOT/build"
 make -C "$ROOT/cores/qpsx" -f Makefile.libretro clean platform=sf3000

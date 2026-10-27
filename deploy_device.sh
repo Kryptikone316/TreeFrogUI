@@ -32,7 +32,7 @@ die() {
 usage() {
     cat >&2 <<EOF
 usage: $0 <r36sx|r36hd|sf3000|sf3000hd_nohdmi|sf3500> [payload ...]
-    payloads: release test-games test-media perf-test-roms duke3d-data undertale-data openlara-data vvvvvv openbor vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-test-game ps1-bios pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test launcher snesz-comparison pokket mame2000 mame2000-mslug mame-test amstrad-cap32-test
+    payloads: release test-games test-media perf-test-roms duke3d-data undertale-data openlara-data vvvvvv openbor vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-test-game ps1-bios pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test launcher snesz-comparison pokket mame2000 mame2000-mslug mame-test amstrad-cap32-test scummvm
 default:  release
 EOF
     exit 2
@@ -77,14 +77,14 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|test-games|test-media|perf-test-roms|snesz-comparison|pokket|duke3d-data|undertale-data|openlara-data|vvvvvv|openbor|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-test-game|ps1-bios|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|launcher|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test) ;;
+        release|test-games|test-media|perf-test-roms|snesz-comparison|pokket|duke3d-data|undertale-data|openlara-data|vvvvvv|openbor|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-test-game|ps1-bios|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|launcher|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test|scummvm) ;;
         *) usage ;;
     esac
 done
 
 [ "$EUID" -eq 0 ] || die "run through pkexec"
 
-for tool in blkid dirname findmnt fsck.vfat grep lsblk mkdir mktemp mount \
+for tool in blkid cut dirname findmnt fsck.vfat grep lsblk mkdir mktemp mount \
     mountpoint readlink rm rsync sed sha256sum sync umount; do
     command -v "$tool" >/dev/null || die "required command is missing: $tool"
 done
@@ -343,7 +343,7 @@ deploy_release() {
 }
 
 deploy_one() {
-    local name="$1" src dst src_hash dst_hash hash_line launcher_hash
+    local name="$1" src dst src_hash dst_hash hash_line launcher_hash bg_src bg_dst
     case "$name" in
         picoarch)
             src="$WORK/picoarch/picoarch"
@@ -356,6 +356,11 @@ deploy_one() {
         frogui)
             src="$REPO/frogui/out/frogui_libretro.so"
             dst="$MOUNT/cubegm/cores/frogui_libretro.so"
+            ;;
+        scummvm)
+            src="$REPO/build/scummvm_libretro.so"
+            dst="$MOUNT/cubegm/cores/scummvm_libretro.so"
+            [ -x "$MOUNT/cubegm/picoarch" ] || die "TreeFrogUI is missing on card; deploy the full release first"
             ;;
         duke3d)
             src="$WORK/FroggyDuke/build/sf3000/duke3d_libretro.so"
@@ -452,6 +457,25 @@ deploy_one() {
         rsync -tc "$REPO/assets/j2me/java-games-artbook-nextui.png" "$MOUNT/frogui/theme-packs/Art_Book_NextUI/j2me.png"
         rsync -tc "$REPO/assets/j2me/java-games-artbook-next.png" "$MOUNT/frogui/theme-packs/Art_Book_Next/j2me.png"
         rsync -tc "$REPO/assets/j2me/java-games-nao-black.png" "$MOUNT/frogui/theme-packs/Nao_Black/j2me.png"
+        mkdir -p "$MOUNT/frogui/system-icons"
+        rsync -tc "$REPO/assets/system-icons/scummvm.png" "$MOUNT/frogui/system-icons/scummvm.png"
+        [ "$(sha256sum "$REPO/assets/system-icons/scummvm.png" | cut -d' ' -f1)" = \
+          "$(sha256sum "$MOUNT/frogui/system-icons/scummvm.png" | cut -d' ' -f1)" ] ||
+            die "ScummVM icon verification failed"
+        for pack in default Art_Book_NextUI Art_Book_Next Nao_Black; do
+            if [ "$pack" = default ]; then
+                bg_src="$REPO/sdcard/frogui/scummvm.jpg"
+                bg_dst="$MOUNT/frogui/scummvm.jpg"
+            else
+                bg_src="$REPO/sdcard/frogui/theme-packs/$pack/scummvm.jpg"
+                bg_dst="$MOUNT/frogui/theme-packs/$pack/scummvm.jpg"
+            fi
+            mkdir -p "$(dirname "$bg_dst")"
+            rsync -tc "$bg_src" "$bg_dst"
+            [ "$(sha256sum "$bg_src" | cut -d' ' -f1)" = \
+              "$(sha256sum "$bg_dst" | cut -d' ' -f1)" ] ||
+                die "ScummVM $pack background verification failed"
+        done
         for system in classicube; do
             rsync -tc "$REPO/assets/minecraft/minecraft-artbook-nextui.jpg" "$MOUNT/frogui/$system.jpg"
             rsync -tc "$REPO/assets/minecraft/minecraft-artbook-nextui.jpg" "$MOUNT/frogui/theme-packs/Art_Book_NextUI/$system.jpg"

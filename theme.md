@@ -81,6 +81,8 @@ original pack available for comparison.
 The supplied packs include explicit artwork aliases for the short TreeFrogUI
 folder names used on the device (for example `a26`, `m2k`, `pcesgx` and
 `ps1r`), so these systems do not fall back to the generic main image.
+ScummVM uses `scummvm.jpg` in each theme pack; every supplied pack includes
+the same ScummVM background in that slot.
 
 ### Which background is used
 
