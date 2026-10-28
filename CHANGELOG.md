@@ -10,3 +10,7 @@ Permanent project history. Per-release announcements are kept separately in
   latest archive from the [Ports Collection releases](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/releases/latest)
   or install them through the TreeFrogUI Installer's **Install ports** option.
   See the [Ports installation guide](docs/cores/ports.md).
+
+## 2026-10-28
+
+- **v1.8.0_u prerelease:** Keep system navigation responsive during background-image loading, sort systems by their displayed friendly names when enabled, and keep the pill highlight in step with rapid scrolling.
