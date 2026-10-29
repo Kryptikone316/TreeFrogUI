@@ -44,6 +44,22 @@ log_event() {
 log_event "=== zhijack boot [@DEV_LABEL@] pid=$$ ==="
 sync
 
+# Simulate a battery-backed clock on devices without an RTC. A newer timestamp
+# can also be imported from a USB drive at /media/hdd/time_save.txt.
+TIME_FILE_REG=/mnt/sdcard/cubegm/time_save.txt
+if [ -f "$TIME_FILE_REG" ]; then
+    LAST_SAVED_CLK=$(cat "$TIME_FILE_REG" 2>/dev/null)
+    date -s "$LAST_SAVED_CLK" 2>/dev/null
+    log_event "Fake RTC restored from SD: $LAST_SAVED_CLK"
+else
+    INIT_CLK_BASE="2026-10-10 12:00:00"
+    printf '%s\n' "$INIT_CLK_BASE" > "$TIME_FILE_REG"
+    date -s "$INIT_CLK_BASE" 2>/dev/null
+    log_event "Fake RTC initialized to baseline: $INIT_CLK_BASE"
+    sync
+fi
+rm -f /tmp/usb_checked.txt 2>/dev/null
+
 # Offline updates: users drop the official update.zip into the SD-card root.
 # Run a /tmp copy so the updater can atomically replace its own
 # installed file. Status 10 means success: restart through the newly installed
@@ -164,6 +180,32 @@ ITER=0
 LAUNCH_PENDING=0
 while true; do
     ITER=$((ITER+1))
+
+    USB_PATH="${TFUPDATE_USB_ROOT:-/media/hdd}"
+    USB_TIME_FILE="$USB_PATH/time_save.txt"
+    if [ -f "$USB_TIME_FILE" ]; then
+        if [ ! -f /tmp/usb_checked.txt ]; then
+            USB_CLK_DATA=$(cat "$USB_TIME_FILE" 2>/dev/null)
+            SYS_SECONDS=$(date +%s 2>/dev/null || echo 0)
+            USB_SECONDS=$(date -d "$USB_CLK_DATA" +%s 2>/dev/null || echo 0)
+            log_event "Fake RTC USB timestamp: system=$SYS_SECONDS usb=$USB_SECONDS ($USB_CLK_DATA)"
+            if [ "$USB_SECONDS" -gt "$SYS_SECONDS" ]; then
+                if date -s "$USB_CLK_DATA" >/dev/null 2>&1; then
+                    printf '%s\n' "$USB_CLK_DATA" > "$TIME_FILE_REG"
+                    log_event "Fake RTC synced from USB: $USB_CLK_DATA"
+                    sync
+                else
+                    log_event "Fake RTC could not apply USB timestamp"
+                fi
+            else
+                log_event "Fake RTC USB sync skipped; system time is newer"
+            fi
+            echo "LEIDO" > /tmp/usb_checked.txt
+        fi
+    else
+        rm -f /tmp/usb_checked.txt 2>/dev/null
+    fi
+
     if [ "$LAUNCH_PENDING" = 1 ] && [ -s "$LAUNCH" ]; then
         log_event "queued launch request at UI-loop start iter=$ITER: $(sed -n '1,3p' "$LAUNCH" | tr '\n' '|')"
     else
@@ -190,6 +232,8 @@ while true; do
         done
         wait "$UI_PID"
         RC=$?
+        date "+%Y-%m-%d %H:%M:%S" 2>/dev/null > "$TIME_FILE_REG"
+        sync
         if [ "$RC" != 0 ]; then
             mkdir -p /mnt/sdcard/cubegm/logs
             cp /tmp/treefrog_ui.log /mnt/sdcard/cubegm/logs/last_picoarch_crash.log
@@ -250,6 +294,8 @@ while true; do
             fi
             log_event "standalone child exited pid=$STANDALONE_PID rc=$STANDALONE_RC"
             cp /tmp/treefrog_ui.log /mnt/sdcard/cubegm/logs/last_standalone.log 2>/dev/null
+            date "+%Y-%m-%d %H:%M:%S" 2>/dev/null > "$TIME_FILE_REG"
+            sync
             sleep 0.2
             continue
         fi
@@ -291,6 +337,8 @@ while true; do
             done
             wait "$GAME_PID"
             GRC=$?
+            date "+%Y-%m-%d %H:%M:%S" 2>/dev/null > "$TIME_FILE_REG"
+            sync
             if [ -s "$LAUNCH" ]; then
                 LAUNCH_PENDING=1
                 log_event "game frontend returned a FrogUI launch request; handling it without another UI start"
