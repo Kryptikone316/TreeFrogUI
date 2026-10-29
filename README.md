@@ -210,6 +210,11 @@ A few systems need more than "drop the ROM in the folder" - either extra compani
 
 Make it look how you want. Full step-by-step in the 📦 **[Customisation Guide](theme.md)**. The quick version:
 
+**Date and time** - use **Settings → DATE/TIME (EMULATION)** to set the clock,
+sync it from a USB drive, or add a fixed minute bump at each boot. These
+handhelds have no battery-backed RTC, so they cannot track elapsed time while
+powered off. See the [Date and Time guide](docs/date-time.md).
+
 **Theme** - in TreeFrogUI: Settings → Theme, press Left/Right. There are 30 built-in colour themes. **Style** offers the standard Vertical list, an animated Horizontal carousel, or an Onion-style System View with a paged console-icon grid. **Icon Pack** changes System View artwork without changing its background or colours. **Friendly System Names** expands folder codes such as `ps` and `gba` in every style.
 
 **Background Theme Pack** - Settings → Appearance → **Background Theme Pack**. Choose **Art Book NextUI** (adapted from [Leviathanium's NextUI-Themes](https://github.com/Leviathanium/NextUI-Themes/tree/main/Catalog/Themes/ArtBookNextUI.theme)), **Nao Black** (adapted from [Leviathanium's Nao-Black theme](https://github.com/Leviathanium/NextUI-Themes/tree/main/Catalog/Themes/Nao-Black.theme)), or another installed pack. **Background Images** must be on for the selected pack to appear.
