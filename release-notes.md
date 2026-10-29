@@ -1,9 +1,12 @@
-# TreeFrogUI v1.8.0_u prerelease
+# TreeFrogUI v1.8.0
 
-## Changes since v1.8.0_t
+## What's new
 
-- **Background loading:** System background images now decode on the existing worker, keeping navigation responsive while an image loads.
-- **System sorting:** Games sort by localized friendly system names when that setting is enabled, and by folder names when disabled.
-- **Fast scrolling:** The pill highlight catches up on repeated navigation instead of trailing the selected row.
+- **New systems:** Added Snes9x-Z, Picante8, Pokket, ScummVM, experimental QPSX, Java Games, and Nintendo DS support. Snes9x-Z is a slower, compatibility-oriented alternative to the default SNES core.
+- **Ports:** Ports are distributed separately through the [TreeFrogUI Ports Collection](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/releases/latest), with setup guides for games that need user-supplied data.
+- **FrogUI navigation:** Added localized friendly-name sorting, responsive pillbox animation during rapid scrolling, asynchronous system-background loading, and working system aliases and PICO-8 cart formats.
+- **Audio:** Reduced popping during CPU-heavy gameplay with PicoArch audio-buffer improvements; mono downmix is off by default.
+- **Artwork and translations:** Restored missing system art and settings translations across the built-in themes and languages.
+- **Device support:** Added and improved installation support for R36SX/R36HD variants and SF3000/SF3500 family devices.
 
 For a fresh installation, use the full archive and matching `install_first/<device>/` files. To update an existing installation, copy `update.zip` to the SD-card root and reboot.

@@ -14,3 +14,7 @@ Permanent project history. Per-release announcements are kept separately in
 ## 2026-10-28
 
 - **v1.8.0_u prerelease:** Keep system navigation responsive during background-image loading, sort systems by their displayed friendly names when enabled, and keep the pill highlight in step with rapid scrolling.
+
+## 2026-10-29
+
+- **v1.8.0 stable:** Promoted the tested v1.8.0_u build with its accumulated core, ports, FrogUI, audio, artwork, translation, and device-support updates.
