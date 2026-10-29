@@ -3,15 +3,6 @@
 Permanent project history. Per-release announcements are kept separately in
 [`release-notes.md`](release-notes.md).
 
-## Unreleased
-
-- **Simulated RTC (MartStartIV):** save and restore the system clock across
-  boots on devices without a battery-backed RTC, with support for importing a
-  newer timestamp from USB. A user-configurable time bump will be implemented
-  separately.
-- **Clock settings:** set the date and time, sync it from USB on demand, and
-  configure how many minutes the clock advances at each boot.
-
 ## 2026-10-27
 
 - **v1.8.0_t prerelease:** Added ScummVM based on [Synaps33's FroggyScummvm](https://github.com/Synaps33/FroggyScummvm); restored missing system artwork and translations; and reduced PicoArch audio popping under heavy load.
@@ -27,3 +18,4 @@ Permanent project history. Per-release announcements are kept separately in
 ## 2026-10-29
 
 - **v1.8.0 stable:** Promoted the tested v1.8.0_u build with its accumulated core, ports, FrogUI, audio, artwork, translation, and device-support updates.
+- **v1.9.0_a prerelease:** Added the simulated clock settings, manual USB time sync, configurable per-boot time bump, and date/time documentation.

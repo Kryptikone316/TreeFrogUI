@@ -1,12 +1,10 @@
-# TreeFrogUI v1.8.0
+# TreeFrogUI v1.9.0_a
 
 ## What's new
 
-- **New systems:** Added Snes9x-Z, Picante8, Pokket, ScummVM, experimental QPSX, Java Games, and Nintendo DS support. Snes9x-Z is a slower, compatibility-oriented alternative to the default SNES core.
-- **Ports:** Ports are distributed separately through the [TreeFrogUI Ports Collection](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/releases/latest), with setup guides for games that need user-supplied data.
-- **FrogUI navigation:** Added localized friendly-name sorting, responsive pillbox animation during rapid scrolling, asynchronous system-background loading, and working system aliases and PICO-8 cart formats.
-- **Audio:** Reduced popping during CPU-heavy gameplay with PicoArch audio-buffer improvements; mono downmix is off by default.
-- **Artwork and translations:** Restored missing system art and settings translations across the built-in themes and languages.
-- **Device support:** Added and improved installation support for R36SX/R36HD variants and SF3000/SF3500 family devices.
+- **Set the clock in Settings:** DATE/TIME (EMULATION) now lets you set the date and time with the D-pad or sync from a USB drive on demand. The section is above SYSTEM and collapsed by default.
+- **Adjust time at boot:** Choose a per-reboot minute bump, from 0 to 1440 minutes in 5-minute steps, to estimate time elapsed while the handheld was off.
+- **Hardware limitation:** Supported handhelds do not have RTC hardware, so they cannot track real elapsed time while powered off. The saved clock and optional boot bump are an emulation; use manual setting or USB sync for an accurate time. Thanks to MartStartIV for contributing the simulated RTC foundation.
+- **Documentation:** Added a date/time guide to the README and website, including the USB file format and clock limitations.
 
 For a fresh installation, use the full archive and matching `install_first/<device>/` files. To update an existing installation, copy `update.zip` to the SD-card root and reboot.
