@@ -44,8 +44,8 @@ log_event() {
 log_event "=== zhijack boot [@DEV_LABEL@] pid=$$ ==="
 sync
 
-# Simulate a battery-backed clock on devices without an RTC. A newer timestamp
-# can also be imported from a USB drive at /media/hdd/time_save.txt.
+# Simulate a battery-backed clock on devices without an RTC. FrogUI updates
+# this file when the user sets the clock or explicitly syncs from USB.
 TIME_FILE_REG=/mnt/sdcard/cubegm/time_save.txt
 if [ -f "$TIME_FILE_REG" ]; then
     LAST_SAVED_CLK=$(cat "$TIME_FILE_REG" 2>/dev/null)
@@ -58,7 +58,28 @@ else
     log_event "Fake RTC initialized to baseline: $INIT_CLK_BASE"
     sync
 fi
-rm -f /tmp/usb_checked.txt 2>/dev/null
+
+# Advance the saved clock once per launcher boot. FrogUI stores this preference
+# in its existing settings file; malformed or missing values mean no bump.
+RTC_BUMP_MIN=$(sed -n 's/^rtc_bump_minutes=//p' /mnt/sdcard/frogui/settings.txt 2>/dev/null | head -n 1)
+case "$RTC_BUMP_MIN" in ''|*[!0-9]*) RTC_BUMP_MIN=0 ;; esac
+[ "$RTC_BUMP_MIN" -le 1440 ] || RTC_BUMP_MIN=1440
+if [ "$RTC_BUMP_MIN" -gt 0 ]; then
+    RTC_EPOCH=$(date -d "$LAST_SAVED_CLK" +%s 2>/dev/null || echo 0)
+    case "$RTC_EPOCH" in ''|*[!0-9]*) RTC_EPOCH=0 ;; esac
+    if [ "$RTC_EPOCH" -gt 0 ]; then
+        RTC_TARGET=$((RTC_EPOCH + RTC_BUMP_MIN * 60))
+        if date -s "@$RTC_TARGET" >/dev/null 2>&1; then
+            date '+%Y-%m-%d %H:%M:%S' 2>/dev/null > "$TIME_FILE_REG"
+            log_event "Fake RTC bumped $RTC_BUMP_MIN minutes on boot"
+            sync
+        else
+            log_event "Fake RTC boot bump failed"
+        fi
+    else
+        log_event "Fake RTC boot bump skipped; saved timestamp is invalid"
+    fi
+fi
 
 # Offline updates: users drop the official update.zip into the SD-card root.
 # Run a /tmp copy so the updater can atomically replace its own
@@ -180,31 +201,6 @@ ITER=0
 LAUNCH_PENDING=0
 while true; do
     ITER=$((ITER+1))
-
-    USB_PATH="${TFUPDATE_USB_ROOT:-/media/hdd}"
-    USB_TIME_FILE="$USB_PATH/time_save.txt"
-    if [ -f "$USB_TIME_FILE" ]; then
-        if [ ! -f /tmp/usb_checked.txt ]; then
-            USB_CLK_DATA=$(cat "$USB_TIME_FILE" 2>/dev/null)
-            SYS_SECONDS=$(date +%s 2>/dev/null || echo 0)
-            USB_SECONDS=$(date -d "$USB_CLK_DATA" +%s 2>/dev/null || echo 0)
-            log_event "Fake RTC USB timestamp: system=$SYS_SECONDS usb=$USB_SECONDS ($USB_CLK_DATA)"
-            if [ "$USB_SECONDS" -gt "$SYS_SECONDS" ]; then
-                if date -s "$USB_CLK_DATA" >/dev/null 2>&1; then
-                    printf '%s\n' "$USB_CLK_DATA" > "$TIME_FILE_REG"
-                    log_event "Fake RTC synced from USB: $USB_CLK_DATA"
-                    sync
-                else
-                    log_event "Fake RTC could not apply USB timestamp"
-                fi
-            else
-                log_event "Fake RTC USB sync skipped; system time is newer"
-            fi
-            echo "LEIDO" > /tmp/usb_checked.txt
-        fi
-    else
-        rm -f /tmp/usb_checked.txt 2>/dev/null
-    fi
 
     if [ "$LAUNCH_PENDING" = 1 ] && [ -s "$LAUNCH" ]; then
         log_event "queued launch request at UI-loop start iter=$ITER: $(sed -n '1,3p' "$LAUNCH" | tr '\n' '|')"

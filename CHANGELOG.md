@@ -9,6 +9,8 @@ Permanent project history. Per-release announcements are kept separately in
   boots on devices without a battery-backed RTC, with support for importing a
   newer timestamp from USB. A user-configurable time bump will be implemented
   separately.
+- **Clock settings:** set the date and time, sync it from USB on demand, and
+  configure how many minutes the clock advances at each boot.
 
 ## 2026-10-27
 
