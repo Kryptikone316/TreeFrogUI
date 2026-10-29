@@ -19,6 +19,8 @@ def website_links(markdown):
         "theme.md": "{{ '/guides/theming/' | relative_url }}",
         "install.md": "{{ '/guides/installation/' | relative_url }}",
         "docs/cores/ports.md": "{{ '/guides/ports/' | relative_url }}",
+        "docs/date-time.md": "{{ '/guides/date-time/' | relative_url }}",
+        "dev/usb-host-storage.md": "https://github.com/tzubertowski/TreeFrogUI/blob/main/docs/dev/usb-host-storage.md",
     }
 
     def replace(match):
@@ -84,6 +86,7 @@ def main():
         "shortcuts.md": section(readme, "## Shortcuts", "## BIOS files required"),
         "bios.md": bios,
         "ports.md": re.sub(r"^# TreeFrogUI Ports Collection\s*\n", "", ports, count=1),
+        "date-time.md": (ROOT / "docs/date-time.md").read_text(),
     }
     assert "Step 1: Prepare the SD card for your handheld" in guides["manual-installation.md"]
     assert "In-Game Shortcuts" not in guides["manual-installation.md"]
