@@ -19,3 +19,8 @@ Permanent project history. Per-release announcements are kept separately in
 
 - **v1.8.0 stable:** Promoted the tested v1.8.0_u build with its accumulated core, ports, FrogUI, audio, artwork, translation, and device-support updates.
 - **v1.9.0_a prerelease:** Added the simulated clock settings, manual USB time sync, configurable per-boot time bump, and date/time documentation.
+
+## 2026-10-30
+
+- Added Synaps33's EPUB-only FroggyReader Libretro core to Apps, with a 640×480 renderer and bundled sample library.
+- Added PDF zoom and pan controls to the standalone Ebook reader.

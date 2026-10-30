@@ -56,7 +56,7 @@ See [cores.md](cores.md) for the full folder→core mapping table.
 - **Game switcher** - Optional OnionOS-style recents carousel: big box art, or a screenshot of where you left off (every game is auto-screenshotted on exit), resumes the game. Turn it on in Settings (Game Switcher), it replaces the recents list.
 - **Start in Recents** - Optional: boot straight into your recents (list or switcher) every time, in Settings.
 - **Play-time stats** - Tracks how long you play each game, shown in the browser.
-- **Ebook reader** - Read **EPUB / MOBI / PDF / CBZ / FB2** on the go (MuPDF-powered): put files in `roms/Ebook/`, adjustable text size + font (custom TTFs supported), progress saved per book. See the [ebook guide](docs/cores/ebook.md).
+- **Ebook readers** - The MuPDF-powered [Ebook reader](docs/cores/ebook.md) reads **EPUB / MOBI / PDF / CBZ / FB2** from `roms/Ebook/`, with adjustable text and PDF zoom. [FroggyReader](docs/cores/froggyreader.md) is an EPUB-only alternative in Apps. See where [saves and save states](docs/cores/save-files.md) are stored.
 - **Video player** - Drop ordinary **MP4 / MKV / AVI / MOV / WMV** files into `roms/videos/`. Playback uses the firmware hardware decoder; its MinUI-style controls inherit your active theme colors and follow each device's native panel orientation. No conversion required.
 - **Simple music player** - Put **MP3 / M4A / AAC / WAV / FLAC / OGG / Opus** files in a folder under `roms/music/`. Each folder acts as a playlist with alphabetical auto-advance, X/Y previous/next, sequential/loop/random modes, embedded ID3v1/ID3v2 metadata and album covers, and a themed interface. Rockbox remains available for advanced library features.
 - **Image viewer** - Browse **JPG / PNG / BMP / GIF / WebP / TIFF** files from `roms/images/`, with Fit/Fill, reliable 1x–4x JPEG/PNG zoom, D-pad panning, and the same themed controls as the music and video players.
@@ -506,7 +506,7 @@ Donations go straight toward buying the next device to port to.
 - **[MartStartIV](https://github.com/MartStartIV)** — USB OTG storage work, testing, and the Spanish translation. [YouTube](https://www.youtube.com/@MartStartIV)
 - **[Maheshivara](https://github.com/Maheshivara)** — Brazilian Portuguese translation.
 - **@Q_ta** — Japanese translation.
-- **[Synaps33](https://github.com/Synaps33)** — ports and device adaptations, including [FroggyScummvm](https://github.com/Synaps33/FroggyScummvm), [FroggyDuke](https://github.com/Synaps33/FroggyDuke), [FroggySpacePinbal](https://github.com/Synaps33/FroggySpacePinbal), and [FroggyTuxRacer](https://github.com/Synaps33/FroggyTuxRacer).
+- **[Synaps33](https://github.com/Synaps33)** — ports, device adaptations, and the [FroggyReader](https://github.com/Synaps33/FroggyReader) EPUB core, including [FroggyScummvm](https://github.com/Synaps33/FroggyScummvm), [FroggyDuke](https://github.com/Synaps33/FroggyDuke), [FroggySpacePinbal](https://github.com/Synaps33/FroggySpacePinbal), and [FroggyTuxRacer](https://github.com/Synaps33/FroggyTuxRacer).
 - **[@ozkaoz](https://github.com/ozkaoz)** — R36SX physical FN-button input support ([TreeFrogUI_picoarch#1](https://github.com/tzubertowski/TreeFrogUI_picoarch/pull/1)) and FrogUI audio fixes ([TreeFrogUI#55](https://github.com/tzubertowski/TreeFrogUI/pull/55)).
 
 ## Credits

@@ -10,7 +10,7 @@
 # is deployed. Optional development payloads:
 #   release, test-games, test-media, perf-test-roms, duke3d-data, undertale-data, openlara-data, vvvvvv, openbor, vvvvvv-data, clean-themes, picoarch, picoarch-hi, frogui, duke3d, butterscotch, picante8, openclaw, dsperate, frogshell, ebook, pcsx4all, pcsx4all-test-game, ps1-bios, pcsx4all-config,
 #   tic80, vecx, j2me, j2me-debug, o2em, o2em-test, c64-test, launcher, snesz-comparison, pokket,
-#   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test
+#   mame2000, mame2000-mslug, mame-test, amstrad-cap32-test, froggyreader
 #
 # This script never formats a card and never uses rsync --delete.
 set -euo pipefail
@@ -32,7 +32,7 @@ die() {
 usage() {
     cat >&2 <<EOF
 usage: $0 <r36sx|r36hd|sf3000|sf3000hd_nohdmi|sf3500> [payload ...]
-    payloads: release test-games test-media perf-test-roms duke3d-data undertale-data openlara-data vvvvvv openbor vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-test-game ps1-bios pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test launcher snesz-comparison pokket mame2000 mame2000-mslug mame-test amstrad-cap32-test scummvm
+    payloads: release test-games test-media perf-test-roms duke3d-data undertale-data openlara-data vvvvvv openbor vvvvvv-data clean-themes picoarch picoarch-hi frogui duke3d butterscotch picante8 openclaw dsperate frogshell ebook pcsx4all pcsx4all-test-game ps1-bios pcsx4all-config tic80 vecx j2me j2me-debug o2em o2em-test c64-test launcher snesz-comparison pokket mame2000 mame2000-mslug mame-test amstrad-cap32-test scummvm froggyreader
 default:  release
 EOF
     exit 2
@@ -77,7 +77,7 @@ readonly -a PAYLOADS=("$@")
 
 for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
-        release|test-games|test-media|perf-test-roms|snesz-comparison|pokket|duke3d-data|undertale-data|openlara-data|vvvvvv|openbor|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-test-game|ps1-bios|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|launcher|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test|scummvm) ;;
+        release|test-games|test-media|perf-test-roms|snesz-comparison|pokket|duke3d-data|undertale-data|openlara-data|vvvvvv|openbor|vvvvvv-data|clean-themes|picoarch|picoarch-hi|frogui|duke3d|butterscotch|picante8|openclaw|dsperate|frogshell|ebook|pcsx4all|pcsx4all-test-game|ps1-bios|pcsx4all-config|tic80|vecx|j2me|j2me-debug|o2em|o2em-test|c64-test|launcher|mame2000|mame2000-mslug|mame-test|amstrad-cap32-test|scummvm|froggyreader) ;;
         *) usage ;;
     esac
 done
@@ -588,6 +588,60 @@ deploy_pokket() {
         [ "$source_hash" = "$card_hash" ] || die "Pokket deployment verification failed: ${pair#*:}"
         echo "Verified: ${pair#*:}  $card_hash"
     done
+    sync
+}
+
+deploy_froggyreader() {
+    local pair src rel dst src_hash dst_hash hash_line
+    local -a files=(
+        "$WORK/FrogUI/out/frogui_libretro.so:cubegm/cores/frogui_libretro.so"
+        "$REPO/build/froggyreader_libretro.so:cubegm/cores/froggyreader_libretro.so"
+        "$WORK/ebook/ebook:cubegm/ebook"
+    )
+    local marker_src="$REPO/assets/froggyreader/Library.epub"
+    local marker_rel="roms/epub/Library.epub"
+    local marker_dst="$MOUNT/$marker_rel"
+    local book_src="$WORK/FroggyReader/library/03-Krotka-Historia-Herbaty.epub"
+    local book_rel="roms/epub/books/03-Krotka-Historia-Herbaty.epub"
+    local book_dst="$MOUNT/$book_rel"
+    [ -x "$MOUNT/cubegm/picoarch" ] || die "TreeFrogUI is missing on card; deploy the full release first"
+    [ -s "$book_src" ] || die "FroggyReader EPUB sample is missing: $book_src"
+    [ -s "$marker_src" ] || die "FroggyReader launcher marker is missing: $marker_src"
+    for pair in "${files[@]}"; do
+        src="${pair%%:*}"
+        [ -s "$src" ] || die "FroggyReader deployment input missing: $src"
+    done
+    if [ -e "$book_dst" ]; then
+        src_hash="$(sha256sum "$book_src")"; src_hash="${src_hash%% *}"
+        dst_hash="$(sha256sum "$book_dst")"; dst_hash="${dst_hash%% *}"
+        [ "$src_hash" = "$dst_hash" ] || die "refusing to replace different EPUB already at $book_rel"
+    fi
+    if [ -e "$marker_dst" ]; then
+        src_hash="$(sha256sum "$marker_src")"; src_hash="${src_hash%% *}"
+        dst_hash="$(sha256sum "$marker_dst")"; dst_hash="${dst_hash%% *}"
+        [ "$src_hash" = "$dst_hash" ] || die "refusing to replace existing file at $marker_rel"
+    fi
+    for pair in "${files[@]}"; do
+        src="${pair%%:*}"; rel="${pair#*:}"; dst="$MOUNT/$rel"
+        mkdir -p "$(dirname "$dst")"
+        rsync -tc "$src" "$dst"
+        src_hash="$(sha256sum "$src")"; src_hash="${src_hash%% *}"
+        dst_hash="$(sha256sum "$dst")"; dst_hash="${dst_hash%% *}"
+        [ "$src_hash" = "$dst_hash" ] || die "FroggyReader deployment verification failed: $rel"
+        echo "Verified: $rel  $dst_hash"
+    done
+    mkdir -p "$(dirname "$book_dst")"
+    [ -e "$book_dst" ] || rsync -tc "$book_src" "$book_dst"
+    src_hash="$(sha256sum "$book_src")"; src_hash="${src_hash%% *}"
+    dst_hash="$(sha256sum "$book_dst")"; dst_hash="${dst_hash%% *}"
+    [ "$src_hash" = "$dst_hash" ] || die "FroggyReader EPUB verification failed"
+    echo "Verified: $book_rel  $dst_hash"
+    mkdir -p "$(dirname "$marker_dst")"
+    [ -e "$marker_dst" ] || rsync -tc "$marker_src" "$marker_dst"
+    src_hash="$(sha256sum "$marker_src")"; src_hash="${src_hash%% *}"
+    dst_hash="$(sha256sum "$marker_dst")"; dst_hash="${dst_hash%% *}"
+    [ "$src_hash" = "$dst_hash" ] || die "FroggyReader launcher verification failed"
+    echo "Verified: $marker_rel  $dst_hash"
     sync
 }
 
@@ -1206,6 +1260,7 @@ for payload in "${PAYLOADS[@]}"; do
     case "$payload" in
         release) deploy_release ;;
         pokket) deploy_pokket ;;
+        froggyreader) deploy_froggyreader ;;
         vvvvvv) deploy_vvvvvv ;;
         openbor) deploy_openbor ;;
         test-games) deploy_test_games ;;

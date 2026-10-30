@@ -156,6 +156,8 @@ jobs:
             cubegm/port_check.sh
             cubegm/cores/frogui_libretro.so cubegm/cores/tyrquake_libretro.so
             cubegm/cores/scummvm_libretro.so frogui/licenses/ScummVM.GPL-3.0
+            cubegm/cores/froggyreader_libretro.so
+            roms/epub/Library.epub
             frogui/system-icons/scummvm.png
             cubegm/cores/snes9x-Z_libretro.so frogui/licenses/Snes9x-Z.LICENSE
             cubegm/cores/pokket_libretro.so frogui/licenses/Pokket.LICENSE
@@ -180,6 +182,8 @@ jobs:
           [[ -d "$current/roms/snesz" ]] || { echo 'Missing required ROM folder: roms/snesz' >&2; exit 1; }
           [[ -d "$current/roms/pokket" ]] || { echo 'Missing required ROM folder: roms/pokket' >&2; exit 1; }
           [[ -d "$current/roms/scummvm" ]] || { echo 'Missing required ROM folder: roms/scummvm' >&2; exit 1; }
+          [[ -d "$current/roms/epub/books" ]] || { echo 'Missing FroggyReader EPUB folder' >&2; exit 1; }
+          [[ -f "$current/roms/epub/Library.epub" ]] || { echo 'Missing FroggyReader library launcher' >&2; exit 1; }
           for art_dir in frogui frogui/theme-packs/Art_Book_Next frogui/theme-packs/Art_Book_NextUI frogui/theme-packs/Nao_Black; do
             for system in neogeo geolith sega md gpgx dos pico286; do
               [[ -s "$current/$art_dir/$system.jpg" ]] || { echo "Missing $system art: $art_dir/$system.jpg" >&2; exit 1; }
@@ -187,6 +191,7 @@ jobs:
           done
           [[ -f "$current/docs/cores/pokket.md" ]] || { echo 'Missing Pokket setup guide' >&2; exit 1; }
           [[ -f "$current/docs/cores/scummvm.md" ]] || { echo 'Missing ScummVM setup guide' >&2; exit 1; }
+          [[ -f "$current/docs/cores/froggyreader.md" ]] || { echo 'Missing FroggyReader guide' >&2; exit 1; }
           for system in pico8 fake08 retro8; do
             [[ -d "$current/roms/$system" ]] || { echo "Missing required ROM folder: roms/$system" >&2; exit 1; }
           done
