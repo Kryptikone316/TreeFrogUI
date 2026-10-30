@@ -506,7 +506,7 @@ Donations go straight toward buying the next device to port to.
 - **[MartStartIV](https://github.com/MartStartIV)** — USB OTG storage work, testing, and the Spanish translation. [YouTube](https://www.youtube.com/@MartStartIV)
 - **[Maheshivara](https://github.com/Maheshivara)** — Brazilian Portuguese translation.
 - **@Q_ta** — Japanese translation.
-- **[Synaps33](https://github.com/Synaps33)** — ports and device adaptations, including [FroggyScummvm](https://github.com/Synaps33/FroggyScummvm), [FroggyDuke](https://github.com/Synaps33/FroggyDuke), and [FroggySpacePinbal](https://github.com/Synaps33/FroggySpacePinbal).
+- **[Synaps33](https://github.com/Synaps33)** — ports and device adaptations, including [FroggyScummvm](https://github.com/Synaps33/FroggyScummvm), [FroggyDuke](https://github.com/Synaps33/FroggyDuke), [FroggySpacePinbal](https://github.com/Synaps33/FroggySpacePinbal), and [FroggyTuxRacer](https://github.com/Synaps33/FroggyTuxRacer).
 - **[@ozkaoz](https://github.com/ozkaoz)** — R36SX physical FN-button input support ([TreeFrogUI_picoarch#1](https://github.com/tzubertowski/TreeFrogUI_picoarch/pull/1)) and FrogUI audio fixes ([TreeFrogUI#55](https://github.com/tzubertowski/TreeFrogUI/pull/55)).
 
 ## Credits
@@ -516,7 +516,7 @@ Donations go straight toward buying the next device to port to.
 - **angree** - Amiga (UAE4ALL) and Atari ST (castaway) ports for SF-series handhelds
 - **goph-R** - [SF3000-RE](https://github.com/goph-R/SF3000-RE) reverse engineering project and boot logo specs
 - **SjslTech** - [YouTube](https://www.youtube.com/@SjslTech) - R36SX testing & contributions
-- **[Synaps33](https://github.com/Synaps33)** - original [FroggyPE](https://github.com/Synaps33/FroggyPE), [FroggyCraft](https://github.com/Synaps33/FroggyCraft), [FroggyKVM](https://github.com/Synaps33/FroggyKVM), [FroggyDuke](https://github.com/Synaps33/FroggyDuke), [FroggyClaw](https://github.com/Synaps33/FroggyClaw), [FroggySpacePinbal](https://github.com/Synaps33/FroggySpacePinbal), [FroggyTale](https://github.com/Synaps33/FroggyTale), [FroggyMania](https://github.com/Synaps33/FroggyMania), and [FroggyScummvm](https://github.com/Synaps33/FroggyScummvm) projects
+- **[Synaps33](https://github.com/Synaps33)** - original [FroggyPE](https://github.com/Synaps33/FroggyPE), [FroggyCraft](https://github.com/Synaps33/FroggyCraft), [FroggyKVM](https://github.com/Synaps33/FroggyKVM), [FroggyDuke](https://github.com/Synaps33/FroggyDuke), [FroggyClaw](https://github.com/Synaps33/FroggyClaw), [FroggySpacePinbal](https://github.com/Synaps33/FroggySpacePinbal), [FroggyTale](https://github.com/Synaps33/FroggyTale), [FroggyMania](https://github.com/Synaps33/FroggyMania), [FroggyScummvm](https://github.com/Synaps33/FroggyScummvm), and [FroggyTuxRacer](https://github.com/Synaps33/FroggyTuxRacer) projects
 - **[diasurgical](https://github.com/diasurgical)** and the [DevilutionX contributors](https://github.com/diasurgical/DevilutionX/graphs/contributors) - original Diablo 1 engine and open-source port
 - All libretro core authors
 
