@@ -506,7 +506,7 @@ Donations go straight toward buying the next device to port to.
 - **[MartStartIV](https://github.com/MartStartIV)** — USB OTG storage work, testing, and the Spanish translation. [YouTube](https://www.youtube.com/@MartStartIV)
 - **[Maheshivara](https://github.com/Maheshivara)** — Brazilian Portuguese translation.
 - **@Q_ta** — Japanese translation.
-- **[Synaps33](https://github.com/Synaps33)** — ports, device adaptations, and the [FroggyReader](https://github.com/Synaps33/FroggyReader) EPUB core, including [FroggyScummvm](https://github.com/Synaps33/FroggyScummvm), [FroggyDuke](https://github.com/Synaps33/FroggyDuke), [FroggySpacePinbal](https://github.com/Synaps33/FroggySpacePinbal), and [FroggyTuxRacer](https://github.com/Synaps33/FroggyTuxRacer).
+- **[Synaps33 (Sajnaps)](https://github.com/Synaps33)** — ports, device adaptations, and the [FroggyReader](https://github.com/Synaps33/FroggyReader) EPUB core, including [FroggyScummvm](https://github.com/Synaps33/FroggyScummvm), [FroggyDuke](https://github.com/Synaps33/FroggyDuke), [FroggySpacePinbal](https://github.com/Synaps33/FroggySpacePinbal), and [FroggyTuxRacer](https://github.com/Synaps33/FroggyTuxRacer).
 - **[@ozkaoz](https://github.com/ozkaoz)** — R36SX physical FN-button input support ([TreeFrogUI_picoarch#1](https://github.com/tzubertowski/TreeFrogUI_picoarch/pull/1)) and FrogUI audio fixes ([TreeFrogUI#55](https://github.com/tzubertowski/TreeFrogUI/pull/55)).
 
 ## Credits

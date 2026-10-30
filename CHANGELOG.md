@@ -22,5 +22,5 @@ Permanent project history. Per-release announcements are kept separately in
 
 ## 2026-10-30
 
-- Added Synaps33's EPUB-only FroggyReader Libretro core to Apps, with a 640×480 renderer and bundled sample library.
+- **v1.9.0_b prerelease:** Added Synaps33 (Sajnaps)'s EPUB-only FroggyReader Libretro core to Apps, with a 640×480 renderer and bundled sample library.
 - Added PDF zoom and pan controls to the standalone Ebook reader.

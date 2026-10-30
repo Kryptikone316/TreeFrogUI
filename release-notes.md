@@ -1,4 +1,4 @@
-# TreeFrogUI v1.9.0_a
+# TreeFrogUI v1.9.0_b
 
 ## What's new
 
@@ -15,6 +15,6 @@ Thanks to [Luis Gabriel da Costa Silva (@Maheshivara)](https://github.com/Mahesh
 
 Thanks to [Synaps33](https://github.com/Synaps33) for [FroggyTuxRacer](https://github.com/Synaps33/FroggyTuxRacer), the Tux Racer port added to the Ports Collection in [PR #14](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/pull/14).
 
-Thanks to [Synaps33](https://github.com/Synaps33) for the [FroggyReader Libretro core](https://github.com/Synaps33/FroggyReader), which powers the new EPUB reader app.
+Thanks to [Sajnaps (Synaps33)](https://github.com/Synaps33) for creating the [FroggyReader Libretro core](https://github.com/Synaps33/FroggyReader), which powers the new EPUB reader app.
 
 For a fresh installation, use the full archive and matching `install_first/<device>/` files. To update an existing installation, copy `update.zip` to the SD-card root and reboot.
