@@ -7,7 +7,7 @@
 - **Hardware limitation:** Supported handhelds do not have RTC hardware, so they cannot track real elapsed time while powered off. The saved clock and optional boot bump are an emulation; use manual setting or USB sync for an accurate time. Credit and thanks to [MartStartIV](https://github.com/MartStartIV) for the simulated RTC foundation in [PR #77](https://github.com/tzubertowski/TreeFrogUI/pull/77) and its required time file in [PR #78](https://github.com/tzubertowski/TreeFrogUI/pull/78); this release adds the configurable per-boot time bump separately.
 - **Documentation:** Added a date/time guide to the README and website, including the USB file format and clock limitations.
 - **EPUB reader:** Added FroggyReader as an EPUB-only alternative under Apps. It opens its book library directly and renders a 640×480 interface with higher-resolution text.
-- **PDF zoom:** The standalone Ebook reader supports PDF zoom with X/Y and D-pad panning while zoomed in.
+- **PDF zoom:** The standalone Ebook reader supports PDF zoom up to 5× with X/Y and D-pad panning while zoomed in.
 
 ## Contributor credit
 

@@ -37,7 +37,7 @@ your device has, so it works the same on R36SX / SF3000 / SF3500 / GB350.
 | **SELECT** | open / close the menu |
 | **SELECT + START** | quit (progress is saved) |
 
-For PDFs, **X / Y** zoom in / out (1x to 3x). At zoom above 1x, use the
+For PDFs, **X / Y** zoom in / out (1x to 5x). At zoom above 1x, use the
 D-pad to pan; **L1 / R1** or **B / A** still turn pages. X/Y and pan controls
 do not affect other formats.
 
