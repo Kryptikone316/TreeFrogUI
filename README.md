@@ -46,7 +46,7 @@ See [cores.md](cores.md) for the full folder→core mapping table.
 ## Why TreeFrogUI?
 
 - **Minimalistic but powerful UI** - Clean, fast game selection screen with quick navigation.
-- **Broad system support** - Includes **Java Games** (J2ME / MIDP 2.0), **PICO-8** (via Fake08/Retro8/Picante8), **Quake** (via Tyrquake), **Cave Story** (via NXEngine), **Doom** (via PrBoom), **PlayStation 1** (via PCSX ReArmed), plus classic computer systems like Commodore Amiga and Atari ST.
+- **Broad system support** - Includes **Java Games** (J2ME / MIDP 2.0), **PICO-8** (via Fake08/Retro8/Picante8), **Cave Story** (via NXEngine), **Doom** (via PrBoom), **PlayStation 1** (via PCSX ReArmed), plus classic computer systems like Commodore Amiga and Atari ST.
 - **Highly configurable cores** - Configurable settings for all cores, allowing for retro features like console palette swaps, LCD ghosting emulation, and more.
 - **In-game saves** - Fully supported across all compatible cores for seamless session saving and loading.
 - **Quick Resume** - Automatically boots back into the last played game upon device boot, skipping the frontend.
@@ -141,7 +141,6 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **Ports Collection** | Optional game ports installed separately - 📖 [installation guide](docs/cores/ports.md) | [Ports Collection release](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/releases/latest) |
 | **openbor** | OpenBOR game/mod PAKs - 📖 [setup guide](docs/cores/openbor.md) | `openbor_libretro.so` |
 | **scummvm** | Point-and-click adventures via [Synaps33's FroggyScummvm](https://github.com/Synaps33/FroggyScummvm) - 📖 [setup guide](docs/cores/scummvm.md) | `scummvm_libretro.so` |
-| **Quake** | Quake | `tyrquake_libretro.so` |
 | **quake2** | Quake II (heavy) - 📖 [setup guide](docs/cores/quake2.md) | `vitaquake2_libretro.so` |
 | **prboom** | Doom / Doom II / Final Doom / Heretic / Hexen | `prboom_libretro.so` |
 | **wolf3d** | Wolfenstein 3D - 📖 [setup guide](docs/cores/wolf3d.md) | `ecwolf_libretro.so` |
