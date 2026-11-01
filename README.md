@@ -141,7 +141,6 @@ The **folder name is what picks the emulator** (so `GBA` runs Game Boy Advance, 
 | **Ports Collection** | Optional game ports installed separately - 📖 [installation guide](docs/cores/ports.md) | [Ports Collection release](https://github.com/tzubertowski/TreeFrogUI_PortsCollection/releases/latest) |
 | **openbor** | OpenBOR game/mod PAKs - 📖 [setup guide](docs/cores/openbor.md) | `openbor_libretro.so` |
 | **scummvm** | Point-and-click adventures via [Synaps33's FroggyScummvm](https://github.com/Synaps33/FroggyScummvm) - 📖 [setup guide](docs/cores/scummvm.md) | `scummvm_libretro.so` |
-| **quake2** | Quake II (heavy) - 📖 [setup guide](docs/cores/quake2.md) | `vitaquake2_libretro.so` |
 | **prboom** | Doom / Doom II / Final Doom / Heretic / Hexen | `prboom_libretro.so` |
 | **wolf3d** | Wolfenstein 3D - 📖 [setup guide](docs/cores/wolf3d.md) | `ecwolf_libretro.so` |
 | **outrun** | Out Run | `cannonball_libretro.so` |
@@ -199,7 +198,6 @@ A few systems need more than "drop the ROM in the folder" - either extra compani
 | Wolfenstein 3D (`wolf3d`) | Needs the game data **and** the engine's own resource pack | 📖 [docs/cores/wolf3d.md](docs/cores/wolf3d.md) |
 | ScummVM (`scummvm`) | Needs original game data in `roms/scummvm/<game>/` and a `.scummvm` hook containing its game ID | 📖 [docs/cores/scummvm.md](docs/cores/scummvm.md) |
 | Doom / Heretic / Hexen (`prboom`) | Supply a legally obtained IWAD (`doom1.wad`, `heretic1.wad`, `hexen.wad`, etc.) | Put the IWAD in `roms/prboom/` |
-| Quake II (`quake2`) | Game data goes in a required `baseq2/` subfolder | 📖 [docs/cores/quake2.md](docs/cores/quake2.md) |
 | Ports | Some require user-supplied game files. Port folders and launch instructions | 📖 [Ports guide](docs/cores/ports.md) |
 | PlayStation 1 (`PS`/`ps1`/`psx`/`ps1r`) | Two cores, BIOS strongly recommended | 📖 [docs/cores/ps1.md](docs/cores/ps1.md) |
 
